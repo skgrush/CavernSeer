@@ -8,29 +8,22 @@
 
 import SwiftUI
 
+
 struct ContentView: View {
-    @State private var selection = 0
+    @State private var selection: Tabs = Tabs.ScanTab
+
+    var scanner = ScannerTab()
  
     var body: some View {
         TabView(selection: $selection){
-            Text("First View")
-                .font(.title)
+            scanner.tabPanelView
                 .tabItem {
                     VStack {
-                        Image("first")
-                        Text("First")
+                        scanner.tabImage
+                        Text(scanner.tabName)
                     }
                 }
-                .tag(0)
-            Text("Second View")
-                .font(.title)
-                .tabItem {
-                    VStack {
-                        Image("second")
-                        Text("Second")
-                    }
-                }
-                .tag(1)
+                .tag(scanner.tab)
         }
     }
 }

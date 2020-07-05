@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E4003AB24AD579100B709BD /* Proposal.md in Resources */ = {isa = PBXBuildFile; fileRef = 7E4003AA24AD579000B709BD /* Proposal.md */; };
+		7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */; };
+		7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */; };
+		7E4003B524AD7B7500B709BD /* DrawableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003B424AD7B7500B709BD /* DrawableProtocol.swift */; };
+		7E4003B824AD8FF300B709BD /* SurveyStationEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003B724AD8FF300B709BD /* SurveyStationEntity.swift */; };
 		7E6C0EAC24A800C200129E8C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAB24A800C200129E8C /* AppDelegate.swift */; };
 		7E6C0EAE24A800C200129E8C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAD24A800C200129E8C /* SceneDelegate.swift */; };
 		7E6C0EB024A800C200129E8C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAF24A800C200129E8C /* ContentView.swift */; };
@@ -15,6 +20,18 @@
 		7E6C0EB824A800C500129E8C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E6C0EB624A800C500129E8C /* LaunchScreen.storyboard */; };
 		7E6C0EC324A800C600129E8C /* CavernSeerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EC224A800C600129E8C /* CavernSeerTests.swift */; };
 		7E6C0ECE24A800C600129E8C /* CavernSeerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0ECD24A800C600129E8C /* CavernSeerUITests.swift */; };
+		7E6C0EDF24A827FE00129E8C /* TabProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EDE24A827FE00129E8C /* TabProtocol.swift */; };
+		7E6C0EE124A82A4A00129E8C /* TabsEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EE024A82A4A00129E8C /* TabsEnum.swift */; };
+		7E6C0EE924A82CC700129E8C /* ScannerTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EE824A82CC700129E8C /* ScannerTabView.swift */; };
+		7E6C0EED24A834E200129E8C /* SnapshotAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EEC24A834E200129E8C /* SnapshotAnchor.swift */; };
+		7E6C0EEF24A8388C00129E8C /* ScanFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EEE24A8388C00129E8C /* ScanFile.swift */; };
+		7E6C0EF124A838A000129E8C /* ScanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF024A838A000129E8C /* ScanStore.swift */; };
+		7E6C0EF324A838E200129E8C /* SavedScanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF224A838E200129E8C /* SavedScanModel.swift */; };
+		7E6C0EF524A9323900129E8C /* ARViewScannerContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF424A9323900129E8C /* ARViewScannerContainer.swift */; };
+		7E6C0EF724A938ED00129E8C /* ScannerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF624A938ED00129E8C /* ScannerModel.swift */; };
+		7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F94E24B113290098D44B /* SurveyStation.swift */; };
+		7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */; };
+		7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95224B1161E0098D44B /* SurveyLine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +52,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7E4003AA24AD579000B709BD /* Proposal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Proposal.md; sourceTree = "<group>"; };
+		7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCoder+simd.swift"; sourceTree = "<group>"; };
+		7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawOverlay.swift; sourceTree = "<group>"; };
+		7E4003B424AD7B7500B709BD /* DrawableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableProtocol.swift; sourceTree = "<group>"; };
+		7E4003B724AD8FF300B709BD /* SurveyStationEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStationEntity.swift; sourceTree = "<group>"; };
 		7E6C0EA824A800C200129E8C /* CavernSeer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CavernSeer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E6C0EAB24A800C200129E8C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7E6C0EAD24A800C200129E8C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +71,18 @@
 		7E6C0EC924A800C600129E8C /* CavernSeerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CavernSeerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E6C0ECD24A800C600129E8C /* CavernSeerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CavernSeerUITests.swift; sourceTree = "<group>"; };
 		7E6C0ECF24A800C600129E8C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7E6C0EDE24A827FE00129E8C /* TabProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabProtocol.swift; sourceTree = "<group>"; };
+		7E6C0EE024A82A4A00129E8C /* TabsEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsEnum.swift; sourceTree = "<group>"; };
+		7E6C0EE824A82CC700129E8C /* ScannerTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerTabView.swift; sourceTree = "<group>"; };
+		7E6C0EEC24A834E200129E8C /* SnapshotAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotAnchor.swift; sourceTree = "<group>"; };
+		7E6C0EEE24A8388C00129E8C /* ScanFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFile.swift; sourceTree = "<group>"; };
+		7E6C0EF024A838A000129E8C /* ScanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStore.swift; sourceTree = "<group>"; };
+		7E6C0EF224A838E200129E8C /* SavedScanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanModel.swift; sourceTree = "<group>"; };
+		7E6C0EF424A9323900129E8C /* ARViewScannerContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewScannerContainer.swift; sourceTree = "<group>"; };
+		7E6C0EF624A938ED00129E8C /* ScannerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerModel.swift; sourceTree = "<group>"; };
+		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
+		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
+		7E99F95224B1161E0098D44B /* SurveyLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,9 +110,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7E4003AC24AD5A5A00B709BD /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */,
+			);
+			path = extensions;
+			sourceTree = "<group>";
+		};
+		7E4003B124AD5E5300B709BD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7E6C0EF624A938ED00129E8C /* ScannerModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7E4003B324AD7B5D00B709BD /* protocols */ = {
+			isa = PBXGroup;
+			children = (
+				7E4003B424AD7B7500B709BD /* DrawableProtocol.swift */,
+			);
+			path = protocols;
+			sourceTree = "<group>";
+		};
+		7E4003B624AD8FD500B709BD /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				7E4003B724AD8FF300B709BD /* SurveyStationEntity.swift */,
+				7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
 		7E6C0E9F24A800C200129E8C = {
 			isa = PBXGroup;
 			children = (
+				7E4003AA24AD579000B709BD /* Proposal.md */,
 				7E6C0EAA24A800C200129E8C /* CavernSeer */,
 				7E6C0EC124A800C600129E8C /* CavernSeerTests */,
 				7E6C0ECC24A800C600129E8C /* CavernSeerUITests */,
@@ -99,6 +167,11 @@
 		7E6C0EAA24A800C200129E8C /* CavernSeer */ = {
 			isa = PBXGroup;
 			children = (
+				7E4003B324AD7B5D00B709BD /* protocols */,
+				7E4003AC24AD5A5A00B709BD /* extensions */,
+				7E6C0EEB24A834B700129E8C /* lib */,
+				7E6C0EEA24A8346F00129E8C /* Models */,
+				7E6C0EDB24A825E700129E8C /* Tabs */,
 				7E6C0EAB24A800C200129E8C /* AppDelegate.swift */,
 				7E6C0EAD24A800C200129E8C /* SceneDelegate.swift */,
 				7E6C0EAF24A800C200129E8C /* ContentView.swift */,
@@ -134,6 +207,64 @@
 				7E6C0ECF24A800C600129E8C /* Info.plist */,
 			);
 			path = CavernSeerUITests;
+			sourceTree = "<group>";
+		};
+		7E6C0EDB24A825E700129E8C /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				7E6C0EDD24A826CA00129E8C /* ScanListTab */,
+				7E6C0EDC24A826BC00129E8C /* ScannerTab */,
+				7E6C0EDE24A827FE00129E8C /* TabProtocol.swift */,
+				7E6C0EE024A82A4A00129E8C /* TabsEnum.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
+		7E6C0EDC24A826BC00129E8C /* ScannerTab */ = {
+			isa = PBXGroup;
+			children = (
+				7E4003B124AD5E5300B709BD /* Models */,
+				7E6C0EE824A82CC700129E8C /* ScannerTabView.swift */,
+				7E6C0EF424A9323900129E8C /* ARViewScannerContainer.swift */,
+				7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */,
+			);
+			path = ScannerTab;
+			sourceTree = "<group>";
+		};
+		7E6C0EDD24A826CA00129E8C /* ScanListTab */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ScanListTab;
+			sourceTree = "<group>";
+		};
+		7E6C0EEA24A8346F00129E8C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7E99F94D24B1130C0098D44B /* Serializations */,
+				7E4003B624AD8FD500B709BD /* Entities */,
+				7E6C0EF024A838A000129E8C /* ScanStore.swift */,
+				7E6C0EF224A838E200129E8C /* SavedScanModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7E6C0EEB24A834B700129E8C /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				7E6C0EEC24A834E200129E8C /* SnapshotAnchor.swift */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		7E99F94D24B1130C0098D44B /* Serializations */ = {
+			isa = PBXGroup;
+			children = (
+				7E6C0EEE24A8388C00129E8C /* ScanFile.swift */,
+				7E99F94E24B113290098D44B /* SurveyStation.swift */,
+				7E99F95224B1161E0098D44B /* SurveyLine.swift */,
+			);
+			path = Serializations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -242,6 +373,7 @@
 			files = (
 				7E6C0EB824A800C500129E8C /* LaunchScreen.storyboard in Resources */,
 				7E6C0EB524A800C500129E8C /* Preview Assets.xcassets in Resources */,
+				7E4003AB24AD579100B709BD /* Proposal.md in Resources */,
 				7E6C0EB224A800C500129E8C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,8 +399,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */,
+				7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */,
+				7E6C0EF324A838E200129E8C /* SavedScanModel.swift in Sources */,
+				7E4003B824AD8FF300B709BD /* SurveyStationEntity.swift in Sources */,
+				7E6C0EF524A9323900129E8C /* ARViewScannerContainer.swift in Sources */,
+				7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */,
 				7E6C0EAC24A800C200129E8C /* AppDelegate.swift in Sources */,
+				7E4003B524AD7B7500B709BD /* DrawableProtocol.swift in Sources */,
+				7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */,
+				7E6C0EE124A82A4A00129E8C /* TabsEnum.swift in Sources */,
+				7E6C0EDF24A827FE00129E8C /* TabProtocol.swift in Sources */,
+				7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */,
+				7E6C0EE924A82CC700129E8C /* ScannerTabView.swift in Sources */,
+				7E6C0EED24A834E200129E8C /* SnapshotAnchor.swift in Sources */,
 				7E6C0EAE24A800C200129E8C /* SceneDelegate.swift in Sources */,
+				7E6C0EF724A938ED00129E8C /* ScannerModel.swift in Sources */,
+				7E6C0EF124A838A000129E8C /* ScanStore.swift in Sources */,
+				7E6C0EEF24A8388C00129E8C /* ScanFile.swift in Sources */,
 				7E6C0EB024A800C200129E8C /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -443,6 +591,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -463,6 +612,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
