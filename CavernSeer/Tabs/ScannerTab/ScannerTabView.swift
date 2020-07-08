@@ -62,8 +62,10 @@ struct ScannerTabView: View {
     }
 }
 
+#if DEBUG
 struct ScanTabView_Previews: PreviewProvider {
     static var previews: some View {
         ScannerTabView()
     }
 }
+#endif

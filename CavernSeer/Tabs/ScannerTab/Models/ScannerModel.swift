@@ -107,7 +107,8 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
             guard let map = worldMap
             else {
-                    self.message = "WorldMap Error: \(error!.localizedDescription)";
+                    self.message
+                        = "WorldMap Error: \(error!.localizedDescription)";
                     return
             }
 
