@@ -13,9 +13,20 @@ struct ContentView: View {
     @State private var selection: Tabs = Tabs.ScanTab
 
     var scanner = ScannerTab()
+    var scanList = ScanListTab()
  
     var body: some View {
         TabView(selection: $selection){
+
+            scanList.tabPanelView
+                .tabItem {
+                    VStack {
+                        scanList.tabImage
+                        Text(scanList.tabName)
+                    }
+                }
+                .tag(scanList.tab)
+
             scanner.tabPanelView
                 .tabItem {
                     VStack {
@@ -24,6 +35,7 @@ struct ContentView: View {
                     }
                 }
                 .tag(scanner.tab)
+
         }
     }
 }

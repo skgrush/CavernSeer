@@ -13,14 +13,31 @@ struct SavedScanListView: View {
     @EnvironmentObject
     var scanStore: ScanStore
 
+    @State
+    private var selection: URL? = nil
+    @State
+    private var showShare = false
+
     var body: some View {
         List(scanStore.modelData) {
             model in
             NavigationLink(destination: SavedScanDetail(model: model)) {
                 SavedScanRow(model: model)
             }
+            .toolbar {
+                Button(action: {
+                    selection = model.url
+                    showShare = true
+                }) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(Font.system(.title))
+                }
+            }
         }
         .navigationTitle("Scan List")
+        .sheet(isPresented: $showShare) {
+            ScanShareSheet(activityItems: [selection!])
+        }
     }
 }
 

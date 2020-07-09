@@ -28,7 +28,8 @@ struct ScanListTabView: View {
             NavigationView {
                 SavedScanListScrollView(
                     width: geometry.size.width,
-                    height: geometry.size.height)
+                    height: geometry.size.height
+                )
             }
         }
     }

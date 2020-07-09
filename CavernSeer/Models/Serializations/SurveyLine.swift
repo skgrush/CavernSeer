@@ -36,15 +36,15 @@ final class SurveyLine: NSObject, NSSecureCoding {
     required init?(coder decoder: NSCoder) {
         self.startIdentifier = decoder.decodeObject(
             of: NSUUID.self,
-            forKey: "startIdentifier")! as UUID
+            forKey: PropertyKeys.startId)! as UUID
         self.endIdentifier = decoder.decodeObject(
             of: NSUUID.self,
-            forKey: "endIdentifier")! as UUID
+            forKey: PropertyKeys.endId)! as UUID
     }
 
     func encode(with coder: NSCoder) {
-        coder.encode(startIdentifier as NSUUID, forKey: "startIdentifier")
-        coder.encode(endIdentifier as NSUUID, forKey: "endIdentifier")
+        coder.encode(startIdentifier as NSUUID, forKey: PropertyKeys.startId)
+        coder.encode(endIdentifier as NSUUID, forKey: PropertyKeys.endId)
     }
 }
 
@@ -155,3 +155,8 @@ extension SurveyLine {
     }
 }
 
+
+fileprivate struct PropertyKeys {
+    static let startId = "startIdentifier"
+    static let endId = "endIdentifier"
+}

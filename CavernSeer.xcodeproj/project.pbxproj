@@ -41,6 +41,7 @@
 		7E9C2CEF24B55FC600B9FC44 /* FlatWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CEE24B55FC600B9FC44 /* FlatWorldRender.swift */; };
 		7E9C2CF124B55FE800B9FC44 /* SavedScanDetailAdvanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CF024B55FE800B9FC44 /* SavedScanDetailAdvanced.swift */; };
 		7E9C2CF324B56C2400B9FC44 /* ScanFile+Nodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CF224B56C2400B9FC44 /* ScanFile+Nodes.swift */; };
+		7E9C2CF724B6937B00B9FC44 /* ScanShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CF624B6937B00B9FC44 /* ScanShareSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 		7E9C2CEE24B55FC600B9FC44 /* FlatWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatWorldRender.swift; sourceTree = "<group>"; };
 		7E9C2CF024B55FE800B9FC44 /* SavedScanDetailAdvanced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanDetailAdvanced.swift; sourceTree = "<group>"; };
 		7E9C2CF224B56C2400B9FC44 /* ScanFile+Nodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScanFile+Nodes.swift"; sourceTree = "<group>"; };
+		7E9C2CF624B6937B00B9FC44 /* ScanShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanShareSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,6 +259,7 @@
 				7E9C2CE324B3F99800B9FC44 /* SavedScanListScrollView.swift */,
 				7E9C2CE524B3FBFE00B9FC44 /* SavedScanListView.swift */,
 				7E9C2CE924B3FD5700B9FC44 /* SavedScanRow.swift */,
+				7E9C2CF624B6937B00B9FC44 /* ScanShareSheet.swift */,
 			);
 			path = ScanListTab;
 			sourceTree = "<group>";
@@ -450,6 +453,7 @@
 				7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */,
 				7E6C0EE124A82A4A00129E8C /* TabsEnum.swift in Sources */,
 				7E6C0EDF24A827FE00129E8C /* TabProtocol.swift in Sources */,
+				7E9C2CF724B6937B00B9FC44 /* ScanShareSheet.swift in Sources */,
 				7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */,
 				7E9C2CE624B3FBFE00B9FC44 /* SavedScanListView.swift in Sources */,
 				7E6C0EE924A82CC700129E8C /* ScannerTabView.swift in Sources */,

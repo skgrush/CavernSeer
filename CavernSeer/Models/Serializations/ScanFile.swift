@@ -13,6 +13,9 @@ final class ScanFile : NSObject, NSSecureCoding {
     static var supportsSecureCoding: Bool {
         true
     }
+    static var currentEncodingVersion: Int32 { 1 }
+
+    let encodingVersion: Int32
 
     let timestamp: Date
     let center: simd_float3
@@ -32,6 +35,8 @@ final class ScanFile : NSObject, NSSecureCoding {
         stations: [SurveyStationEntity],
         lines: [SurveyLineEntity]
     ) {
+        self.encodingVersion = ScanFile.currentEncodingVersion
+
         self.timestamp = date ?? Date()
         self.center = map.center
         self.extent = map.extent
@@ -47,71 +52,87 @@ final class ScanFile : NSObject, NSSecureCoding {
     }
 
     required init?(coder decoder: NSCoder) {
-        guard
-            let timestamp = decoder.decodeObject(
-                of: NSDate.self,
-                forKey: "timestamp"
-            ) as Date?,
-            let meshAnchors = decoder.decodeObject(
-                of: [NSArray.self, ARMeshAnchor.self],
-                forKey: "meshAnchors"
-            ) as? [ARMeshAnchor]
-        else { return nil }
 
-        self.timestamp = timestamp as Date
-        self.center = decoder.decode_simd_float3(prefix: "center")
-        self.extent = decoder.decode_simd_float3(prefix: "extent")
-        self.meshAnchors = meshAnchors
+        let version =
+            decoder.containsValue(forKey: PropertyKeys.version)
+                ? decoder.decodeInt32(forKey: PropertyKeys.version)
+                : 1
+        self.encodingVersion = version
 
-        if decoder.containsValue(forKey: "startSnapshot") {
-            self.startSnapshot = decoder.decodeObject(
-                of: SnapshotAnchor.self,
-                forKey: "startSnapshot"
-            )
-        } else {
-            self.startSnapshot = nil
-        }
-        if decoder.containsValue(forKey: "endSnapshot") {
-            self.endSnapshot = decoder.decodeObject(
-                of: SnapshotAnchor.self,
-                forKey: "endSnapshot"
-            )
-        } else {
-            self.endSnapshot = nil
-        }
+        if (version == 1) {
+            guard
+                let timestamp = decoder.decodeObject(
+                    of: NSDate.self,
+                    forKey: PropertyKeys.timestamp
+                ) as Date?,
+                let meshAnchors = decoder.decodeObject(
+                    of: [NSArray.self, ARMeshAnchor.self],
+                    forKey: PropertyKeys.meshAnchors
+                ) as? [ARMeshAnchor]
+            else { return nil }
 
-        if decoder.containsValue(forKey: "stations") {
-            self.stations = decoder.decodeObject(
-                of: [NSArray.self, SurveyStation.self],
-                forKey: "stations"
-            ) as! [SurveyStation]
+            self.timestamp = timestamp as Date
+            self.center =
+                decoder.decode_simd_float3(prefix: PropertyKeys.center)
+            self.extent =
+                decoder.decode_simd_float3(prefix: PropertyKeys.extent)
+            self.meshAnchors = meshAnchors
+
+            if decoder.containsValue(forKey: PropertyKeys.startSnapshot) {
+                self.startSnapshot = decoder.decodeObject(
+                    of: SnapshotAnchor.self,
+                    forKey: PropertyKeys.startSnapshot
+                )
+            } else {
+                self.startSnapshot = nil
+            }
+            if decoder.containsValue(forKey: PropertyKeys.endSnapshot) {
+                self.endSnapshot = decoder.decodeObject(
+                    of: SnapshotAnchor.self,
+                    forKey: PropertyKeys.endSnapshot
+                )
+            } else {
+                self.endSnapshot = nil
+            }
+
+            if decoder.containsValue(forKey: PropertyKeys.stations) {
+                self.stations = decoder.decodeObject(
+                    of: [NSArray.self, SurveyStation.self],
+                    forKey: PropertyKeys.stations
+                ) as! [SurveyStation]
+            } else {
+                self.stations = []
+            }
+            if decoder.containsValue(forKey: PropertyKeys.lines) {
+                self.lines = decoder.decodeObject(
+                    of: [NSArray.self, SurveyLine.self],
+                    forKey: PropertyKeys.lines
+                ) as! [SurveyLine]
+            } else {
+                self.lines = []
+            }
         } else {
-            self.stations = []
-        }
-        if decoder.containsValue(forKey: "lines") {
-            self.lines = decoder.decodeObject(
-                of: [NSArray.self, SurveyLine.self],
-                forKey: "lines"
-            ) as! [SurveyLine]
-        } else {
-            self.lines = []
+            fatalError("Unexpected encoding version \(version)")
         }
     }
 
     func encode(with coder: NSCoder) {
-        coder.encode(timestamp, forKey: "timestamp")
-        coder.encode(center, forPrefix: "center")
-        coder.encode(extent, forPrefix: "extent")
-        coder.encode(meshAnchors as NSArray, forKey: "meshAnchors")
-        coder.encode(startSnapshot, forKey: "startSnapshot")
-        coder.encode(endSnapshot, forKey: "endSnapshot")
+        coder.encode(encodingVersion, forKey: PropertyKeys.version)
+        coder.encode(timestamp, forKey: PropertyKeys.timestamp)
+        coder.encode(center, forPrefix: PropertyKeys.center)
+        coder.encode(extent, forPrefix: PropertyKeys.extent)
+        coder.encode(meshAnchors as NSArray, forKey: PropertyKeys.meshAnchors)
+        coder.encode(startSnapshot, forKey: PropertyKeys.startSnapshot)
+        coder.encode(endSnapshot, forKey: PropertyKeys.endSnapshot)
 
-        coder.encode(stations as NSArray, forKey: "stations")
-        coder.encode(lines as NSArray, forKey: "lines")
+        coder.encode(stations as NSArray, forKey: PropertyKeys.stations)
+        coder.encode(lines as NSArray, forKey: PropertyKeys.lines)
     }
 
     #if DEBUG
     init(debugInit: Any?) {
+        self.encodingVersion = ScanFile.currentEncodingVersion
+
         self.timestamp = Date()
         self.center = simd_make_float3(0)
         self.extent = simd_make_float3(0)
@@ -125,4 +146,18 @@ final class ScanFile : NSObject, NSSecureCoding {
         super.init()
     }
     #endif
+}
+
+
+fileprivate struct PropertyKeys {
+    static let version = "version"
+    static let timestamp = "timestamp"
+    static let center = "center"
+    static let extent = "extent"
+    static let meshAnchors = "meshAnchors"
+    static let startSnapshot = "startSnapshot"
+    static let endSnapshot = "endSnapshot"
+    static let stations = "stations"
+    static let lines = "lines"
+
 }

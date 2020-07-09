@@ -62,6 +62,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        print("contexts: \(URLContexts.description)")
+
+        let scanStore = ScanStore()
+
+        var successes: [URL] = []
+        var failures: [URL:String] = [:]
+
+        for context in URLContexts {
+            let url = context.url
+
+            let model = SavedScanModel(url: url)
+
+            if scanStore.modelData.contains(where: { $0.id == model.id }) {
+                failures[url] = "Already exists in store"
+            } else {
+                do {
+                    try scanStore.saveScanFile(scanFile: model.scan)
+                    successes.append(url)
+                } catch {
+                    failures[url] = error.localizedDescription
+                }
+            }
+        }
+
+        // TODO: notify of successes/failures
+    }
 
 }
 

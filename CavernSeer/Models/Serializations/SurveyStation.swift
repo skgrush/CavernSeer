@@ -29,13 +29,14 @@ final class SurveyStation: NSObject, NSSecureCoding {
     required init?(coder decoder: NSCoder) {
         self.identifier = decoder.decodeObject(
             of: NSUUID.self,
-            forKey: "identifier")! as UUID
-        self.transform = decoder.decode_simd_float4x4(prefix: "transform")
+            forKey: PropertyKeys.identifier)! as UUID
+        self.transform =
+            decoder.decode_simd_float4x4(prefix: PropertyKeys.transform)
     }
 
     func encode(with coder: NSCoder) {
-        coder.encode(identifier as NSUUID, forKey: "identifer")
-        coder.encode(transform, forPrefix: "transform")
+        coder.encode(identifier as NSUUID, forKey: PropertyKeys.identifier)
+        coder.encode(transform, forPrefix: PropertyKeys.transform)
     }
 }
 
@@ -52,4 +53,9 @@ extension SurveyStation {
         node.simdTransform = self.transform
         return node
     }
+}
+
+fileprivate struct PropertyKeys {
+    static let identifier = "identifier"
+    static let transform = "transform"
 }

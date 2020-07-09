@@ -16,14 +16,13 @@ struct SavedScanListScrollView: UIViewRepresentable {
     @EnvironmentObject
     var scanStore: ScanStore
 
-    let rootView = SavedScanListView()
-
     func makeCoordinator() -> Coordinator {
         Coordinator(self, modelData: scanStore)
     }
 
     func makeUIView(context: Context) -> UIScrollView {
         let control = UIScrollView()
+        control.refreshControl = UIRefreshControl()
         control.refreshControl?.addTarget(
             context.coordinator,
             action: #selector(Coordinator.handleRefreshControl),
@@ -31,7 +30,7 @@ struct SavedScanListScrollView: UIViewRepresentable {
         )
 
 
-        let childView = UIHostingController(rootView: rootView)
+        let childView = UIHostingController(rootView: SavedScanListView())
         childView.view.frame = CGRect(x: 0, y: 0, width: width, height: height)
 
         control.addSubview(childView.view)
