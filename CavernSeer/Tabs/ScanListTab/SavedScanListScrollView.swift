@@ -17,7 +17,7 @@ struct SavedScanListScrollView: UIViewRepresentable {
     var scanStore: ScanStore
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(self, modelData: scanStore)
+        Coordinator(modelData: scanStore, height: height)
     }
 
     func makeUIView(context: Context) -> UIScrollView {
@@ -29,31 +29,45 @@ struct SavedScanListScrollView: UIViewRepresentable {
             for: .valueChanged
         )
 
+        context.coordinator.height = height
 
-        let childView = UIHostingController(rootView: SavedScanListView())
-        childView.view.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        let idealSize = min(height, width) - 100
+        let uiHost = UIHostingController(rootView: SavedScanListView())
+        // context.coordinator.uiHost = uiHost
+        uiHost.view.frame = CGRect(x: 0, y: 0, width: width, height: idealSize)
 
-        control.addSubview(childView.view)
+        control.addSubview(uiHost.view)
+
+        scanStore.update()
+
         return control
     }
 
-    func updateUIView(_ uiView: UIScrollView, context: Context) {}
+    func updateUIView(_ uiView: UIScrollView, context: Context) {
+        context.coordinator.height = height
+    }
 }
 
 
 
 class Coordinator : NSObject {
-    var control: SavedScanListScrollView
     var scanStore: ScanStore
 
-    init(_ control: SavedScanListScrollView, modelData: ScanStore) {
-        self.control = control
+    // var uiHost: UIHostingController<SavedScanListView>?
+    var height: CGFloat
+
+    var relayout = false
+
+    init(modelData: ScanStore, height: CGFloat) {
         self.scanStore = modelData
+        self.height = height
     }
 
     @objc
     func handleRefreshControl(sender: UIRefreshControl) {
         scanStore.update()
-        sender.endRefreshing()
+        DispatchQueue.main.async {
+            sender.endRefreshing()
+        }
     }
 }
