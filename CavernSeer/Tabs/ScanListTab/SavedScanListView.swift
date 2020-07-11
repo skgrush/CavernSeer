@@ -19,14 +19,25 @@ struct SavedScanListView: View {
     private var showShare = false
 
     var body: some View {
-        List(scanStore.modelData) {
-            model
-            in
-            NavigationLink(destination: SavedScanDetail(model: model)) {
-                SavedScanRow(model: model)
+        List {
+            ForEach(scanStore.modelData) {
+                model
+                in
+                NavigationLink(destination: SavedScanDetail(model: model)) {
+                    SavedScanRow(model: model)
+                }
             }
+            .onDelete(perform: delete)
         }
         .navigationTitle("Scan List")
+        .navigationBarItems(trailing: EditButton())
+    }
+
+    func delete(at offset: IndexSet) {
+        let modelData = scanStore.modelData
+        offset
+            .map { modelData[$0] }
+            .forEach { self.scanStore.deleteFile(model: $0) }
     }
 }
 

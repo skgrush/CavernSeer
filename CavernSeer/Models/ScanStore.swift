@@ -16,6 +16,7 @@ class ScanStore : ObservableObject {
 
     var scanDirectory: URL
 
+    private let fileManager = FileManager.default
     private let dateFormatter = ISO8601DateFormatter()
 
     init(data: [SavedScanModel] = []) {
@@ -23,7 +24,7 @@ class ScanStore : ObservableObject {
 
         do {
             self.scanDirectory = try
-                FileManager.default
+                fileManager
                     .url(for: .documentDirectory,
                          in: .userDomainMask,
                          appropriateFor: nil,
@@ -59,6 +60,20 @@ class ScanStore : ObservableObject {
             withRootObject: scanFile,
             requiringSecureCoding: true)
         try data.write(to: newSaveURL, options: [.atomic])
+    }
+
+    func deleteFile(model: SavedScanModel) {
+        let index = modelData.firstIndex(where: { $0.url == model.url })
+        if index != nil {
+            do {
+                try fileManager.removeItem(at: model.url)
+            } catch {
+                fatalError("Deletion failed: \(error.localizedDescription)")
+            }
+            modelData.remove(at: index!)
+        } else {
+            fatalError("Model not found in modelData")
+        }
     }
 
     private func getDirectoryURLs() -> [URL] {
