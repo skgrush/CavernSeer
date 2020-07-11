@@ -11,10 +11,13 @@ import SwiftUI
 final class ScannerTab : TabProtocol {
     typealias ViewType = ScannerTabView
 
-    var tabPanelView: ScannerTabView { ScannerTabView() }
     var tab: Tabs = Tabs.ScanTab
     var tabName = "Scanner"
     var tabImage: Image { Image(systemName: "camera.viewfinder") }
+
+    func tabPanelView() -> ScannerTabView {
+        ScannerTabView()
+    }
 }
 
 struct ScannerTabView: View {
@@ -38,25 +41,30 @@ struct ScannerTabView: View {
                     }) {
                         Text("Start Scan")
                     }.disabled(scanModel.scanEnabled)
+
                     Button(action: {
                         self.scanModel.scanEnabled = false
                     }) {
                         Text("Cancel Scan")
                     }.disabled(!scanModel.scanEnabled)
+
+                    Button(action: {
+                        self.scanModel.saveScan(scanStore: self.scanStore)
+                    }) {
+                        Text("Save")
+                    }.disabled(!scanModel.scanEnabled)
                 }
 
-                Button(action: {
-                    self.scanModel.saveScan(scanStore: self.scanStore)
-                }) {
-                    Text("Save")
-                }.disabled(scanModel.scanEnabled)
-                Toggle(isOn: $scanModel.showDebug) {
-                    Text("Debug")
+                HStack {
+                    Toggle("Debug", isOn: $scanModel.showDebug)
+                        .frame(maxWidth: 100)
                 }
 
                 Spacer()
 
-                Text(scanModel.message)
+                HStack {
+                    Text(scanModel.message)
+                }
             }
         }
     }

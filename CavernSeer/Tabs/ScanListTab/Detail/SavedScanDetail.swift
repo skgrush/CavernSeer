@@ -15,6 +15,8 @@ struct SavedScanDetail: View {
     private var isPresentingRender = false
     @State
     private var isPresentingMap = false
+    @State
+    private var showShare = false
 
     var body: some View {
         VStack {
@@ -63,6 +65,19 @@ struct SavedScanDetail: View {
                     }
                 }
             }
+
+            Spacer()
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { showShare = true }) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(Font.system(.title))
+                }
+            }
+        }
+        .sheet(isPresented: $showShare) {
+            ScanShareSheet(activityItems: [model.url])
         }
     }
 

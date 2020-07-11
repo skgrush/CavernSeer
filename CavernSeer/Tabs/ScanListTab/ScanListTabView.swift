@@ -11,10 +11,13 @@ import SwiftUI
 final class ScanListTab : TabProtocol {
     typealias ViewType = ScanListTabView
 
-    var tabPanelView: ScanListTabView { ScanListTabView() }
     var tab: Tabs = Tabs.ScanListTab
     var tabName = "Scan List"
     var tabImage: Image { Image(systemName: "list.dash") }
+
+    func tabPanelView() -> ScanListTabView {
+        ScanListTabView()
+    }
 }
 
 struct ScanListTabView: View {

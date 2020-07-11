@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @State private var selection: Tabs = Tabs.ScanTab
+    @State private var selection: Tabs = Tabs.ScanListTab
 
     var scanner = ScannerTab()
     var scanList = ScanListTab()
@@ -18,7 +18,7 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selection){
 
-            scanList.tabPanelView
+            scanList.tabPanelView()
                 .tabItem {
                     VStack {
                         scanList.tabImage
@@ -27,7 +27,7 @@ struct ContentView: View {
                 }
                 .tag(scanList.tab)
 
-            scanner.tabPanelView
+            scanner.tabPanelView()
                 .tabItem {
                     VStack {
                         scanner.tabImage

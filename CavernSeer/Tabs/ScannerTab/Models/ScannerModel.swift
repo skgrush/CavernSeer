@@ -18,15 +18,15 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
     var sceneUpdateSubscription: Cancellable!
 
-    /// the layer that can draw on top of the arView (e.g. for line drawing)
-    let drawView: UIView
     /// the layer containing the AR render of the scan
     let arView: ARView
+    /// the layer that can draw on top of the arView (e.g. for line drawing)
+    let drawView: UIView
 
     @Published
     var message: String = ""
     @Published
-    var scanEnabled: Bool {
+    var scanEnabled: Bool! {
         didSet {
             if oldValue != scanEnabled {
                 scanEnabled
@@ -36,7 +36,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         }
     }
     @Published
-    var showDebug: Bool {
+    var showDebug: Bool! {
         didSet {
             if showDebug {
                 arView.debugOptions.insert(.showStatistics)
@@ -57,8 +57,6 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     var passiveConfiguration: ARConfiguration!
 
     init() {
-        self.scanEnabled = false
-        self.showDebug = false
 
         let arView = ARView(frame: .zero)
         let drawView = DrawOverlay(frame: arView.frame, toDraw: surveyLines)
@@ -74,6 +72,9 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         ) {
             [unowned self] in self.updateScene(on: $0)
         }
+
+        self.showDebug = false
+        self.scanEnabled = false
     }
 
     func updateDrawConstraints() {
