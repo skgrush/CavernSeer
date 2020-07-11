@@ -43,18 +43,21 @@ extension ScanFile {
         scnNodes.forEach { node in scnScene.rootNode.addChildNode(node) }
 
         let camera = SCNCamera()
+        camera.usesOrthographicProjection = true
+        camera.orthographicScale = 50
+//        camera.zNear = 0
+        camera.zFar = 8
+
         let cameraNode = SCNNode()
         cameraNode.camera = camera
+        /// position above
+        cameraNode.position = SCNVector3(x: 0, y: 0, z: 5000)
+        /// look down
+        // cameraNode.eulerAngles = SCNVector3Make(.pi / -2, 0, 0)
 
-        if let lookAtTarget = scnScene.rootNode.childNodes.first {
-            let constraint = SCNLookAtConstraint(target: lookAtTarget)
-            cameraNode.constraints = [ constraint ]
-        }
-
-        let node3d = SK3DNode(viewportSize: CGSize(width: 200, height: 200))
+        let node3d = SK3DNode(viewportSize: CGSize(width: 2000, height: 2000))
         node3d.scnScene = scnScene
         node3d.pointOfView = cameraNode
-        node3d.pointOfView!.position = SCNVector3(0, 0, 20)
 
         return node3d
     }
@@ -95,7 +98,7 @@ fileprivate func meshGeometryToNode(
 
     let defaultMaterial = SCNMaterial()
     defaultMaterial.isDoubleSided = false
-    defaultMaterial.diffuse.contents = UIColor.brown
+    // defaultMaterial.diffuse.contents = UIColor.brown
 
     node.geometry!.materials = [defaultMaterial]
 

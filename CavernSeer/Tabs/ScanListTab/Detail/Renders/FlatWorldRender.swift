@@ -9,6 +9,9 @@
 import SwiftUI
 import SpriteKit
 
+/*
+ Couldn't figure out how to get this to work >:(
+ */
 struct FlatWorldRender: View {
 
     var scan: ScanFile
@@ -52,7 +55,14 @@ final class FlatWorldRenderController :
 
         skView.delegate = self
 
-        skView.scene!.addChild(skNode)
+        let scene = SKScene()
+        scene.addChild(skNode)
+        scene.scaleMode = .resizeFill
+
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        skView.ignoresSiblingOrder = true
+        skView.presentScene(scene)
         skView.isPaused = false
 
         return skView

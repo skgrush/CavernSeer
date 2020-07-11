@@ -33,15 +33,12 @@ struct SavedScanDetail: View {
                 .font(.title)
                 .padding()
 
-            Spacer()
-
-            NavigationView {
+            List {
                 NavigationLink(
                     destination: SavedScanDetailAdvanced(model: self.model)
                 ) {
                     HStack {
                         Text("Advanced")
-                        Spacer()
                     }
                 }
                 NavigationLink(
@@ -49,7 +46,13 @@ struct SavedScanDetail: View {
                 ) {
                     HStack {
                         Text("3D Render")
-                        Spacer()
+                    }
+                }
+                NavigationLink(
+                    destination: ProjectedMiniWorldRender(scan: self.model.scan)
+                ) {
+                    HStack {
+                        Text("Projected Render")
                     }
                 }
                 NavigationLink(
@@ -57,7 +60,6 @@ struct SavedScanDetail: View {
                 ) {
                     HStack {
                         Text("Map Render")
-                        Spacer()
                     }
                 }
             }
