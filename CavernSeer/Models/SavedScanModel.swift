@@ -25,24 +25,6 @@ struct SavedScanModel: Identifiable {
         self.url = url
         id = url.lastPathComponent
 
-        // TEMP: for importing from TabbedAppExperiment
-        NSKeyedUnarchiver.setClass(
-            ScanFile.self,
-            forClassName: "TabbedAppExperiment.ScanFile"
-        )
-        NSKeyedUnarchiver.setClass(
-            SurveyStation.self,
-            forClassName: "TabbedAppExperiment.SurveyStation"
-        )
-        NSKeyedUnarchiver.setClass(
-            SurveyLine.self,
-            forClassName: "TabbedAppExperiment.SurveyLine"
-        )
-        NSKeyedUnarchiver.setClass(
-            SnapshotAnchor.self,
-            forClassName: "TabbedAppExperiment.SnapshotAnchor"
-        )
-
         do {
             let data = try Data(contentsOf: url)
             self.fileSize = Int64(data.count)

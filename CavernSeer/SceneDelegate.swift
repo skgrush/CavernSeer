@@ -66,6 +66,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("contexts: \(URLContexts.description)")
 
         let scanStore = ScanStore()
+        scanStore.update()
 
         var successes: [URL] = []
         var failures: [URL:String] = [:]
