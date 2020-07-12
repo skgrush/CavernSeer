@@ -1,4 +1,4 @@
-<img src="docs/icon/icon-167.png" align="right">
+<img src="/CavernSeer/Assets.xcassets/AppIcon.appiconset/icon-167.png" align="right">
 
 #  CavernSeer [PROTOTYPING]
 > An iPadOS application for scanning 3D spaces
