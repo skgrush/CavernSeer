@@ -34,7 +34,7 @@ struct SavedScanListScrollView: UIViewRepresentable {
         let idealSize = min(height, width) - 100
         let uiHost = UIHostingController(rootView: SavedScanListView())
         // context.coordinator.uiHost = uiHost
-        uiHost.view.frame = CGRect(x: 0, y: 0, width: width, height: idealSize)
+        uiHost.view.frame = CGRect(x: 0, y: 0, width: 333, height: idealSize)
 
         control.addSubview(uiHost.view)
 

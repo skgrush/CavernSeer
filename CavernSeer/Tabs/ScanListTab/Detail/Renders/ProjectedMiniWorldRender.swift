@@ -13,8 +13,11 @@ struct ProjectedMiniWorldRender: View {
 
     var scan: ScanFile
 
+    var color: Color?
+
     private var sceneNodes: [SCNNode] {
-        scan.toSCNNodes()
+        let uiColor: UIColor = color == nil ? .clear : UIColor(color!)
+        return scan.toSCNNodes(color: uiColor)
     }
 
     var offset: SCNVector3 {
@@ -22,8 +25,20 @@ struct ProjectedMiniWorldRender: View {
         return SCNVector3Make(-center.x, -center.y, -center.z)
     }
 
+    @State
+    private var height: Int = 0
+
     var body: some View {
-        ProjectedMiniWorldRenderController(sceneNodes: sceneNodes)
+        VStack {
+            ProjectedMiniWorldRenderController(
+                sceneNodes: sceneNodes,
+                height: $height
+            )
+            HStack {
+                Stepper("Height: \(height)m", value: $height)
+                    .frame(maxWidth: 150)
+            }
+        }
     }
 }
 
@@ -32,9 +47,15 @@ final class ProjectedMiniWorldRenderController :
 
     let sceneView = SCNView(frame: .zero)
     let sceneNodes: [SCNNode]
+    // let offset: SCNVector3
+    @Binding
+    var height: Int
 
-    init(sceneNodes: [SCNNode]) {
+    init(sceneNodes: [SCNNode], height: Binding<Int>) {
         self.sceneNodes = sceneNodes
+        // self.offset = offset
+        _height = height
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -43,9 +64,10 @@ final class ProjectedMiniWorldRenderController :
         fatalError("init(coder:) has not been implemented")
     }
 
-
     func makeUIView(context: Context) -> SCNView {
-        sceneView.scene = makeaScene()
+        let (scene, cameraNode) = makeaScene()
+        sceneView.scene = scene
+        sceneView.pointOfView = cameraNode
 
         sceneView.showsStatistics = true
 
@@ -60,14 +82,22 @@ final class ProjectedMiniWorldRenderController :
     }
 
     func updateUIView(_ uiView: SCNView, context: Context) {
+        let pov = uiView.pointOfView
+        if pov != nil {
+            let pos = pov!.position
+            let move = SCNAction.moveBy(x: 0, y: CGFloat(Float(height) - pos.y), z: 0, duration: 0)
+            pov!.runAction(move)
+        }
     }
 
-    private func makeaScene() -> SCNScene {
+    private func makeaScene() -> (SCNScene, SCNNode) {
         let scene = SCNScene()
 
         let camera = SCNCamera()
         camera.usesOrthographicProjection = true
-        camera.orthographicScale = 8
+        camera.orthographicScale = 16
+        camera.zNear = 0.1
+        camera.zFar = 1000
 
         let cameraNode = SCNNode()
         cameraNode.camera = camera
@@ -88,6 +118,6 @@ final class ProjectedMiniWorldRenderController :
         ambientLightNode.light!.color = UIColor.red
         scene.rootNode.addChildNode(ambientLightNode)
 
-        return scene
+        return (scene, cameraNode)
     }
 }
