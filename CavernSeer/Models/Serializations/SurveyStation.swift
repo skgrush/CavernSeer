@@ -12,18 +12,28 @@ import ARKit
 final class SurveyStation: NSObject, NSSecureCoding {
     static var supportsSecureCoding: Bool { true }
 
+    let name: String
     let identifier: UUID
     let transform: float4x4
 
-    init(entity: SurveyStationEntity) {
+    init(entity: SurveyStationEntity, name: String? = nil) {
         guard
             let anchor = entity.anchor,
             let identifier = anchor.anchorIdentifier
         else {
             fatalError("SurveyStationEntity has no anchor")
         }
+
+        self.name = name ?? identifier.uuidString
         self.identifier = identifier
         self.transform = entity.transform.matrix
+    }
+
+    init(rename other: SurveyStation, to: String) {
+
+        self.name = to
+        self.identifier = other.identifier
+        self.transform = other.transform
     }
 
     required init?(coder decoder: NSCoder) {
@@ -32,6 +42,13 @@ final class SurveyStation: NSObject, NSSecureCoding {
             forKey: PropertyKeys.identifier)! as UUID
         self.transform =
             decoder.decode_simd_float4x4(prefix: PropertyKeys.transform)
+        if decoder.containsValue(forKey: PropertyKeys.name) {
+            self.name = decoder.decodeObject(
+                forKey: PropertyKeys.name
+            ) as! String
+        } else {
+            self.name = self.identifier.uuidString
+        }
     }
 
     func encode(with coder: NSCoder) {
@@ -50,12 +67,14 @@ extension SurveyStation {
         geo.materials = [material]
 
         let node = SCNNode(geometry: geo)
+        node.name = self.name
         node.simdTransform = self.transform
         return node
     }
 }
 
 fileprivate struct PropertyKeys {
+    static let name = "name"
     static let identifier = "identifier"
     static let transform = "transform"
 }

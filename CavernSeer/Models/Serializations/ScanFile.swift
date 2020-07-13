@@ -10,14 +10,18 @@ import Foundation
 import ARKit
 
 final class ScanFile : NSObject, NSSecureCoding {
-    static var supportsSecureCoding: Bool {
-        true
-    }
+    static let supportsSecureCoding: Bool = true
+    static let dateFormatter: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate, .withFullTime]
+        return f
+    }()
     static var currentEncodingVersion: Int32 { 1 }
 
     let encodingVersion: Int32
 
     let timestamp: Date
+    let name: String
     let center: simd_float3
     let extent: simd_float3
     let meshAnchors: [ARMeshAnchor]
@@ -29,6 +33,7 @@ final class ScanFile : NSObject, NSSecureCoding {
 
     init(
         map: ARWorldMap,
+        name: String? = nil,
         startSnap: SnapshotAnchor?,
         endSnap: SnapshotAnchor?,
         date: Date?,
@@ -38,6 +43,7 @@ final class ScanFile : NSObject, NSSecureCoding {
         self.encodingVersion = ScanFile.currentEncodingVersion
 
         self.timestamp = date ?? Date()
+        self.name = ScanFile.dateFormatter.string(from: self.timestamp)
         self.center = map.center
         self.extent = map.extent
         // pull out only the ARMeshAnchors
@@ -78,6 +84,14 @@ final class ScanFile : NSObject, NSSecureCoding {
                 decoder.decode_simd_float3(prefix: PropertyKeys.extent)
             self.meshAnchors = meshAnchors
 
+            if decoder.containsValue(forKey: PropertyKeys.name) {
+                self.name = decoder.decodeObject(
+                    forKey: PropertyKeys.name
+                ) as! String
+            } else {
+                self.name = ScanFile.dateFormatter.string(from: self.timestamp)
+            }
+
             if decoder.containsValue(forKey: PropertyKeys.startSnapshot) {
                 self.startSnapshot = decoder.decodeObject(
                     of: SnapshotAnchor.self,
@@ -116,8 +130,33 @@ final class ScanFile : NSObject, NSSecureCoding {
         }
     }
 
+
+    internal init(
+        name: String? = nil,
+        center: simd_float3,
+        extent: simd_float3,
+        meshAnchors: [ARMeshAnchor],
+        startSnapshot: SnapshotAnchor?,
+        endSnapshot: SnapshotAnchor?,
+        stations: [SurveyStation],
+        lines: [SurveyLine]
+    ) {
+        self.encodingVersion = ScanFile.currentEncodingVersion
+        let timestamp = Date()
+        self.timestamp = timestamp
+        self.name = name ?? ScanFile.dateFormatter.string(from: timestamp)
+        self.center = center
+        self.extent = extent
+        self.meshAnchors = meshAnchors
+        self.startSnapshot = startSnapshot
+        self.endSnapshot = endSnapshot
+        self.stations = stations
+        self.lines = lines
+    }
+
     func encode(with coder: NSCoder) {
         coder.encode(encodingVersion, forKey: PropertyKeys.version)
+        coder.encode(name, forKey: PropertyKeys.name)
         coder.encode(timestamp, forKey: PropertyKeys.timestamp)
         coder.encode(center, forPrefix: PropertyKeys.center)
         coder.encode(extent, forPrefix: PropertyKeys.extent)
@@ -134,6 +173,7 @@ final class ScanFile : NSObject, NSSecureCoding {
         self.encodingVersion = ScanFile.currentEncodingVersion
 
         self.timestamp = Date()
+        self.name = ScanFile.dateFormatter.string(from: self.timestamp)
         self.center = simd_make_float3(0)
         self.extent = simd_make_float3(0)
         self.meshAnchors = []
@@ -151,6 +191,7 @@ final class ScanFile : NSObject, NSSecureCoding {
 
 fileprivate struct PropertyKeys {
     static let version = "version"
+    static let name = "name"
     static let timestamp = "timestamp"
     static let center = "center"
     static let extent = "extent"
