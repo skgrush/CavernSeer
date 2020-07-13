@@ -36,31 +36,31 @@ extension ScanFile {
         return meshAnchorNodes + lineNodes + stationNodes
     }
 
-    func toSK3DNode() -> SKNode {
-        let scnScene = SCNScene()
-
-        let scnNodes = self.toSCNNodes()
-        scnNodes.forEach { node in scnScene.rootNode.addChildNode(node) }
-
-        let camera = SCNCamera()
-        camera.usesOrthographicProjection = true
-        camera.orthographicScale = 50
-//        camera.zNear = 0
-        camera.zFar = 8
-
-        let cameraNode = SCNNode()
-        cameraNode.camera = camera
-        /// position above
-        cameraNode.position = SCNVector3(x: 0, y: 0, z: 5000)
-        /// look down
-        // cameraNode.eulerAngles = SCNVector3Make(.pi / -2, 0, 0)
-
-        let node3d = SK3DNode(viewportSize: CGSize(width: 2000, height: 2000))
-        node3d.scnScene = scnScene
-        node3d.pointOfView = cameraNode
-
-        return node3d
-    }
+//    func toSK3DNode(color: UIColor? = .clear) -> SKNode {
+//        let scnScene = SCNScene()
+//
+//        let scnNodes = self.toSCNNodes(color: color)
+//        scnNodes.forEach { node in scnScene.rootNode.addChildNode(node) }
+//
+//        let camera = SCNCamera()
+//        camera.usesOrthographicProjection = true
+//        camera.orthographicScale = 50
+////        camera.zNear = 0
+//        camera.zFar = 8
+//
+//        let cameraNode = SCNNode()
+//        cameraNode.camera = camera
+//        /// position above
+//        cameraNode.position = SCNVector3(x: 0, y: 0, z: 5000)
+//        /// look down
+//        // cameraNode.eulerAngles = SCNVector3Make(.pi / -2, 0, 0)
+//
+//        let node3d = SK3DNode(viewportSize: CGSize(width: 2000, height: 2000))
+//        node3d.scnScene = scnScene
+//        node3d.pointOfView = cameraNode
+//
+//        return node3d
+//    }
 }
 
 fileprivate func meshGeometryToNode(

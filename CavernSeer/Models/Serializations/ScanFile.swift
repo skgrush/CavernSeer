@@ -31,7 +31,7 @@ final class ScanFile : NSObject, NSSecureCoding {
     let stations: [SurveyStation]
     let lines: [SurveyLine]
 
-    init(
+    convenience init(
         map: ARWorldMap,
         name: String? = nil,
         startSnap: SnapshotAnchor?,
@@ -40,21 +40,19 @@ final class ScanFile : NSObject, NSSecureCoding {
         stations: [SurveyStationEntity],
         lines: [SurveyLineEntity]
     ) {
-        self.encodingVersion = ScanFile.currentEncodingVersion
-
-        self.timestamp = date ?? Date()
-        self.name = ScanFile.dateFormatter.string(from: self.timestamp)
-        self.center = map.center
-        self.extent = map.extent
-        // pull out only the ARMeshAnchors
-        self.meshAnchors = map.anchors.compactMap {
-            $0 is ARMeshAnchor ? $0 as? ARMeshAnchor : nil
-        }
-        self.startSnapshot = startSnap
-        self.endSnapshot = endSnap
-
-        self.stations = stations.map { SurveyStation(entity: $0) }
-        self.lines = lines.map { SurveyLine(entity: $0) }
+        self.init(
+            timestamp: date ?? Date(),
+            center: map.center,
+            extent: map.extent,
+            /// pull out only the *true* ARMeshAnchors
+            meshAnchors: map.anchors.compactMap {
+                $0 is ARMeshAnchor ? $0 as? ARMeshAnchor : nil
+            },
+            startSnapshot: startSnap,
+            endSnapshot: endSnap,
+            stations: stations.map { SurveyStation(entity: $0) },
+            lines: lines.map { SurveyLine(entity: $0) }
+        )
     }
 
     required init?(coder decoder: NSCoder) {
@@ -133,6 +131,7 @@ final class ScanFile : NSObject, NSSecureCoding {
 
     internal init(
         name: String? = nil,
+        timestamp: Date = Date(),
         center: simd_float3,
         extent: simd_float3,
         meshAnchors: [ARMeshAnchor],
@@ -142,7 +141,6 @@ final class ScanFile : NSObject, NSSecureCoding {
         lines: [SurveyLine]
     ) {
         self.encodingVersion = ScanFile.currentEncodingVersion
-        let timestamp = Date()
         self.timestamp = timestamp
         self.name = name ?? ScanFile.dateFormatter.string(from: timestamp)
         self.center = center
