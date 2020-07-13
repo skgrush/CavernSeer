@@ -13,13 +13,14 @@ struct SavedScanListView: View {
     @EnvironmentObject
     var scanStore: ScanStore
 
-    @State
-    private var selection: URL? = nil
+    @Binding
+    var editMode: EditMode
+
     @State
     private var showShare = false
 
     var body: some View {
-        List {
+        List(selection: $scanStore.selection) {
             ForEach(scanStore.modelData) {
                 model
                 in
@@ -29,8 +30,23 @@ struct SavedScanListView: View {
             }
             .onDelete(perform: delete)
         }
+        .environment(\.editMode, self.$editMode)
         .navigationTitle("Scan List")
-        .navigationBarItems(trailing: EditButton())
+        .navigationBarItems(trailing: editButton)
+    }
+
+    private var editButton: some View {
+        let newMode: EditMode = self.editMode == .inactive ? .active : .inactive
+        return Button(action: {
+            self.scanStore.selection.removeAll()
+            self.editMode = newMode
+        }, label: {
+            Text(
+                newMode == .inactive
+                    ? "Done"
+                    : "Edit"
+            )
+        })
     }
 
     func delete(at offset: IndexSet) {
@@ -41,10 +57,11 @@ struct SavedScanListView: View {
     }
 }
 
-#if DEBUG
-struct SavedScanListView_Previews: PreviewProvider {
-    static var previews: some View {
-        SavedScanListView()
-    }
-}
-#endif
+//#if DEBUG
+//struct SavedScanListView_Previews: PreviewProvider {
+//    static var previews: some View {
+//
+//        SavedScanListView(editMode: Binding()
+//    }
+//}
+//#endif

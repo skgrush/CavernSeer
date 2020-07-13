@@ -12,7 +12,7 @@ import ARKit
 /**
     Readonly model of a saved scan ready in from a file.
  */
-struct SavedScanModel: Identifiable {
+struct SavedScanModel: Identifiable, Hashable {
     /// the file basename, e.g. `scan_\(ISO8601-timestamp).arscanfile`
     let id: String
     /// the URL the file was read from

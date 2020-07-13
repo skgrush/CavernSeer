@@ -14,6 +14,9 @@ class ScanStore : ObservableObject {
     @Published
     var modelData: [SavedScanModel]
 
+    @Published
+    var selection = Set<String>()
+
     var scanDirectory: URL
 
     private let fileManager = FileManager.default

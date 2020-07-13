@@ -16,6 +16,9 @@ struct SavedScanListScrollView: UIViewRepresentable {
     @EnvironmentObject
     var scanStore: ScanStore
 
+    @Binding
+    var editMode: EditMode
+
     func makeCoordinator() -> Coordinator {
         Coordinator(modelData: scanStore, height: height)
     }
@@ -32,7 +35,9 @@ struct SavedScanListScrollView: UIViewRepresentable {
         context.coordinator.height = height
 
         let idealSize = min(height, width) - 100
-        let uiHost = UIHostingController(rootView: SavedScanListView())
+        let uiHost = UIHostingController(
+            rootView: SavedScanListView(editMode: $editMode)
+        )
         // context.coordinator.uiHost = uiHost
         uiHost.view.frame = CGRect(x: 0, y: 0, width: 333, height: idealSize)
 

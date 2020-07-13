@@ -25,16 +25,44 @@ struct ScanListTabView: View {
     @EnvironmentObject
     var scanStore: ScanStore
 
+    @State
+    private var editMode = EditMode.inactive
+
+    @State
+    private var showMergeTool = false
+
     var body: some View {
         GeometryReader {
             geometry in
             NavigationView {
                 SavedScanListScrollView(
                     width: geometry.size.width,
-                    height: geometry.size.height
+                    height: geometry.size.height,
+                    editMode: $editMode
                 )
+                .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        Button(
+                            action: { self.deleteSelected() },
+                            label: { Image(systemName: "trash") }
+                        )
+                        .disabled(self.scanStore.selection.isEmpty)
+                    }
+                }
+                .environment(\.editMode, self.$editMode)
             }
         }
+    }
+
+    func deleteSelected() {
+        let ids = scanStore.selection
+        scanStore.selection.removeAll()
+
+        scanStore.modelData
+            .filter { ids.contains($0.id) }
+            .forEach { self.scanStore.deleteFile(model: $0) }
+
+        scanStore.update()
     }
 }
 
