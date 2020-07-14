@@ -16,7 +16,7 @@ final class ScanFile : NSObject, NSSecureCoding {
         f.formatOptions = [.withFullDate, .withFullTime]
         return f
     }()
-    static var currentEncodingVersion: Int32 { 1 }
+    static let currentEncodingVersion: Int32 = 1
 
     let encodingVersion: Int32
 
