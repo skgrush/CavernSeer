@@ -8,34 +8,28 @@
 
 import SwiftUI
 
-
 struct ContentView: View {
     @State private var selection: Tabs = Tabs.ScanListTab
 
-    var scanner = ScannerTab()
-    var scanList = ScanListTab()
+    let tabs: [TabProtocol] = [
+        ProjectListTab(),
+        ScanListTab(),
+        ScannerTab()
+    ]
  
     var body: some View {
         TabView(selection: $selection){
 
-            scanList.tabPanelView()
-                .tabItem {
-                    VStack {
-                        scanList.tabImage
-                        Text(scanList.tabName)
+            ForEach(tabs, id: \.tab) {
+                tab in
+                tab.tabPanelView
+                    .tabItem {
+                        VStack {
+                            tab.tabImage
+                            Text(tab.tabName)
+                        }
                     }
-                }
-                .tag(scanList.tab)
-
-            scanner.tabPanelView()
-                .tabItem {
-                    VStack {
-                        scanner.tabImage
-                        Text(scanner.tabName)
-                    }
-                }
-                .tag(scanner.tab)
-
+            }
         }
     }
 }

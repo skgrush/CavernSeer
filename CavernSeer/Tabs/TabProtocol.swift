@@ -12,12 +12,11 @@ import SwiftUI
 
 
 protocol TabProtocol {
-    associatedtype ViewType: View
 
     // var tabPanelView: ViewType { get }
     var tab: Tabs { get }
     var tabName: String { get }
     var tabImage: Image { get }
 
-    func tabPanelView() -> ViewType
+    var tabPanelView: AnyView { get }
 }

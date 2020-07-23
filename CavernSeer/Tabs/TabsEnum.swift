@@ -11,4 +11,5 @@ import Foundation
 enum Tabs {
     case ScanTab
     case ScanListTab
+    case ProjectListTab
 }

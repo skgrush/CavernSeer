@@ -9,14 +9,12 @@
 import SwiftUI
 
 final class ScannerTab : TabProtocol {
-    typealias ViewType = ScannerTabView
-
     var tab: Tabs = Tabs.ScanTab
     var tabName = "Scanner"
     var tabImage: Image { Image(systemName: "camera.viewfinder") }
 
-    func tabPanelView() -> ScannerTabView {
-        ScannerTabView()
+    var tabPanelView: AnyView {
+        AnyView(ScannerTabView())
     }
 }
 
