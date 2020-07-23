@@ -131,7 +131,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
                 lines: lines)
 
             do {
-                try scanStore.saveScanFile(scanFile: scanFile)
+                try scanStore.saveFile(file: scanFile)
                 self.message = "Save successful!"
             } catch {
                 self.message = "Error: \(error.localizedDescription)"

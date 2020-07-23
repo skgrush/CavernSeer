@@ -9,7 +9,7 @@
 import Foundation
 import ARKit
 
-final class ScanFile : NSObject, NSSecureCoding {
+final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     static let supportsSecureCoding: Bool = true
     static let dateFormatter: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter()
@@ -165,6 +165,8 @@ final class ScanFile : NSObject, NSSecureCoding {
         coder.encode(stations as NSArray, forKey: PropertyKeys.stations)
         coder.encode(lines as NSArray, forKey: PropertyKeys.lines)
     }
+
+    func getTimestamp() -> Date { timestamp }
 
     #if DEBUG
     init(debugInit: Any?) {

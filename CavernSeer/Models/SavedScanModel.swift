@@ -12,8 +12,8 @@ import ARKit
 /**
     Readonly model of a saved scan ready in from a file.
  */
-struct SavedScanModel: Identifiable, Hashable {
-    /// the file basename, e.g. `scan_\(ISO8601-timestamp).arscanfile`
+struct SavedScanModel: Identifiable, Hashable, SavedStoredFileProtocol {
+    /// the file basename, e.g. `scan_\(ISO8601-timestamp)`
     let id: String
     /// the URL the file was read from
     let url: URL
@@ -23,7 +23,7 @@ struct SavedScanModel: Identifiable, Hashable {
 
     init(url: URL) {
         self.url = url
-        id = url.lastPathComponent
+        id = url.deletingPathExtension().lastPathComponent
 
         do {
             let data = try Data(contentsOf: url)
@@ -39,6 +39,8 @@ struct SavedScanModel: Identifiable, Hashable {
                        "got error: \(error.localizedDescription)")
         }
     }
+
+    func getURL() -> URL { url }
 
     #if DEBUG
     // Debug Initializer

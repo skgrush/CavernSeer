@@ -8,8 +8,14 @@
 
 import Foundation
 
-class ScanStore : ObservableObject {
-    let fileExtension = "arscanfile"
+final class ScanStore : StoreProtocol {
+    typealias FileType = ScanFile
+    typealias ModelType = SavedScanModel
+
+    var directoryName: String { "scans" }
+    var filePrefix: String { "scan" }
+    var fileExtension: String { "arscanfile" }
+    var directory: URL!
 
     @Published
     var modelData: [SavedScanModel]
@@ -17,95 +23,13 @@ class ScanStore : ObservableObject {
     @Published
     var selection = Set<String>()
 
-    var scanDirectory: URL
-
-    private let fileManager = FileManager.default
-    private let dateFormatter = ISO8601DateFormatter()
+    internal var fileManager = FileManager.default
+    internal var dateFormatter = ISO8601DateFormatter()
 
     init(data: [SavedScanModel] = []) {
         modelData = data
 
-        do {
-            self.scanDirectory = try
-                fileManager
-                    .url(for: .documentDirectory,
-                         in: .userDomainMask,
-                         appropriateFor: nil,
-                         create: true)
-        } catch {
-            fatalError("Could not resolve scanDirectory URL; " +
-                       "\(error.localizedDescription)")
-        }
-    }
-
-    func update(urls: [URL]? = nil) {
-        let newURLs = urls ?? getDirectoryURLs()
-
-        let cachedURLs = modelData.map { scan in scan.url }
-
-        let difference = newURLs.difference(from: cachedURLs)
-
-        for change in difference {
-            switch change {
-                case let .remove(offset, _, _):
-                    modelData.remove(at: offset)
-                case let .insert(offset, url, _):
-                    let newDatum = SavedScanModel(url: url)
-                    modelData.insert(newDatum, at: offset)
-            }
-        }
-    }
-
-    func saveScanFile(scanFile: ScanFile) throws {
-        let newSaveURL = getSaveURL(scanFile: scanFile)
-
-        let data = try NSKeyedArchiver.archivedData(
-            withRootObject: scanFile,
-            requiringSecureCoding: true)
-        try data.write(to: newSaveURL, options: [.atomic])
-    }
-
-    func deleteFile(model: SavedScanModel) {
-        let index = modelData.firstIndex(where: { $0.url == model.url })
-        if index != nil {
-            do {
-                try fileManager.removeItem(at: model.url)
-            } catch {
-                fatalError("Deletion failed: \(error.localizedDescription)")
-            }
-            modelData.remove(at: index!)
-        } else {
-            fatalError("Model not found in modelData")
-        }
-    }
-
-    private func getDirectoryURLs() -> [URL] {
-        do {
-            let contents = try FileManager.default
-                .contentsOfDirectory(
-                    at: scanDirectory,
-                    includingPropertiesForKeys: nil
-                )
-
-            return contents
-                .filter { url in url.pathExtension == fileExtension }
-                .sorted(by: { (url1, url2) -> Bool in
-                    url1
-                        .absoluteString
-                        .lexicographicallyPrecedes(url2.absoluteString)
-                })
-        } catch {
-            fatalError("Could not resolve directory contents")
-        }
-    }
-
-    private func getSaveURL(scanFile: ScanFile) -> URL {
-        dateFormatter.timeZone = TimeZone.current
-        let dateString = dateFormatter.string(from: scanFile.timestamp)
-
-        return scanDirectory
-            .appendingPathComponent("scan_\(dateString)")
-            .appendingPathExtension(fileExtension)
+        directory = getOrCreateDirectory()
     }
 }
 

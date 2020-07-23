@@ -20,10 +20,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         let scanStore = ScanStore()
+        let projectStore = ProjectStore()
 
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView()
             .environmentObject(scanStore)
+            .environmentObject(projectStore)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
@@ -80,7 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 failures[url] = "Already exists in store"
             } else {
                 do {
-                    try scanStore.saveScanFile(scanFile: model.scan)
+                    try scanStore.saveFile(file: model.scan)
                     successes.append(url)
                 } catch {
                     failures[url] = error.localizedDescription

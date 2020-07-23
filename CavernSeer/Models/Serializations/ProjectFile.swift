@@ -9,7 +9,7 @@
 import Foundation
 import ARKit
 
-final class ProjectFile : NSSecureCoding {
+final class ProjectFile : NSObject, StoredFileProtocol {
     static let supportsSecureCoding: Bool = true
     static let currentEncodingVersion: Int32 = 1
 
@@ -49,6 +49,8 @@ final class ProjectFile : NSSecureCoding {
         coder.encode(name, forKey: PropertyKeys.name)
         coder.encode(scans as NSArray, forKey: PropertyKeys.scans)
     }
+
+    func getTimestamp() -> Date { timestamp }
 
     private struct PropertyKeys {
         static let version = "version"
