@@ -15,12 +15,18 @@ struct ProjectedMiniWorldRender: View {
 
     var color: Color?
 
+    @Binding
+    var selection: SurveyStation?
+
+    @State
+    private var prevSelection: SurveyStation?
+
     private var sceneNodes: [SCNNode] {
         let uiColor: UIColor = color == nil ? .clear : UIColor(color!)
         return scan.toSCNNodes(color: uiColor)
     }
 
-    var offset: SCNVector3 {
+    private var offset: SCNVector3 {
         let center = scan.center
         return SCNVector3Make(-center.x, -center.y, -center.z)
     }
@@ -32,7 +38,9 @@ struct ProjectedMiniWorldRender: View {
         VStack {
             ProjectedMiniWorldRenderController(
                 sceneNodes: sceneNodes,
-                height: $height
+                height: $height,
+                selection: $selection,
+                prevSelection: $prevSelection
             )
             HStack {
                 Stepper("Height: \(height)m", value: $height)
@@ -45,16 +53,32 @@ struct ProjectedMiniWorldRender: View {
 final class ProjectedMiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
+    static let defaultColor: UIColor = .gray
+    static let selectedColor: UIColor = .blue
+
     let sceneView = SCNView(frame: .zero)
     let sceneNodes: [SCNNode]
     // let offset: SCNVector3
+
     @Binding
     var height: Int
+    @Binding
+    var selectedStation: SurveyStation?
 
-    init(sceneNodes: [SCNNode], height: Binding<Int>) {
+    @Binding
+    var prevSelected: SurveyStation?
+
+    init(
+        sceneNodes: [SCNNode],
+        height: Binding<Int>,
+        selection: Binding<SurveyStation?>,
+        prevSelection: Binding<SurveyStation?>
+    ) {
         self.sceneNodes = sceneNodes
         // self.offset = offset
         _height = height
+        _selectedStation = selection
+        _prevSelected = prevSelection
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -87,6 +111,36 @@ final class ProjectedMiniWorldRenderController :
             let pos = pov!.position
             let move = SCNAction.moveBy(x: 0, y: CGFloat(Float(height) - pos.y), z: 0, duration: 0)
             pov!.runAction(move)
+        }
+
+        if selectedStation != prevSelected {
+            updateSelection(uiView: uiView)
+        }
+    }
+
+    private func updateSelection(uiView: SCNView) {
+        guard let scene = uiView.scene else { return }
+
+        if prevSelected != nil {
+            let previousNode = scene.rootNode.childNode(
+                withName: prevSelected!.identifier.uuidString,
+                recursively: false
+            )
+            previousNode?.geometry?.firstMaterial?.diffuse.contents =
+                ProjectedMiniWorldRenderController.defaultColor
+        }
+
+        if selectedStation != nil {
+            let node = scene.rootNode.childNode(
+                withName: selectedStation!.identifier.uuidString,
+                recursively: false
+            )
+            node?.geometry?.firstMaterial?.diffuse.contents =
+                ProjectedMiniWorldRenderController.selectedColor
+        }
+
+        DispatchQueue.main.async {
+            self.prevSelected = self.selectedStation
         }
     }
 
