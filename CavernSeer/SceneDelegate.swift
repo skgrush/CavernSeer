@@ -13,6 +13,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    var contentView: ContentView?
+    var fileOpener: FileOpener?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -21,16 +23,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let scanStore = ScanStore()
         let projectStore = ProjectStore()
+        let fileOpener = FileOpener(scanStore, projectStore)
+        self.fileOpener = fileOpener
 
         // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView()
+        self.contentView = ContentView()
+        let contentViewContext = self.contentView
             .environmentObject(scanStore)
             .environmentObject(projectStore)
+            .environmentObject(fileOpener)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: contentView)
+            window.rootViewController = UIHostingController(
+                rootView: contentViewContext
+            )
             self.window = window
             window.makeKeyAndVisible()
         }
@@ -64,33 +72,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+    /**
+     Open file by URL
+     */
+    func scene(
+        _ scene: UIScene,
+        openURLContexts URLContexts: Set<UIOpenURLContext>
+    ) {
         print("contexts: \(URLContexts.description)")
 
-        let scanStore = ScanStore()
-        scanStore.update()
-
-        var successes: [URL] = []
-        var failures: [URL:String] = [:]
-
-        for context in URLContexts {
-            let url = context.url
-
-            let model = SavedScanModel(url: url)
-
-            if scanStore.modelData.contains(where: { $0.id == model.id }) {
-                failures[url] = "Already exists in store"
-            } else {
-                do {
-                    try scanStore.saveFile(file: model.scan)
-                    successes.append(url)
-                } catch {
-                    failures[url] = error.localizedDescription
-                }
-            }
-        }
-
-        // TODO: notify of successes/failures
+        let urls = URLContexts.map { $0.url }
+        self.fileOpener?.openURLs(urls: urls)
     }
 
 }

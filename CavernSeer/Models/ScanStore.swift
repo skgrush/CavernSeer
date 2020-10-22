@@ -23,6 +23,9 @@ final class ScanStore : StoreProtocol {
     @Published
     var selection = Set<String>()
 
+    @Published
+    var visibleScan: URL?
+
     internal var fileManager = FileManager.default
     internal var dateFormatter = ISO8601DateFormatter()
 

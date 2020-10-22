@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selection: Tabs = Tabs.ScanListTab
+    @EnvironmentObject var scanStore: ScanStore
+    @EnvironmentObject var fileOpener: FileOpener
 
     let tabs: [TabProtocol] = [
         ProjectListTab(),
@@ -30,6 +32,60 @@ struct ContentView: View {
                         }
                     }
             }
+        }
+        // TODO
+        .sheet(isPresented: $fileOpener.showOpenResults) {
+            if (fileOpener.openSuccesses?.count ?? 0 > 0 &&
+                    fileOpener.openFailures?.count ?? 0 == 0
+            ) {
+                /// success-state view
+                VStack {
+                    Text("Successful import!")
+                    List(Array(fileOpener.openSuccesses!.keys), id: \.self) {
+                        url
+                        in
+                        Button(action: { openFile(url: url) }) {
+                            Text(url.lastPathComponent)
+                        }
+                    }
+                }
+            } else if fileOpener.openFailures != nil {
+                /// failure-state view
+                VStack {
+                    List(
+                        Array((fileOpener.openSuccesses ?? [:]).keys),
+                        id: \.self
+                    ) {
+                        url
+                        in
+                        Text("\(url.lastPathComponent): successful open")
+                    }
+                    List(Array(fileOpener.openFailures!.keys), id: \.self) {
+                        url
+                        in
+                        Text("\(url.lastPathComponent): " +
+                             (fileOpener.openFailures![url] ?? ""))
+                    }
+                }
+            } else {
+                VStack {
+                    Text("Unknown issue opening files")
+                }
+            }
+        }
+    }
+
+
+    private func openFile(url: URL) {
+        self.fileOpener.showOpenResults = false
+        let type = self.fileOpener.openSuccesses![url]!
+
+        switch (type) {
+            case .project:
+                self.selection = .ProjectListTab
+            case .scan:
+                self.selection = .ScanListTab
+                self.scanStore.visibleScan = url
         }
     }
 }

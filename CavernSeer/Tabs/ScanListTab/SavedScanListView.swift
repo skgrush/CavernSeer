@@ -24,7 +24,11 @@ struct SavedScanListView: View {
             ForEach(scanStore.modelData) {
                 model
                 in
-                NavigationLink(destination: SavedScanDetail(model: model)) {
+                NavigationLink(
+                    destination: SavedScanDetail(model: model),
+                    tag: model.url,
+                    selection: $scanStore.visibleScan
+                ) {
                     SavedScanRow(model: model)
                 }
             }
