@@ -14,7 +14,7 @@ final class ScanStore : StoreProtocol {
 
     var directoryName: String { "scans" }
     var filePrefix: String { "scan" }
-    var fileExtension: String { "arscanfile" }
+    var fileExtension: String { FileType.fileExtension }
     var directory: URL!
 
     @Published

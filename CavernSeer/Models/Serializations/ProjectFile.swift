@@ -10,6 +10,8 @@ import Foundation
 import ARKit
 
 final class ProjectFile : NSObject, StoredFileProtocol {
+    static var fileExtension: String = "cavernseerproj"
+
     static let supportsSecureCoding: Bool = true
     static let currentEncodingVersion: Int32 = 1
 
@@ -28,23 +30,30 @@ final class ProjectFile : NSObject, StoredFileProtocol {
     }
 
     required init?(coder decoder: NSCoder) {
-        self.encodingVersion = decoder.decodeInt32(forKey: PropertyKeys.version)
-        self.timestamp = decoder.decodeObject(
-            of: NSDate.self,
-            forKey: PropertyKeys.timestamp
-        )! as Date
-        self.name = decoder.decodeObject(
-            of: NSString.self,
-            forKey: PropertyKeys.name
-        )! as String
-        self.scans = decoder.decodeObject(
-            of: [NSArray.self, ProjectScanRelation.self],
-            forKey: PropertyKeys.scans
-        ) as! [ProjectScanRelation]
+        let version = decoder.decodeInt32(forKey: PropertyKeys.version)
+        self.encodingVersion = version
+
+        if (version == 1) {
+            self.timestamp = decoder.decodeObject(
+                of: NSDate.self,
+                forKey: PropertyKeys.timestamp
+            )! as Date
+            self.name = decoder.decodeObject(
+                of: NSString.self,
+                forKey: PropertyKeys.name
+            )! as String
+            self.scans = decoder.decodeObject(
+                of: [NSArray.self, ProjectScanRelation.self],
+                forKey: PropertyKeys.scans
+            ) as! [ProjectScanRelation]
+        } else {
+            fatalError("Unexpected encoding version \(version)")
+        }
     }
 
     func encode(with coder: NSCoder) {
-        coder.encode(encodingVersion, forKey: PropertyKeys.version)
+        coder.encode(ProjectFile.currentEncodingVersion,
+                     forKey: PropertyKeys.version)
         coder.encode(timestamp, forKey: PropertyKeys.timestamp)
         coder.encode(name, forKey: PropertyKeys.name)
         coder.encode(scans as NSArray, forKey: PropertyKeys.scans)

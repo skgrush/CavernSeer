@@ -14,7 +14,7 @@ final class ProjectStore : StoreProtocol {
 
     var directoryName: String { "projects" }
     var filePrefix: String { "proj" }
-    var fileExtension: String { "cavernseerproj" }
+    var fileExtension: String { FileType.fileExtension }
     var directory: URL!
 
     @Published

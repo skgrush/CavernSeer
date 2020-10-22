@@ -9,17 +9,23 @@
 import Foundation
 
 protocol StoredFileProtocol : NSObject, NSSecureCoding {
+    static var fileExtension: String { get }
     func getTimestamp() -> Date
 }
 
 protocol SavedStoredFileProtocol {
-    init(url: URL)
+    associatedtype FileType: StoredFileProtocol
+
+    var id: String { get }
+    init(url: URL) throws
     func getURL() -> URL
+    func getFile() -> FileType
 }
 
 protocol StoreProtocol : ObservableObject {
-    associatedtype FileType: StoredFileProtocol
     associatedtype ModelType: SavedStoredFileProtocol
+    // associatedtype FileType: StoredFileProtocol
+    associatedtype FileType: StoredFileProtocol = ModelType.FileType
 
     var directoryName: String { get }
     var filePrefix: String { get }
@@ -35,7 +41,7 @@ protocol StoreProtocol : ObservableObject {
 
 extension StoreProtocol {
 
-    func saveFile(file: FileType) throws {
+    func saveFile(file: FileType) throws -> URL {
         let newSaveUrl = getSaveURL(file: file)
 
         let data = try NSKeyedArchiver.archivedData(
@@ -43,9 +49,11 @@ extension StoreProtocol {
             requiringSecureCoding: true
         )
         try data.write(to: newSaveUrl, options: [.atomic])
+
+        return newSaveUrl
     }
 
-    func update(urls: [URL]? = nil) {
+    func update(urls: [URL]? = nil) throws {
         let newURLs = urls ?? getDirectoryURLs()
 
         let cachedURLs = modelData.map { model in model.getURL() }
@@ -57,7 +65,7 @@ extension StoreProtocol {
                 case let .remove(offset, _, _):
                     modelData.remove(at: offset)
                 case let .insert(offset, url, _):
-                    let newDatum = ModelType(url: url)
+                    let newDatum = try ModelType(url: url)
                     modelData.insert(newDatum, at: offset)
             }
         }
@@ -76,6 +84,15 @@ extension StoreProtocol {
         } else {
             fatalError("Model not found in modelData")
         }
+    }
+
+    func importFile(model: ModelType) throws -> URL {
+        if modelData.contains(where: { $0.id == model.id }) {
+            throw FileSaveError.AlreadyExists
+        }
+
+        let file = model.getFile() as! Self.FileType
+        return try saveFile(file: file)
     }
 
     internal func getSaveURL(file: FileType) -> URL {
@@ -97,11 +114,11 @@ extension StoreProtocol {
                          create: true)
                 .appendingPathComponent(directoryName, isDirectory: true)
 
-            if (!(try directory.checkResourceIsReachable())) {
-                try fileManager
-                    .createDirectory(at: directory,
-                                     withIntermediateDirectories: false)
-            }
+            //if (!(try directory.checkResourceIsReachable())) {
+            try fileManager
+                .createDirectory(at: directory,
+                                 withIntermediateDirectories: true)
+            //}
 
             return directory
         } catch {

@@ -10,6 +10,7 @@ import Foundation
 import ARKit
 
 final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
+    static let fileExtension = "arscanfile"
     static let supportsSecureCoding: Bool = true
     static let dateFormatter: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter()

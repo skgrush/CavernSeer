@@ -13,6 +13,8 @@ import ARKit
     Readonly model of a saved scan ready in from a file.
  */
 struct SavedScanModel: Identifiable, Hashable, SavedStoredFileProtocol {
+    typealias FileType = ScanFile
+
     /// the file basename, e.g. `scan_\(ISO8601-timestamp)`
     let id: String
     /// the URL the file was read from
@@ -21,26 +23,22 @@ struct SavedScanModel: Identifiable, Hashable, SavedStoredFileProtocol {
     let scan: ScanFile
     let fileSize: Int64
 
-    init(url: URL) {
+    init(url: URL) throws {
         self.url = url
         id = url.deletingPathExtension().lastPathComponent
 
-        do {
-            let data = try Data(contentsOf: url)
-            self.fileSize = Int64(data.count)
-            guard let scan = try NSKeyedUnarchiver.unarchivedObject(
-                    ofClass: ScanFile.self,
-                    from: data
-                )
-                else { fatalError("No ScanFile in archive") }
-            self.scan = scan
-        } catch {
-            fatalError("Unable to read from url '\(url)', " +
-                       "got error: \(error.localizedDescription)")
-        }
+        let data = try Data(contentsOf: url)
+        self.fileSize = Int64(data.count)
+        guard let scan = try NSKeyedUnarchiver.unarchivedObject(
+                ofClass: ScanFile.self,
+                from: data
+            )
+        else { throw FileOpenError.noFileInArchive(url: url) }
+        self.scan = scan
     }
 
     func getURL() -> URL { url }
+    func getFile() -> FileType { scan }
 
     #if DEBUG
     // Debug Initializer
