@@ -27,8 +27,8 @@ struct ScanListTabView: View {
     @State
     private var editMode = EditMode.inactive
 
-    @State
-    private var showMergeTool = false
+//    @State
+//    private var showMergeTool = false
 
     var body: some View {
         GeometryReader {
@@ -47,9 +47,30 @@ struct ScanListTabView: View {
                         )
                         .disabled(self.scanStore.selection.isEmpty)
                     }
+
+// TODO: Merge Tool
+//                    ToolbarItem(placement: .bottomBar) {
+//                        Button(
+//                            action: { self.showMergeTool = true },
+//                            label: {
+//                                HStack {
+//                                    Spacer()
+//                                    Text("Merge")
+//                                    Image(systemName: "arrow.merge")
+//                                }
+//                            }
+//                        )
+//                        .disabled(self.scanStore.selection.isEmpty)
+//                    }
                 }
                 .environment(\.editMode, self.$editMode)
             }
+//            .sheet(isPresented: $showMergeTool) {
+//                MergeTool(
+//                    scanStore: scanStore,
+//                    viewModel: MergeToolModel(store: scanStore)
+//                )
+//            }
         }
     }
 
