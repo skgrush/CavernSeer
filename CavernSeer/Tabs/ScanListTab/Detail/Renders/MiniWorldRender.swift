@@ -17,7 +17,7 @@ struct MiniWorldRender: View {
     var ambientColor: Color = Color.red
 
     private var sceneNodes: [SCNNode] {
-        let uiColor: UIColor = color == nil ? .clear : UIColor(color!)
+        let uiColor: UIColor? = color == nil ? nil : UIColor(color!)
         return scan.toSCNNodes(color: uiColor)
     }
 

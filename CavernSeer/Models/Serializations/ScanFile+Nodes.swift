@@ -10,7 +10,7 @@ import ARKit
 import SceneKit
 
 extension ScanFile {
-    func toSCNNodes(color: UIColor? = .clear) -> [SCNNode] {
+    func toSCNNodes(color: UIColor?) -> [SCNNode] {
         let meshAnchorNodes = self.meshAnchors.map {
             anchor in
             meshGeometryToNode(
@@ -69,7 +69,7 @@ extension ScanFile {
 fileprivate func meshGeometryToNode(
     mesh: ARMeshGeometry,
     transform:  simd_float4x4,
-    color: UIColor? = .clear
+    color: UIColor?
 ) -> SCNNode {
 
     let vertices = SCNGeometrySource(
@@ -102,7 +102,9 @@ fileprivate func meshGeometryToNode(
 
     let defaultMaterial = SCNMaterial()
     defaultMaterial.isDoubleSided = false
-    defaultMaterial.diffuse.contents = color
+    if (color != nil) {
+        defaultMaterial.diffuse.contents = color
+    }
 
     node.geometry!.materials = [defaultMaterial]
 

@@ -22,7 +22,7 @@ struct ProjectedMiniWorldRender: View {
     private var prevSelection: SurveyStation?
 
     private var sceneNodes: [SCNNode] {
-        let uiColor: UIColor = color == nil ? .clear : UIColor(color!)
+        let uiColor: UIColor? = color == nil ? nil : UIColor(color!)
         return scan.toSCNNodes(color: uiColor)
     }
 
