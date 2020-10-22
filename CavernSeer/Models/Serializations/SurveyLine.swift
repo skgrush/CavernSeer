@@ -14,8 +14,8 @@ final class SurveyLine: NSObject, NSSecureCoding {
         true
     }
 
-    let startIdentifier: UUID
-    let endIdentifier: UUID
+    let startIdentifier: SurveyStation.Identifier
+    let endIdentifier: SurveyStation.Identifier
 
     var identifier: String {
         get { "\(startIdentifier.uuidString)_\(endIdentifier.uuidString)" }
@@ -36,10 +36,10 @@ final class SurveyLine: NSObject, NSSecureCoding {
     required init?(coder decoder: NSCoder) {
         self.startIdentifier = decoder.decodeObject(
             of: NSUUID.self,
-            forKey: PropertyKeys.startId)! as UUID
+            forKey: PropertyKeys.startId)! as SurveyStation.Identifier
         self.endIdentifier = decoder.decodeObject(
             of: NSUUID.self,
-            forKey: PropertyKeys.endId)! as UUID
+            forKey: PropertyKeys.endId)! as SurveyStation.Identifier
     }
 
     func encode(with coder: NSCoder) {
@@ -50,7 +50,7 @@ final class SurveyLine: NSObject, NSSecureCoding {
 
 
 extension SurveyLine {
-    func toSCNNode(stationDict: [UUID:SCNNode]) -> SCNNode {
+    func toSCNNode(stationDict: [SurveyStation.Identifier:SCNNode]) -> SCNNode {
         guard
             let start = stationDict[self.startIdentifier],
             let end = stationDict[self.endIdentifier]

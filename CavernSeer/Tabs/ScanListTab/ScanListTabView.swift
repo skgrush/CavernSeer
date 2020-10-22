@@ -61,7 +61,11 @@ struct ScanListTabView: View {
             .filter { ids.contains($0.id) }
             .forEach { self.scanStore.deleteFile(model: $0) }
 
-        scanStore.update()
+        do {
+            try scanStore.update()
+        } catch {
+            fatalError("Deletion failed: \(error.localizedDescription)")
+        }
     }
 }
 

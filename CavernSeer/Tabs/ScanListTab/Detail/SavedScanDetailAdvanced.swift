@@ -32,6 +32,7 @@ struct SavedScanDetailAdvanced: View {
                 Text("anchor count: \(model.scan.meshAnchors.count)")
                 Text("vertex count: \(totalVertices)")
                 Text("triangle count: \(totalFaces)")
+                Text("URL: \(model.url.absoluteString)")
                 Text("file size: \(showMegabytes(amount: model.fileSize))")
             }
 

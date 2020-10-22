@@ -43,7 +43,11 @@ struct SavedScanListScrollView: UIViewRepresentable {
 
         control.addSubview(uiHost.view)
 
-        scanStore.update()
+        do {
+            try scanStore.update()
+        } catch {
+            fatalError("Update failed: \(error.localizedDescription)")
+        }
 
         return control
     }
@@ -70,7 +74,11 @@ class Coordinator : NSObject {
 
     @objc
     func handleRefreshControl(sender: UIRefreshControl) {
-        scanStore.update()
+        do {
+            try scanStore.update()
+        } catch {
+            fatalError("Update failed: \(error.localizedDescription)")
+        }
         DispatchQueue.main.async {
             sender.endRefreshing()
         }

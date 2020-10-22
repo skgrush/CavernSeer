@@ -19,8 +19,10 @@ extension ScanFile {
             )
         }
 
-        let stationDict = self.stations.reduce([UUID:SCNNode]()) {
-            (dict, station) -> [UUID:SCNNode]
+        let stationDict = self.stations.reduce(
+            [SurveyStation.Identifier: SCNNode]()
+        ) {
+            (dict, station)
             in
             var dict = dict
             dict[station.identifier] = station.toSCNNode()

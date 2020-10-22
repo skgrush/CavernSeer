@@ -18,6 +18,9 @@ struct SavedScanDetail: View {
     @State
     private var showShare = false
 
+    @State
+    private var dummySelect: SurveyStation? = nil
+
     var body: some View {
         VStack {
             /// side-by-side start and end snapshots
@@ -51,17 +54,13 @@ struct SavedScanDetail: View {
                     }
                 }
                 NavigationLink(
-                    destination: ProjectedMiniWorldRender(scan: self.model.scan)
+                    destination: ProjectedMiniWorldRender(
+                        scan: self.model.scan,
+                        selection: $dummySelect
+                    )
                 ) {
                     HStack {
                         Text("Projected Render")
-                    }
-                }
-                NavigationLink(
-                    destination: FlatWorldRender(scan: self.model.scan)
-                ) {
-                    HStack {
-                        Text("Map Render")
                     }
                 }
             }

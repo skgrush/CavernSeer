@@ -10,10 +10,11 @@ import Foundation
 import ARKit
 
 final class SurveyStation: NSObject, NSSecureCoding {
+    typealias Identifier = UUID
     static var supportsSecureCoding: Bool { true }
 
     let name: String
-    let identifier: UUID
+    let identifier: Identifier
     let transform: float4x4
 
     init(entity: SurveyStationEntity, name: String? = nil) {
@@ -39,7 +40,7 @@ final class SurveyStation: NSObject, NSSecureCoding {
     required init?(coder decoder: NSCoder) {
         self.identifier = decoder.decodeObject(
             of: NSUUID.self,
-            forKey: PropertyKeys.identifier)! as UUID
+            forKey: PropertyKeys.identifier)! as Identifier
         self.transform =
             decoder.decode_simd_float4x4(prefix: PropertyKeys.transform)
         if decoder.containsValue(forKey: PropertyKeys.name) {
@@ -54,6 +55,9 @@ final class SurveyStation: NSObject, NSSecureCoding {
     func encode(with coder: NSCoder) {
         coder.encode(identifier as NSUUID, forKey: PropertyKeys.identifier)
         coder.encode(transform, forPrefix: PropertyKeys.transform)
+        if name != identifier.uuidString {
+            coder.encode(name as NSString, forKey: PropertyKeys.name)
+        }
     }
 }
 
