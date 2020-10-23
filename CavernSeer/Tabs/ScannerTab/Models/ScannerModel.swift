@@ -90,8 +90,10 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     func showMesh(_ show: Bool) {
         if show {
             arView.debugOptions.insert(.showSceneUnderstanding)
+            arView.debugOptions.insert(.showWorldOrigin)
         } else {
             arView.debugOptions.remove(.showSceneUnderstanding)
+            arView.debugOptions.remove(.showWorldOrigin)
         }
     }
 
