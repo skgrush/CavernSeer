@@ -66,12 +66,9 @@ extension ScanFile {
 //    }
 }
 
-fileprivate func meshGeometryToNode(
-    mesh: ARMeshGeometry,
-    transform:  simd_float4x4,
-    color: UIColor?
-) -> SCNNode {
-
+fileprivate func meshGeometryToSCNGeometry(
+    mesh: ARMeshGeometry
+) -> SCNGeometry {
     let vertices = SCNGeometrySource(
         buffer: mesh.vertices.buffer,
         vertexFormat: mesh.vertices.format,
@@ -94,16 +91,25 @@ fileprivate func meshGeometryToNode(
         bytesPerIndex: mesh.faces.bytesPerIndex
     )
 
+    return SCNGeometry(sources: [vertices], elements: [faces])
+}
 
-    let node = SCNNode(
-        geometry: SCNGeometry(sources: [vertices], elements: [faces])
-    )
+fileprivate func meshGeometryToNode(
+    mesh: ARMeshGeometry,
+    transform:  simd_float4x4,
+    color: UIColor?
+) -> SCNNode {
+    let node = SCNNode(geometry: meshGeometryToSCNGeometry(mesh: mesh))
     node.simdTransform = transform
 
     let defaultMaterial = SCNMaterial()
     defaultMaterial.isDoubleSided = false
     if (color != nil) {
         defaultMaterial.diffuse.contents = color
+    } else {
+        defaultMaterial.diffuse.contents = UIColor(
+            hue: CGFloat(drand48()), saturation: 1, brightness: 1, alpha: 1)
+
     }
 
     node.geometry!.materials = [defaultMaterial]

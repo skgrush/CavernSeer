@@ -26,6 +26,8 @@
 		7E23DAFD2544EFCD00BABB52 /* icon-180.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E23DAFB2544EFCD00BABB52 /* icon-180.png */; };
 		7E23DB052544F0C300BABB52 /* icon-87.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E23DB042544F0C300BABB52 /* icon-87.png */; };
 		7E23DB0A2544F19C00BABB52 /* icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E23DB092544F19C00BABB52 /* icon-29.png */; };
+		7E23DB122544FDA800BABB52 /* ObjSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB112544FDA800BABB52 /* ObjSerializer.swift */; };
+		7E23DB17254570BC00BABB52 /* ObjSerializationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */; };
 		7E4003AB24AD579100B709BD /* Proposal.md in Resources */ = {isa = PBXBuildFile; fileRef = 7E4003AA24AD579000B709BD /* Proposal.md */; };
 		7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */; };
 		7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */; };
@@ -109,6 +111,8 @@
 		7E23DAFB2544EFCD00BABB52 /* icon-180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-180.png"; sourceTree = "<group>"; };
 		7E23DB042544F0C300BABB52 /* icon-87.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-87.png"; sourceTree = "<group>"; };
 		7E23DB092544F19C00BABB52 /* icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-29.png"; sourceTree = "<group>"; };
+		7E23DB112544FDA800BABB52 /* ObjSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjSerializer.swift; sourceTree = "<group>"; };
+		7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjSerializationError.swift; sourceTree = "<group>"; };
 		7E4003AA24AD579000B709BD /* Proposal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Proposal.md; sourceTree = "<group>"; };
 		7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCoder+simd.swift"; sourceTree = "<group>"; };
 		7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawOverlay.swift; sourceTree = "<group>"; };
@@ -216,6 +220,7 @@
 			children = (
 				7E0C5EF824CE5F0B001C0D0E /* FileOpenError.swift */,
 				7E0C5EFA24CE639E001C0D0E /* FileSaveError.swift */,
+				7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */,
 			);
 			path = errors;
 			sourceTree = "<group>";
@@ -371,6 +376,7 @@
 				7E0C5EE624C90D86001C0D0E /* SavedProjectModel.swift */,
 				7E0C5EEA24C93446001C0D0E /* StoreProtocol.swift */,
 				7E0C5EF524CE580B001C0D0E /* FileOpener.swift */,
+				7E23DB112544FDA800BABB52 /* ObjSerializer.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -590,6 +596,7 @@
 				7E9C2D0B24BA283400B9FC44 /* ProjectedMiniWorldRender.swift in Sources */,
 				7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */,
 				7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */,
+				7E23DB122544FDA800BABB52 /* ObjSerializer.swift in Sources */,
 				7E6C0EF324A838E200129E8C /* SavedScanModel.swift in Sources */,
 				7E4003B824AD8FF300B709BD /* SurveyStationEntity.swift in Sources */,
 				7E0C5EEB24C93446001C0D0E /* StoreProtocol.swift in Sources */,
@@ -628,6 +635,7 @@
 				7E6C0EF124A838A000129E8C /* ScanStore.swift in Sources */,
 				7E0C5EE724C90D86001C0D0E /* SavedProjectModel.swift in Sources */,
 				7E6C0EEF24A8388C00129E8C /* ScanFile.swift in Sources */,
+				7E23DB17254570BC00BABB52 /* ObjSerializationError.swift in Sources */,
 				7E6C0EB024A800C200129E8C /* ContentView.swift in Sources */,
 				7E9C2CE224B3F74E00B9FC44 /* ScanListTabView.swift in Sources */,
 			);

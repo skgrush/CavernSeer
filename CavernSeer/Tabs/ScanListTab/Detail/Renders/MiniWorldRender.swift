@@ -80,7 +80,6 @@ final class MiniWorldRenderController :
 
         sceneNodes.forEach {
             node in
-                // node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
                 scene.rootNode.addChildNode(node)
         }
 

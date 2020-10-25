@@ -7,9 +7,13 @@
 //
 
 import SwiftUI
+import ARKit
 
 struct SavedScanDetail: View {
     var model: SavedScanModel
+
+    @EnvironmentObject
+    var objSerializer: ObjSerializer
 
     @State
     private var isPresentingRender = false
@@ -17,6 +21,12 @@ struct SavedScanDetail: View {
     private var isPresentingMap = false
     @State
     private var showShare = false
+    @State
+    private var showObjPrompt = false
+    @State
+    private var showObjExport = false
+    @State
+    private var objExportUrl: URL?
 
     @State
     private var dummySelect: SurveyStation? = nil
@@ -74,9 +84,26 @@ struct SavedScanDetail: View {
                         .font(Font.system(.title))
                 }
             }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { showObjPrompt = true }) {
+                    Image(systemName: "arrow.up.bin")
+                        .font(Font.system(.title))
+                }
+            }
         }
         .sheet(isPresented: $showShare) {
             ScanShareSheet(activityItems: [model.url])
+        }
+        .sheet(isPresented: $showObjExport) {
+            ScanShareSheet(activityItems: [objExportUrl!])
+        }
+        .alert(isPresented: $showObjPrompt) {
+            Alert(
+                title: Text("Export"),
+                message: Text("Generate and export OBJ file?"),
+                primaryButton: .destructive(Text("Export")) {
+                    generateObj()
+            }, secondaryButton: .cancel())
         }
     }
 
@@ -94,6 +121,35 @@ struct SavedScanDetail: View {
             .resizable()
             .scaledToFill()
             .frame(height: 300)
+    }
+
+    private func generateObj() {
+
+        do {
+            let temporaryDirectoryURL =
+                FileManager.default.temporaryDirectory
+
+            let tempUrl = temporaryDirectoryURL
+                .appendingPathComponent(model.scan.name)
+                .appendingPathExtension("obj")
+            var succeeded = false
+            defer {
+                showObjExport = succeeded
+                showObjPrompt = false
+                if succeeded {
+                    self.objExportUrl = tempUrl
+                }
+            }
+
+            try objSerializer.serializeScanViaMDLViaSceneKit(
+                scan: self.model.scan,
+                url: tempUrl,
+                surfaceColor: .green
+            )
+            succeeded = true
+        } catch {
+            fatalError("Error generating OBJ: \(error.localizedDescription)")
+        }
     }
 }
 
