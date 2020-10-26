@@ -124,31 +124,30 @@ struct SavedScanDetail: View {
     }
 
     private func generateObj() {
+        let temporaryDirectoryURL = FileManager.default.temporaryDirectory
+        let name = self.model.scan.name
+            .replacingOccurrences(of: ":", with: "")
+            .replacingOccurrences(of: "/", with: "")
 
-        do {
-            let temporaryDirectoryURL =
-                FileManager.default.temporaryDirectory
 
-            let tempUrl = temporaryDirectoryURL
-                .appendingPathComponent(model.scan.name)
-                .appendingPathExtension("obj")
-            var succeeded = false
-            defer {
-                showObjExport = succeeded
-                showObjPrompt = false
-                if succeeded {
-                    self.objExportUrl = tempUrl
-                }
+        let tempUrl = temporaryDirectoryURL
+            .appendingPathComponent(name)
+            .appendingPathExtension("obj")
+
+        self.objExportUrl = tempUrl
+
+        DispatchQueue.global().async {
+            do {
+                try objSerializer.serializeScanViaMDL(
+                    scan: self.model.scan,
+                    url: tempUrl
+                )
+            } catch {
+                fatalError("Error generating OBJ: \(error.localizedDescription)")
             }
 
-            try objSerializer.serializeScanViaMDLViaSceneKit(
-                scan: self.model.scan,
-                url: tempUrl,
-                surfaceColor: .green
-            )
-            succeeded = true
-        } catch {
-            fatalError("Error generating OBJ: \(error.localizedDescription)")
+            self.showObjPrompt = false
+            self.showObjExport = true
         }
     }
 }

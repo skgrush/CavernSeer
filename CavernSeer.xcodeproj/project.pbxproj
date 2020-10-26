@@ -28,6 +28,7 @@
 		7E23DB0A2544F19C00BABB52 /* icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E23DB092544F19C00BABB52 /* icon-29.png */; };
 		7E23DB122544FDA800BABB52 /* ObjSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB112544FDA800BABB52 /* ObjSerializer.swift */; };
 		7E23DB17254570BC00BABB52 /* ObjSerializationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */; };
+		7E23DB1C2545F02400BABB52 /* ScanFile+MDL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */; };
 		7E4003AB24AD579100B709BD /* Proposal.md in Resources */ = {isa = PBXBuildFile; fileRef = 7E4003AA24AD579000B709BD /* Proposal.md */; };
 		7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */; };
 		7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */; };
@@ -113,6 +114,7 @@
 		7E23DB092544F19C00BABB52 /* icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-29.png"; sourceTree = "<group>"; };
 		7E23DB112544FDA800BABB52 /* ObjSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjSerializer.swift; sourceTree = "<group>"; };
 		7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjSerializationError.swift; sourceTree = "<group>"; };
+		7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScanFile+MDL.swift"; sourceTree = "<group>"; };
 		7E4003AA24AD579000B709BD /* Proposal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Proposal.md; sourceTree = "<group>"; };
 		7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCoder+simd.swift"; sourceTree = "<group>"; };
 		7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawOverlay.swift; sourceTree = "<group>"; };
@@ -397,6 +399,7 @@
 				7E99F94E24B113290098D44B /* SurveyStation.swift */,
 				7E99F95224B1161E0098D44B /* SurveyLine.swift */,
 				7E0C5EDD24BD5D4E001C0D0E /* ProjectFile.swift */,
+				7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */,
 			);
 			path = Serializations;
 			sourceTree = "<group>";
@@ -617,6 +620,7 @@
 				7E0C5EDA24BBA2E0001C0D0E /* MergeToolModel.swift in Sources */,
 				7E0C5EEE24CA8977001C0D0E /* MakeProjectView.swift in Sources */,
 				7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */,
+				7E23DB1C2545F02400BABB52 /* ScanFile+MDL.swift in Sources */,
 				7E6C0EE124A82A4A00129E8C /* TabsEnum.swift in Sources */,
 				7E6C0EDF24A827FE00129E8C /* TabProtocol.swift in Sources */,
 				7E9C2CF724B6937B00B9FC44 /* ScanShareSheet.swift in Sources */,
