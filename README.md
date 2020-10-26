@@ -1,7 +1,7 @@
 <img src="/CavernSeer/Assets.xcassets/AppIcon.appiconset/icon-167.png" align="right">
 
-#  CavernSeer [PROTOTYPING]
-> An iPadOS application for scanning 3D spaces
+#  CavernSeer [In Development]
+> An iPadOS and iOS application for scanning 3D spaces
 
 Leverages the LiDAR scanner of the 2020 iPad Pro and the iPhone 12 Pro,
 and RealityKit's scene reconstruction,

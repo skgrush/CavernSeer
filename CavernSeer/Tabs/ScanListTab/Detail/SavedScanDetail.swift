@@ -25,6 +25,8 @@ struct SavedScanDetail: View {
     @State
     private var showObjExport = false
     @State
+    private var showExportLoading = false
+    @State
     private var objExportUrl: URL?
 
     @State
@@ -32,6 +34,19 @@ struct SavedScanDetail: View {
 
     var body: some View {
         VStack {
+            if showExportLoading {
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Exporting OBJ file...").bold()
+                        Text(self.model.scan.name)
+                    }
+                    Spacer()
+                }
+                .padding(12)
+                .background(Color.green)
+                .cornerRadius(8)
+            }
+
             /// side-by-side start and end snapshots
             HStack {
                 self.showSnapshot(snapshot: self.model.scan.startSnapshot)
@@ -78,23 +93,26 @@ struct SavedScanDetail: View {
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showShare = true }) {
+                Button(action: {
+                    self.showObjExport = false
+                    self.showShare = true
+
+                }) {
                     Image(systemName: "square.and.arrow.up")
                         .font(Font.system(.title))
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showObjPrompt = true }) {
+                Button(action: { self.showObjPrompt = true }) {
                     Image(systemName: "arrow.up.bin")
                         .font(Font.system(.title))
                 }
             }
         }
         .sheet(isPresented: $showShare) {
-            ScanShareSheet(activityItems: [model.url])
-        }
-        .sheet(isPresented: $showObjExport) {
-            ScanShareSheet(activityItems: [objExportUrl!])
+            ScanShareSheet(activityItems: [
+                self.showObjExport ? self.objExportUrl! : self.model.url
+            ])
         }
         .alert(isPresented: $showObjPrompt) {
             Alert(
@@ -102,7 +120,9 @@ struct SavedScanDetail: View {
                 message: Text("Generate and export OBJ file?"),
                 primaryButton: .destructive(Text("Export")) {
                     generateObj()
-            }, secondaryButton: .cancel())
+                },
+                secondaryButton: .cancel()
+            )
         }
     }
 
@@ -123,6 +143,12 @@ struct SavedScanDetail: View {
     }
 
     private func generateObj() {
+        self.showObjPrompt = false
+        self.showShare = false
+        DispatchQueue.global().async {
+            self.showExportLoading = true
+        }
+
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
         let name = self.model.scan.name
             .replacingOccurrences(of: ":", with: "")
@@ -145,8 +171,9 @@ struct SavedScanDetail: View {
                 fatalError("Error generating OBJ: \(error.localizedDescription)")
             }
 
-            self.showObjPrompt = false
+            self.showExportLoading = false
             self.showObjExport = true
+            self.showShare = true
         }
     }
 }
