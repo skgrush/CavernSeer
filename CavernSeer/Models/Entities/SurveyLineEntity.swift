@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RealityKit
-import ARKit
+import RealityKit /// Entity, HasAnchoring, ARView
+import ARKit /// CG*
 
 class SurveyLineEntity: Entity, HasAnchoring, Drawable {
 

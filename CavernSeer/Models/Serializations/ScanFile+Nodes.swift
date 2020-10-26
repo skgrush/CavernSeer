@@ -6,7 +6,7 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import ARKit
+import ARKit /// UIColor, SCNNode, ARMeshGeometry, SCNGeometry, Data, simd_float4x4
 
 extension ScanFile {
     func toSCNNodes(color: UIColor?) -> [SCNNode] {

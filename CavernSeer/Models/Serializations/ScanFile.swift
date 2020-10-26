@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ARKit
+import ARKit /// simd_float3, ARMeshAnchor, ARWorldMap
 
 final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     static let fileExtension = "arscanfile"

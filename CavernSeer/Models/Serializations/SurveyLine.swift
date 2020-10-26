@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ARKit
+import ARKit /// SCN*, simd_float3, UIColor
 
 final class SurveyLine: NSObject, NSSecureCoding {
     static var supportsSecureCoding: Bool {

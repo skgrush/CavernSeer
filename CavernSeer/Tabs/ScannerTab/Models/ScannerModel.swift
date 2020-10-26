@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import ARKit /// for ARWorldTrackingConfiguration
-import RealityKit /// for ARView
-import Combine /// for Cancellable
+import RealityKit /// ARView, SceneEvents
+import ARKit /// other AR*, UIView, UIGestureRecognizer, NSLayoutConstraint
+import Combine /// Cancellable
 
 final class ScannerModel: UIGestureRecognizer, ObservableObject {
 

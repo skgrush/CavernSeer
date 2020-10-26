@@ -6,8 +6,7 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SwiftUI
-import UIKit
+import SwiftUI /// UIViewControllerRepresentable, Context
 
 struct ScanShareSheet: UIViewControllerRepresentable {
     typealias Callback = (_ activityType: UIActivity.ActivityType?,

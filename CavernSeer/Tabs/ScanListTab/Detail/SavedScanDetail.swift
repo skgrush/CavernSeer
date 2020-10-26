@@ -6,8 +6,7 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SwiftUI
-import ARKit
+import SwiftUI /// View
 
 struct SavedScanDetail: View {
     var model: SavedScanModel

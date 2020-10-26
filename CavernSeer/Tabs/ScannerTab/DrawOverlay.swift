@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import UIKit
+import UIKit /// UIView, CGRect
 
 class DrawOverlay: UIView {
 

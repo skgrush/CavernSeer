@@ -6,8 +6,8 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SwiftUI
-import RealityKit
+import SwiftUI /// UIViewRepresentable, Context
+import RealityKit /// ARView
 
 struct ARViewScannerContainer: UIViewRepresentable {
     var scanModel: ScannerModel

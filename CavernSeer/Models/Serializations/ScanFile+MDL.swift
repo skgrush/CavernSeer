@@ -6,8 +6,8 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import ARKit
-import MetalKit
+import ARKit /// ARMeshGeometry, ARGeometrySource
+import MetalKit /// MTKMeshBufferAllocator
 
 extension ScanFile {
     func toMDLAsset(device: MTLDevice) -> MDLAsset {

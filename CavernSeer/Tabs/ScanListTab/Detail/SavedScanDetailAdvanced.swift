@@ -6,8 +6,8 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SwiftUI
-import ARKit
+import SwiftUI /// View
+import ARKit /// ARMeshAnchor
 
 struct SavedScanDetailAdvanced: View {
     var model: SavedScanModel

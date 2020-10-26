@@ -7,12 +7,7 @@
 //
 
 import Foundation
-import ARKit
-
-import SceneKit
-import SceneKit.ModelIO
-import ModelIO
-
+import ARKit /// MDLAsset, MTLCreateSystemDefaultDevice
 
 class ObjSerializer : ObservableObject {
     let fileExtension: String = "obj"
