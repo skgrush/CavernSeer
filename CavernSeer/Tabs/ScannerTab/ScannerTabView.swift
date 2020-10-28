@@ -6,7 +6,7 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SwiftUI
+import SwiftUI /// AnyView, View, Image, EnvironmentObject
 
 final class ScannerTab : TabProtocol {
     var tab: Tabs = Tabs.ScanTab

@@ -20,8 +20,8 @@ _Samuel K. Grush_
 - **Phase2**
   - ~~Project meshes can be rendered into flat map projections,~~ and plane slices
   - ~~Project messhes can be exported to _some_ file format that retains all information~~
-  - Project meshes can be exported to an open and well-supported format
-  - View meshes in VR
+  - ~~Project meshes can be exported to an open and well-supported format~~
+  - View meshes in VR/AR
 - **Phase3? (Tough/longshot goals)**
   - Tweak mesh based on precise external measurements of survey anchors (e.g. feed long-range disto-measurements into world map to improve accuracy)
   - Collaboration

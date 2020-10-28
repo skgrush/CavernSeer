@@ -6,8 +6,8 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SwiftUI
-import SceneKit
+import SwiftUI /// View
+import SceneKit /// SCN*
 
 struct MiniWorldRender: View {
 
@@ -80,7 +80,6 @@ final class MiniWorldRenderController :
 
         sceneNodes.forEach {
             node in
-                // node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
                 scene.rootNode.addChildNode(node)
         }
 

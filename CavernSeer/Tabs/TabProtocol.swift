@@ -7,13 +7,10 @@
 //
 
 import Foundation
-import SwiftUI
-
-
+import SwiftUI /// Image, AnyView
 
 protocol TabProtocol {
 
-    // var tabPanelView: ViewType { get }
     var tab: Tabs { get }
     var tabName: String { get }
     var tabImage: Image { get }

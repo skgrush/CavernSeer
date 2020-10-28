@@ -6,8 +6,8 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SceneKit
-import SwiftUI
+import SwiftUI /// View
+import SceneKit /// SCN*
 
 struct ProjectedMiniWorldRender: View {
 
@@ -93,6 +93,9 @@ final class ProjectedMiniWorldRenderController :
         sceneView.scene = scene
         sceneView.pointOfView = cameraNode
 
+        //let (barScene, barNode) = makeaScaleBar()
+        //sceneView.overlaySKScene = barScene
+
         sceneView.showsStatistics = true
 
         sceneView.delegate = self
@@ -174,4 +177,10 @@ final class ProjectedMiniWorldRenderController :
 
         return (scene, cameraNode)
     }
+
+//    private func makeaScaleBar() -> (SKScene, SKNode) {
+//        let scene = SKScene()
+//
+//        let barNode = SKNode()
+//    }
 }

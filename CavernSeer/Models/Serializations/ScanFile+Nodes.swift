@@ -6,8 +6,7 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import ARKit
-import SceneKit
+import ARKit /// UIColor, SCNNode, ARMeshGeometry, SCNGeometry, Data, simd_float4x4
 
 extension ScanFile {
     func toSCNNodes(color: UIColor?) -> [SCNNode] {
@@ -38,40 +37,11 @@ extension ScanFile {
 
         return meshAnchorNodes + lineNodes + stationNodes
     }
-
-//    func toSK3DNode(color: UIColor? = .clear) -> SKNode {
-//        let scnScene = SCNScene()
-//
-//        let scnNodes = self.toSCNNodes(color: color)
-//        scnNodes.forEach { node in scnScene.rootNode.addChildNode(node) }
-//
-//        let camera = SCNCamera()
-//        camera.usesOrthographicProjection = true
-//        camera.orthographicScale = 50
-////        camera.zNear = 0
-//        camera.zFar = 8
-//
-//        let cameraNode = SCNNode()
-//        cameraNode.camera = camera
-//        /// position above
-//        cameraNode.position = SCNVector3(x: 0, y: 0, z: 5000)
-//        /// look down
-//        // cameraNode.eulerAngles = SCNVector3Make(.pi / -2, 0, 0)
-//
-//        let node3d = SK3DNode(viewportSize: CGSize(width: 2000, height: 2000))
-//        node3d.scnScene = scnScene
-//        node3d.pointOfView = cameraNode
-//
-//        return node3d
-//    }
 }
 
-fileprivate func meshGeometryToNode(
-    mesh: ARMeshGeometry,
-    transform:  simd_float4x4,
-    color: UIColor?
-) -> SCNNode {
-
+fileprivate func meshGeometryToSCNGeometry(
+    mesh: ARMeshGeometry
+) -> SCNGeometry {
     let vertices = SCNGeometrySource(
         buffer: mesh.vertices.buffer,
         vertexFormat: mesh.vertices.format,
@@ -94,16 +64,25 @@ fileprivate func meshGeometryToNode(
         bytesPerIndex: mesh.faces.bytesPerIndex
     )
 
+    return SCNGeometry(sources: [vertices], elements: [faces])
+}
 
-    let node = SCNNode(
-        geometry: SCNGeometry(sources: [vertices], elements: [faces])
-    )
+fileprivate func meshGeometryToNode(
+    mesh: ARMeshGeometry,
+    transform:  simd_float4x4,
+    color: UIColor?
+) -> SCNNode {
+    let node = SCNNode(geometry: meshGeometryToSCNGeometry(mesh: mesh))
     node.simdTransform = transform
 
     let defaultMaterial = SCNMaterial()
     defaultMaterial.isDoubleSided = false
     if (color != nil) {
         defaultMaterial.diffuse.contents = color
+    } else {
+        defaultMaterial.diffuse.contents = UIColor(
+            hue: CGFloat(drand48()), saturation: 1, brightness: 1, alpha: 1)
+
     }
 
     node.geometry!.materials = [defaultMaterial]

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ARKit
+import ARKit /// simd_float4x4
 
 final class ProjectFile : NSObject, StoredFileProtocol {
     static var fileExtension: String = "cavernseerproj"

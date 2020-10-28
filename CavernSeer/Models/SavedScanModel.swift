@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import ARKit
 
 /**
     Readonly model of a saved scan ready in from a file.

@@ -6,10 +6,13 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SwiftUI
+import SwiftUI /// View
 
 struct SavedScanDetail: View {
     var model: SavedScanModel
+
+    @EnvironmentObject
+    var objSerializer: ObjSerializer
 
     @State
     private var isPresentingRender = false
@@ -17,12 +20,35 @@ struct SavedScanDetail: View {
     private var isPresentingMap = false
     @State
     private var showShare = false
+    @State
+    private var showObjPrompt = false
+    @State
+    private var showObjExport = false
+    @State
+    private var showExportLoading = false
+    @State
+    private var objExportUrl: URL?
+    @State
+    private var fileExt = "obj"
 
     @State
     private var dummySelect: SurveyStation? = nil
 
     var body: some View {
         VStack {
+            if showExportLoading {
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Exporting '\(self.fileExt)' file...").bold()
+                        Text(self.model.scan.name)
+                    }
+                    Spacer()
+                }
+                .padding(12)
+                .background(Color.green)
+                .cornerRadius(8)
+            }
+
             /// side-by-side start and end snapshots
             HStack {
                 self.showSnapshot(snapshot: self.model.scan.startSnapshot)
@@ -69,14 +95,36 @@ struct SavedScanDetail: View {
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { showShare = true }) {
+                Button(action: {
+                    self.showObjExport = false
+                    self.showShare = true
+
+                }) {
                     Image(systemName: "square.and.arrow.up")
+                        .font(Font.system(.title))
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { self.showObjPrompt = true }) {
+                    Image(systemName: "arrow.up.bin")
                         .font(Font.system(.title))
                 }
             }
         }
         .sheet(isPresented: $showShare) {
-            ScanShareSheet(activityItems: [model.url])
+            ScanShareSheet(activityItems: [
+                self.showObjExport ? self.objExportUrl! : self.model.url
+            ])
+        }
+        .alert(isPresented: $showObjPrompt) {
+            Alert(
+                title: Text("Export"),
+                message: Text("Generate and export '\(self.fileExt)' file?"),
+                primaryButton: .destructive(Text("Export")) {
+                    generateObj()
+                },
+                secondaryButton: .cancel()
+            )
         }
     }
 
@@ -94,6 +142,43 @@ struct SavedScanDetail: View {
             .resizable()
             .scaledToFill()
             .frame(height: 300)
+    }
+
+    private func generateObj() {
+        self.showObjPrompt = false
+        self.showShare = false
+        DispatchQueue.global().async {
+            self.showExportLoading = true
+        }
+
+        let temporaryDirectoryURL = FileManager.default.temporaryDirectory
+        let name = self.model.scan.name
+            .replacingOccurrences(of: ":", with: "")
+            .replacingOccurrences(of: "/", with: "")
+
+
+        let tempUrl = temporaryDirectoryURL
+            .appendingPathComponent(name)
+            .appendingPathExtension(self.fileExt)
+
+        self.objExportUrl = tempUrl
+
+        DispatchQueue.global().async {
+            do {
+                try objSerializer.serializeScanViaMDL(
+                    scan: self.model.scan,
+                    url: tempUrl
+                )
+            } catch {
+                fatalError(
+                    "Error generating file: \(error.localizedDescription)"
+                )
+            }
+
+            self.showExportLoading = false
+            self.showObjExport = true
+            self.showShare = true
+        }
     }
 }
 

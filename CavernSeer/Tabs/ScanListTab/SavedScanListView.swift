@@ -6,7 +6,7 @@
 //  Copyright © 2020 Samuel K. Grush. All rights reserved.
 //
 
-import SwiftUI
+import SwiftUI /// View
 
 struct SavedScanListView: View {
 

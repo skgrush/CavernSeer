@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RealityKit
+import RealityKit /// basically everything here
 import UIKit /// for UIColor
 
 class SurveyStationEntity: Entity, HasAnchoring, HasModel, HasCollision {
