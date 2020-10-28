@@ -10,6 +10,9 @@ import ARKit /// ARMeshGeometry, ARGeometrySource
 import MetalKit /// MTKMeshBufferAllocator
 
 extension ScanFile {
+    /**
+     * Generate an `MDLAsset` from the `ScanFile`'s mesh data.
+     */
     func toMDLAsset(device: MTLDevice) -> MDLAsset {
 
         let allocator = MTKMeshBufferAllocator(device: device)
@@ -32,12 +35,11 @@ extension ScanFile {
 
 extension ARMeshGeometry {
     /**
-     * Convert ARMeshGeometry to MDLMesh by simple buffer transforms.
+     * Generate an `MDLMesh` from the `ARMeshGeometry` by simple buffer transforms.
      *
      * Essentially directly from StackOverflow users
      *  [`swiftcoder`](https://stackoverflow.com/a/61104855) and
      *  [`Alexander Gaidukov`](https://stackoverflow.com/a/61327580)
-     *
      */
     fileprivate func toMDLMesh(
         transform: simd_float4x4,
@@ -98,6 +100,10 @@ extension ARMeshGeometry {
 
 
 extension ARGeometrySource {
+    /**
+     * Generate a sequence of coordinate-elements from the `ARGeometrySource`'s
+     * buffer of coordinates based on a `simd_float4x4` transformation matrix.
+     */
     fileprivate func transformVertices(
         _ transform: simd_float4x4
     ) -> [Float] {

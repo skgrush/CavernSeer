@@ -12,6 +12,10 @@ import ARKit /// MDLAsset, MTLCreateSystemDefaultDevice
 class ObjSerializer : ObservableObject {
     let fileExtension: String = "obj"
 
+    /**
+     * Generate a mesh from the `ScanFile` and serialize it to the `URL`
+     * based on the file extension.
+     */
     func serializeScanViaMDL(scan: ScanFile, url: URL) throws {
         if (
             !MDLAsset.canExportFileExtension(url.pathExtension) ||
