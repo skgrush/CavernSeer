@@ -28,6 +28,8 @@ struct SavedScanDetail: View {
     private var showExportLoading = false
     @State
     private var objExportUrl: URL?
+    @State
+    private var fileExt = "obj"
 
     @State
     private var dummySelect: SurveyStation? = nil
@@ -37,7 +39,7 @@ struct SavedScanDetail: View {
             if showExportLoading {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Exporting OBJ file...").bold()
+                        Text("Exporting '\(self.fileExt)' file...").bold()
                         Text(self.model.scan.name)
                     }
                     Spacer()
@@ -117,7 +119,7 @@ struct SavedScanDetail: View {
         .alert(isPresented: $showObjPrompt) {
             Alert(
                 title: Text("Export"),
-                message: Text("Generate and export OBJ file?"),
+                message: Text("Generate and export '\(self.fileExt)' file?"),
                 primaryButton: .destructive(Text("Export")) {
                     generateObj()
                 },
@@ -157,7 +159,7 @@ struct SavedScanDetail: View {
 
         let tempUrl = temporaryDirectoryURL
             .appendingPathComponent(name)
-            .appendingPathExtension("obj")
+            .appendingPathExtension(self.fileExt)
 
         self.objExportUrl = tempUrl
 
@@ -168,7 +170,9 @@ struct SavedScanDetail: View {
                     url: tempUrl
                 )
             } catch {
-                fatalError("Error generating OBJ: \(error.localizedDescription)")
+                fatalError(
+                    "Error generating file: \(error.localizedDescription)"
+                )
             }
 
             self.showExportLoading = false
