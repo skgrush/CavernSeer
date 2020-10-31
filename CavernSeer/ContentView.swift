@@ -24,7 +24,7 @@ struct ContentView: View {
 
             ForEach(tabs, id: \.tab) {
                 tab in
-                tab.tabPanelView
+                tab.getTabPanelView(selected: selection == tab.tab)
                     .tabItem {
                         VStack {
                             tab.tabImage

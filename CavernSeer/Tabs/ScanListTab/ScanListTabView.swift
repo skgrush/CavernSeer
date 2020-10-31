@@ -14,7 +14,7 @@ final class ScanListTab : TabProtocol {
     var tabName = "Scan List"
     var tabImage: Image { Image(systemName: "list.dash") }
 
-    var tabPanelView: AnyView {
+    func getTabPanelView(selected: Bool) -> AnyView {
         AnyView(ScanListTabView())
     }
 }

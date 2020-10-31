@@ -13,8 +13,8 @@ final class ScannerTab : TabProtocol {
     var tabName = "Scanner"
     var tabImage: Image { Image(systemName: "camera.viewfinder") }
 
-    var tabPanelView: AnyView {
-        AnyView(ScannerTabView())
+    func getTabPanelView(selected: Bool) -> AnyView {
+        AnyView(ScannerTabView(isSelected: selected))
     }
 }
 
@@ -26,11 +26,15 @@ struct ScannerTabView: View {
     @ObservedObject
     var scanModel = ScannerModel()
 
+    var isSelected: Bool
+
     var body: some View {
         VStack {
 
-            ARViewScannerContainer(scanModel: scanModel)
-                .edgesIgnoringSafeArea(.all)
+            if isSelected {
+                ARViewScannerContainer(scanModel: scanModel)
+                    .edgesIgnoringSafeArea(.all)
+            }
 
             HStack {
                 HStack {
@@ -67,11 +71,3 @@ struct ScannerTabView: View {
         }
     }
 }
-
-#if DEBUG
-struct ScanTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        ScannerTabView()
-    }
-}
-#endif

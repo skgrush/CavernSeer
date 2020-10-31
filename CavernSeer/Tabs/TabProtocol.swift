@@ -15,5 +15,5 @@ protocol TabProtocol {
     var tabName: String { get }
     var tabImage: Image { get }
 
-    var tabPanelView: AnyView { get }
+    func getTabPanelView(selected: Bool) -> AnyView;
 }

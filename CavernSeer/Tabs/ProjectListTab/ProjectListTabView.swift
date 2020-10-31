@@ -13,7 +13,9 @@ final class ProjectListTab : TabProtocol {
     var tabName = "Project List"
     var tabImage: Image { Image(systemName: "list.bullet.indent") }
 
-    var tabPanelView: AnyView { AnyView(ProjectListTabView()) }
+    func getTabPanelView(selected: Bool) -> AnyView {
+        AnyView(ProjectListTabView())
+    }
 }
 
 struct ProjectListTabView: View {
