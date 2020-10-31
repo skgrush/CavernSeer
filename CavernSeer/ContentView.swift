@@ -85,7 +85,12 @@ struct ContentView: View {
                 self.selection = .ProjectListTab
             case .scan:
                 self.selection = .ScanListTab
-                self.scanStore.visibleScan = url
+                do {
+                    try self.scanStore.update()
+                } catch {
+                    fatalError("Error updating: \(error.localizedDescription)")
+                }
+                self.scanStore.setVisible(visible: url)
         }
     }
 }

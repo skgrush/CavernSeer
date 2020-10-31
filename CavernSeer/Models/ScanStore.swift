@@ -24,7 +24,7 @@ final class ScanStore : StoreProtocol {
     var selection = Set<String>()
 
     @Published
-    var visibleScan: URL?
+    var visibleScan: String?
 
     internal var fileManager = FileManager.default
     internal var dateFormatter = ISO8601DateFormatter()
@@ -33,6 +33,10 @@ final class ScanStore : StoreProtocol {
         modelData = data
 
         directory = getOrCreateDirectory()
+    }
+
+    func setVisible(visible: URL) {
+        self.visibleScan = visible.lastPathComponent
     }
 }
 
