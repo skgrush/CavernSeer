@@ -41,8 +41,14 @@ protocol StoreProtocol : ObservableObject {
 
 extension StoreProtocol {
 
-    func saveFile(file: FileType) throws -> URL {
-        let newSaveUrl = getSaveURL(file: file)
+    /**
+     * Save a file to the store directory.
+     *
+     * - Parameter file: the `FileType` instance being saved
+     * - Parameter baseName: an optional base name to use for the saved file. Otherwise `url.lastPathComponent`.
+     */
+    func saveFile(file: FileType, baseName: String? = nil) throws -> URL {
+        let newSaveUrl = getSaveURL(file: file, baseName: baseName)
 
         let data = try NSKeyedArchiver.archivedData(
             withRootObject: file,
@@ -92,15 +98,19 @@ extension StoreProtocol {
         }
 
         let file = model.getFile() as! Self.FileType
-        return try saveFile(file: file)
+        return try saveFile(file: file, baseName: model.id)
     }
 
-    internal func getSaveURL(file: FileType) -> URL {
-        dateFormatter.timeZone = TimeZone.current
-        let dateString = dateFormatter.string(from: file.getTimestamp())
+    internal func getSaveURL(file: FileType, baseName: String? = nil) -> URL {
+        var base: String? = baseName
+        if base == nil {
+            dateFormatter.timeZone = TimeZone.current
+            let dateString = dateFormatter.string(from: file.getTimestamp())
+            base = "\(filePrefix)_\(dateString)"
+        }
 
         return directory
-            .appendingPathComponent("\(filePrefix)_\(dateString)")
+            .appendingPathComponent(base!)
             .appendingPathExtension(fileExtension)
     }
 
