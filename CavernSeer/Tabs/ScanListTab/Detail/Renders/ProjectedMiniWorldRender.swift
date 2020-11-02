@@ -21,6 +21,9 @@ struct ProjectedMiniWorldRender: View {
     @State
     private var prevSelection: SurveyStation?
 
+    @State
+    private var scaleBarModel = ScaleBarModel()
+
     private var sceneNodes: [SCNNode] {
         let uiColor: UIColor? = color == nil ? nil : UIColor(color!)
         return scan.toSCNNodes(color: uiColor)
@@ -40,7 +43,8 @@ struct ProjectedMiniWorldRender: View {
                 sceneNodes: sceneNodes,
                 height: $height,
                 selection: $selection,
-                prevSelection: $prevSelection
+                prevSelection: $prevSelection,
+                scaleBarModel: $scaleBarModel
             )
             HStack {
                 Stepper("Height: \(height)m", value: $height)
@@ -68,17 +72,22 @@ final class ProjectedMiniWorldRenderController :
     @Binding
     var prevSelected: SurveyStation?
 
+    @Binding
+    var scaleBarModel: ScaleBarModel
+
     init(
         sceneNodes: [SCNNode],
         height: Binding<Int>,
         selection: Binding<SurveyStation?>,
-        prevSelection: Binding<SurveyStation?>
+        prevSelection: Binding<SurveyStation?>,
+        scaleBarModel: Binding<ScaleBarModel>
     ) {
         self.sceneNodes = sceneNodes
         // self.offset = offset
         _height = height
         _selectedStation = selection
         _prevSelected = prevSelection
+        _scaleBarModel = scaleBarModel
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -93,8 +102,7 @@ final class ProjectedMiniWorldRenderController :
         sceneView.scene = scene
         sceneView.pointOfView = cameraNode
 
-        //let (barScene, barNode) = makeaScaleBar()
-        //sceneView.overlaySKScene = barScene
+        sceneView.overlaySKScene = scaleBarModel.scene
 
         sceneView.showsStatistics = true
 
@@ -112,13 +120,21 @@ final class ProjectedMiniWorldRenderController :
         let pov = uiView.pointOfView
         if pov != nil {
             let pos = pov!.position
-            let move = SCNAction.moveBy(x: 0, y: CGFloat(Float(height) - pos.y), z: 0, duration: 0)
+            let move = SCNAction.moveBy(
+                x: 0,
+                y: CGFloat(Float(height) - pos.y),
+                z: 0, duration: 0.5
+            )
             pov!.runAction(move)
+
+            pov!.camera?.fieldOfView = uiView.frame.size.width
         }
 
         if selectedStation != prevSelected {
             updateSelection(uiView: uiView)
         }
+
+        scaleBarModel.updateOverlay(bounds: uiView.frame)
     }
 
     private func updateSelection(uiView: SCNView) {
@@ -152,7 +168,9 @@ final class ProjectedMiniWorldRenderController :
 
         let camera = SCNCamera()
         camera.usesOrthographicProjection = true
-        camera.orthographicScale = 16
+        camera.orthographicScale = 1
+        camera.projectionDirection = .horizontal
+        camera.fieldOfView = sceneView.frame.size.width
         camera.zNear = 0.1
         camera.zFar = 1000
 
@@ -178,9 +196,26 @@ final class ProjectedMiniWorldRenderController :
         return (scene, cameraNode)
     }
 
-//    private func makeaScaleBar() -> (SKScene, SKNode) {
-//        let scene = SKScene()
-//
-//        let barNode = SKNode()
-//    }
+    func renderer(
+        _ renderer: SCNSceneRenderer,
+        didRenderScene scene: SCNScene,
+        atTime time: TimeInterval
+    ) {
+        if let camera = renderer.pointOfView?.camera {
+            let orthoScale = camera.orthographicScale
+            let scaleBar = self.scaleBarModel
+            if (
+                orthoScale != scaleBar.prevOrthoScale &&
+                scaleBar.scene.size.width > 0
+            ) {
+                scaleBar.prevOrthoScale = orthoScale
+                scaleBar.update(renderer: renderer)
+            }
+        }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        scaleBarModel.updateOverlay(bounds: view.frame)
+    }
 }

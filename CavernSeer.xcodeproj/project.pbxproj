@@ -29,6 +29,7 @@
 		7E23DB122544FDA800BABB52 /* ObjSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB112544FDA800BABB52 /* ObjSerializer.swift */; };
 		7E23DB17254570BC00BABB52 /* ObjSerializationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */; };
 		7E23DB1C2545F02400BABB52 /* ScanFile+MDL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */; };
+		7E23DB2A254E457000BABB52 /* ScaleBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB29254E457000BABB52 /* ScaleBarModel.swift */; };
 		7E4003AB24AD579100B709BD /* Proposal.md in Resources */ = {isa = PBXBuildFile; fileRef = 7E4003AA24AD579000B709BD /* Proposal.md */; };
 		7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */; };
 		7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */; };
@@ -115,6 +116,7 @@
 		7E23DB112544FDA800BABB52 /* ObjSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjSerializer.swift; sourceTree = "<group>"; };
 		7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjSerializationError.swift; sourceTree = "<group>"; };
 		7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScanFile+MDL.swift"; sourceTree = "<group>"; };
+		7E23DB29254E457000BABB52 /* ScaleBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleBarModel.swift; sourceTree = "<group>"; };
 		7E4003AA24AD579000B709BD /* Proposal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Proposal.md; sourceTree = "<group>"; };
 		7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCoder+simd.swift"; sourceTree = "<group>"; };
 		7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawOverlay.swift; sourceTree = "<group>"; };
@@ -379,6 +381,7 @@
 				7E0C5EEA24C93446001C0D0E /* StoreProtocol.swift */,
 				7E0C5EF524CE580B001C0D0E /* FileOpener.swift */,
 				7E23DB112544FDA800BABB52 /* ObjSerializer.swift */,
+				7E23DB29254E457000BABB52 /* ScaleBarModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -615,6 +618,7 @@
 				7E0C5EFB24CE639E001C0D0E /* FileSaveError.swift in Sources */,
 				7E9C2CEF24B55FC600B9FC44 /* FlatWorldRender.swift in Sources */,
 				7E0C5EF624CE580B001C0D0E /* FileOpener.swift in Sources */,
+				7E23DB2A254E457000BABB52 /* ScaleBarModel.swift in Sources */,
 				7E6C0EAC24A800C200129E8C /* AppDelegate.swift in Sources */,
 				7E4003B524AD7B7500B709BD /* DrawableProtocol.swift in Sources */,
 				7E0C5EDA24BBA2E0001C0D0E /* MergeToolModel.swift in Sources */,
