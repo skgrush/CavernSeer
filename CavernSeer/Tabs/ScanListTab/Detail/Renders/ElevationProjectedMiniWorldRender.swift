@@ -48,12 +48,16 @@ struct ElevationProjectedMiniWorldRender: View {
     @State
     private var fly: Int = 0
 
+    @ObservedObject
+    private var snapshotModel = SnapshotExportModel()
+
     var body: some View {
         VStack {
             ElevationProjectedMiniWorldRenderController(
                 sceneNodes: sceneNodes,
                 rotation: $rotation,
                 fly: $fly,
+                snapshotModel: _snapshotModel,
                 selection: $selection,
                 prevSelection: $prevSelection,
                 scaleBarModel: $scaleBarModel
@@ -89,6 +93,18 @@ struct ElevationProjectedMiniWorldRender: View {
                 Spacer()
             }
         }
+        .sheet(isPresented: $snapshotModel.showPrompt) {
+            SnapshotExportView(model: snapshotModel)
+        }
+        .navigationBarItems(trailing:
+            Button(action: {
+                snapshotModel.replaceScan(scan: scan)
+                snapshotModel.showPrompt = true
+            }) {
+                Image(systemName: "camera.on.rectangle")
+                    .font(Font.system(.title))
+            }
+        )
     }
 
     private func clampRotation() {
@@ -115,11 +131,14 @@ final class ElevationProjectedMiniWorldRenderController :
     var prevSelected: SurveyStation?
     @Binding
     var scaleBarModel: ScaleBarModel
+    @ObservedObject
+    var snapshotModel: SnapshotExportModel
 
     init(
         sceneNodes: [SCNNode],
         rotation: Binding<Int>,
         fly: Binding<Int>,
+        snapshotModel: ObservedObject<SnapshotExportModel>,
         selection: Binding<SurveyStation?>,
         prevSelection: Binding<SurveyStation?>,
         scaleBarModel: Binding<ScaleBarModel>
@@ -127,6 +146,7 @@ final class ElevationProjectedMiniWorldRenderController :
         self.sceneNodes = sceneNodes
         _rotation = rotation
         _fly = fly
+        _snapshotModel = snapshotModel
         _selectedStation = selection
         _prevSelected = prevSelection
         _scaleBarModel = scaleBarModel
@@ -170,6 +190,13 @@ final class ElevationProjectedMiniWorldRenderController :
             }
 
             pov!.camera?.fieldOfView = uiView.frame.size.width
+        }
+
+        if self.snapshotModel.multiplier != nil {
+            self.snapshotModel.renderASnapshot(
+                view: uiView,
+                scaleBarModel: self.scaleBarModel
+            )
         }
     }
 
