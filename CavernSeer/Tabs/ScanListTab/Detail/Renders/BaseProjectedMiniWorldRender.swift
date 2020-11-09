@@ -116,12 +116,17 @@ extension BaseProjectedMiniWorldRenderController {
                 scene.rootNode.addChildNode(node)
         }
 
+        let ambientLightNode = makeAmbientLight()
+        scene.rootNode.addChildNode(ambientLightNode)
+
+        return (scene, cameraNode)
+    }
+
+    func makeAmbientLight() -> SCNNode {
         let ambientLightNode = SCNNode()
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = .ambient
         ambientLightNode.light!.color = UIColor.red
-        scene.rootNode.addChildNode(ambientLightNode)
-
-        return (scene, cameraNode)
+        return ambientLightNode
     }
 }

@@ -89,6 +89,16 @@ struct SavedScanDetail: View {
                         Text("Projected Render")
                     }
                 }
+                NavigationLink(
+                    destination: ElevationProjectedMiniWorldRender(
+                        scan: self.model.scan,
+                        selection: $dummySelect
+                    )
+                ) {
+                    HStack {
+                        Text("Vertical Projected Render")
+                    }
+                }
             }
 
             Spacer()
