@@ -159,7 +159,7 @@ final class ElevationProjectedMiniWorldRenderController :
 
             let move = SCNAction.rotateTo(
                 x: 0,
-                y: angleRads,
+                y: -angleRads,
                 z: 0,
                 duration: 0.5,
                 usesShortestUnitArc: true
