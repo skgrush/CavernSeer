@@ -12,7 +12,6 @@ import SceneKit /// SCN*
 protocol BaseProjectedMiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
-    var sceneView: SCNView { get }
     var sceneNodes: [SCNNode] { get }
 
     var selectedStation: SurveyStation? { get }
@@ -33,6 +32,7 @@ extension BaseProjectedMiniWorldRenderController {
     static var selectedColor: UIColor { .blue }
 
     func makeUIView(context: Context) -> SCNView {
+        let sceneView = SCNView(frame: .zero)
         let (scene, cameraNode) = makeaScene()
         sceneView.scene = scene
         sceneView.pointOfView = cameraNode

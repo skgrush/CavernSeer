@@ -118,7 +118,6 @@ final class ElevationProjectedMiniWorldRenderController :
     UIViewController,
     BaseProjectedMiniWorldRenderController {
 
-    let sceneView = SCNView(frame: .zero)
     let sceneNodes: [SCNNode]
 
     @Binding

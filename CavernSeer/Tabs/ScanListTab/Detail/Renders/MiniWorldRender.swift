@@ -45,7 +45,6 @@ struct MiniWorldRender: View {
 final class MiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
-    let sceneView = SCNView(frame: .zero)
     let sceneNodes: [SCNNode]
     let ambientColor: Color
 
@@ -68,6 +67,7 @@ final class MiniWorldRenderController :
     }
 
     func makeUIView(context: Context) -> SCNView {
+        let sceneView = SCNView(frame: .zero)
         sceneView.scene = makeaScene()
 
         sceneView.showsStatistics = true

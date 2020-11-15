@@ -65,7 +65,6 @@ struct ProjectedMiniWorldRender: View {
 final class ProjectedMiniWorldRenderController :
     UIViewController, BaseProjectedMiniWorldRenderController {
 
-    let sceneView = SCNView(frame: .zero)
     let sceneNodes: [SCNNode]
 
     @Binding
@@ -134,7 +133,6 @@ final class ProjectedMiniWorldRenderController :
         camera.usesOrthographicProjection = true
         camera.orthographicScale = 1
         camera.projectionDirection = .horizontal
-        camera.fieldOfView = sceneView.frame.size.width
         camera.zNear = 0.1
         camera.zFar = 1000
 
