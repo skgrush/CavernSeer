@@ -86,7 +86,7 @@ struct SavedScanDetail: View {
                     )
                 ) {
                     HStack {
-                        Text("Projected Render")
+                        Text("Plan Projected Render")
                     }
                 }
                 NavigationLink(
@@ -96,7 +96,7 @@ struct SavedScanDetail: View {
                     )
                 ) {
                     HStack {
-                        Text("Vertical Projected Render")
+                        Text("Elevation Projected Render")
                     }
                 }
             }
