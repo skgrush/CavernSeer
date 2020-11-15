@@ -26,11 +26,19 @@ struct MiniWorldRender: View {
         return SCNVector3Make(-center.x, -center.y, -center.z)
     }
 
+    @ObservedObject
+    private var snapshotModel = SnapshotExportModel()
+
     var body: some View {
         MiniWorldRenderController(
             sceneNodes: sceneNodes,
+            snapshotModel: _snapshotModel,
             ambientColor: ambientColor
         )
+        .sheet(isPresented: $snapshotModel.showPrompt) {
+            SnapshotExportView(model: snapshotModel)
+        }
+        .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
 }
 
@@ -41,8 +49,16 @@ final class MiniWorldRenderController :
     let sceneNodes: [SCNNode]
     let ambientColor: Color
 
-    init(sceneNodes: [SCNNode], ambientColor: Color) {
+    @ObservedObject
+    var snapshotModel: SnapshotExportModel
+
+    init(
+        sceneNodes: [SCNNode],
+        snapshotModel: ObservedObject<SnapshotExportModel>,
+        ambientColor: Color
+    ) {
         self.sceneNodes = sceneNodes
+        self._snapshotModel = snapshotModel
         self.ambientColor = ambientColor
         super.init(nibName: nil, bundle: nil)
     }
@@ -67,6 +83,11 @@ final class MiniWorldRenderController :
     }
 
     func updateUIView(_ uiView: SCNView, context: Context) {
+        if self.snapshotModel.multiplier != nil {
+            self.snapshotModel.renderASnapshot(
+                view: uiView
+            )
+        }
     }
 
     private func makeaScene() -> SCNScene {

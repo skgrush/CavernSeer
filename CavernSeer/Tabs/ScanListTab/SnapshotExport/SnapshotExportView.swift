@@ -8,6 +8,7 @@
 
 import SwiftUI /// View
 import SceneKit /// SCNView
+import SpriteKit /// SKScene
 
 class SnapshotExportModel : ObservableObject {
     var scan: ScanFile?
@@ -23,14 +24,9 @@ class SnapshotExportModel : ObservableObject {
 
     init(scan: ScanFile? = nil) {
         self.scan = scan
-
     }
 
-    func replaceScan(scan: ScanFile?) {
-        self.scan = scan
-    }
-
-    func renderASnapshot(view: SCNView, scaleBarModel: ScaleBarModel) {
+    func renderASnapshot(view: SCNView, overlaySKScene: SKScene? = nil) {
 
         guard
             let multiplierInt = self.multiplier,
@@ -50,7 +46,7 @@ class SnapshotExportModel : ObservableObject {
         let renderer = SCNRenderer(device: device)
         renderer.scene = view.scene
         renderer.pointOfView = view.pointOfView
-        renderer.overlaySKScene = scaleBarModel.scene
+        renderer.overlaySKScene = overlaySKScene
         renderer.autoenablesDefaultLighting = true
 
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
@@ -76,6 +72,16 @@ class SnapshotExportModel : ObservableObject {
         self.exportUrl = tempUrl
         self.showPrompt = true
         self.multiplier = nil
+    }
+
+    func promptButton(scan: ScanFile) -> some View {
+        Button(action: {
+            self.scan = scan
+            self.showPrompt = true
+        }) {
+            Image(systemName: "camera.on.rectangle")
+                .font(Font.system(.title))
+        }
     }
 }
 

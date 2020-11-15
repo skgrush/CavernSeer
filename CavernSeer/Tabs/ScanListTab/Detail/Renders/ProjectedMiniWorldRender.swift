@@ -37,11 +37,15 @@ struct ProjectedMiniWorldRender: View {
     @State
     private var height: Int = 0
 
+    @ObservedObject
+    private var snapshotModel = SnapshotExportModel()
+
     var body: some View {
         VStack {
             ProjectedMiniWorldRenderController(
                 sceneNodes: sceneNodes,
                 height: $height,
+                snapshotModel: _snapshotModel,
                 selection: $selection,
                 prevSelection: $prevSelection,
                 scaleBarModel: $scaleBarModel
@@ -51,6 +55,10 @@ struct ProjectedMiniWorldRender: View {
                     .frame(maxWidth: 150)
             }
         }
+        .sheet(isPresented: $snapshotModel.showPrompt) {
+            SnapshotExportView(model: snapshotModel)
+        }
+        .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
 }
 
@@ -68,16 +76,20 @@ final class ProjectedMiniWorldRenderController :
     var prevSelected: SurveyStation?
     @Binding
     var scaleBarModel: ScaleBarModel
+    @ObservedObject
+    var snapshotModel: SnapshotExportModel
 
     init(
         sceneNodes: [SCNNode],
         height: Binding<Int>,
+        snapshotModel: ObservedObject<SnapshotExportModel>,
         selection: Binding<SurveyStation?>,
         prevSelection: Binding<SurveyStation?>,
         scaleBarModel: Binding<ScaleBarModel>
     ) {
         self.sceneNodes = sceneNodes
         _height = height
+        _snapshotModel = snapshotModel
         _selectedStation = selection
         _prevSelected = prevSelection
         _scaleBarModel = scaleBarModel
@@ -107,6 +119,13 @@ final class ProjectedMiniWorldRenderController :
             pov!.runAction(move)
 
             pov!.camera?.fieldOfView = uiView.frame.size.width
+        }
+
+        if self.snapshotModel.multiplier != nil {
+            self.snapshotModel.renderASnapshot(
+                view: uiView,
+                overlaySKScene: self.scaleBarModel.scene
+            )
         }
     }
 

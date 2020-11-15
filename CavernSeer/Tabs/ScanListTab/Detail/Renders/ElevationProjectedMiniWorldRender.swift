@@ -96,15 +96,7 @@ struct ElevationProjectedMiniWorldRender: View {
         .sheet(isPresented: $snapshotModel.showPrompt) {
             SnapshotExportView(model: snapshotModel)
         }
-        .navigationBarItems(trailing:
-            Button(action: {
-                snapshotModel.replaceScan(scan: scan)
-                snapshotModel.showPrompt = true
-            }) {
-                Image(systemName: "camera.on.rectangle")
-                    .font(Font.system(.title))
-            }
-        )
+        .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
 
     private func clampRotation() {
@@ -195,7 +187,7 @@ final class ElevationProjectedMiniWorldRenderController :
         if self.snapshotModel.multiplier != nil {
             self.snapshotModel.renderASnapshot(
                 view: uiView,
-                scaleBarModel: self.scaleBarModel
+                overlaySKScene: self.scaleBarModel.scene
             )
         }
     }
