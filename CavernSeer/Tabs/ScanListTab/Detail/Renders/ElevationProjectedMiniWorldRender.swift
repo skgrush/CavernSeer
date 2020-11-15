@@ -35,12 +35,13 @@ struct ElevationProjectedMiniWorldRender: View {
     }
 
     /**
-     * The rotation of the perspective, in degrees from magnetic north
+     * The rotation of the perspective, in degrees from magnetic north.
+     *
+     * Doing manual rotation rather than leaving it up to a value-binding seems to provide
+     * more consistently, especially since we want to clamp the rotation to `[0, 360)`.
      */
     @State
-    private var rotation: Int = 0 {
-        didSet { clampRotation() }
-    }
+    private var rotation: Int = 0
 
     /**
      * Communicate to the controller to step forward / backward by this many meters
@@ -64,17 +65,22 @@ struct ElevationProjectedMiniWorldRender: View {
             )
             HStack {
                 Spacer()
+
                 HStack {
-                    Button(action: { rotation -= 90 }) {
+                    Stepper(
+                        onIncrement: { clampRotation(+5) },
+                        onDecrement: { clampRotation(-5) },
+                        label: {
+                            Text("\(rotation)ºN")
+                            + Text("m").font(.system(size: 8)).baselineOffset(0)
+                        }
+                    )
+                        .frame(maxWidth: 150)
+
+                    Button(action: { clampRotation(-90) }) {
                         Image(systemName: "gobackward.90")
                     }
-                    /// Can't seem to get the stepper to work as expected :(
-//                    Stepper("Angle: \(rotation)º", value: $rotation)
-//                        .onChange(of: rotation) { r in clampRotation() }
-//                        .frame(maxWidth: 150)
-                    Text("\(rotation)ºN")
-                    + Text("m").font(.system(size: 8)).baselineOffset(0)
-                    Button(action: { rotation += 90 }) {
+                    Button(action: { clampRotation(+90) }) {
                         Image(systemName: "goforward.90")
                     }
                 }
@@ -90,6 +96,7 @@ struct ElevationProjectedMiniWorldRender: View {
                         Image(systemName: "arrow.down.square")
                     }
                 }
+
                 Spacer()
             }
         }
@@ -99,10 +106,11 @@ struct ElevationProjectedMiniWorldRender: View {
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
 
-    private func clampRotation() {
-        if (self.rotation < 0 || self.rotation >= 360) {
-            self.rotation = (rotation + 360) % 360
-        }
+    /**
+     * Clamp rotation to `[0,360)`, "overflowing" and "underflowing" on boundaries
+     */
+    private func clampRotation(_ delta: Int) {
+        self.rotation = (self.rotation + delta + 360) % 360
     }
 }
 
