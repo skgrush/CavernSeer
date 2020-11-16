@@ -37,6 +37,8 @@
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is used for augmented reality scanning.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Optional saving of high-resolution images</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

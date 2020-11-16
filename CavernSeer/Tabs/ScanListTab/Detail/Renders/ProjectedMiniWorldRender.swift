@@ -37,11 +37,15 @@ struct ProjectedMiniWorldRender: View {
     @State
     private var height: Int = 0
 
+    @ObservedObject
+    private var snapshotModel = SnapshotExportModel()
+
     var body: some View {
         VStack {
             ProjectedMiniWorldRenderController(
                 sceneNodes: sceneNodes,
                 height: $height,
+                snapshotModel: _snapshotModel,
                 selection: $selection,
                 prevSelection: $prevSelection,
                 scaleBarModel: $scaleBarModel
@@ -51,40 +55,40 @@ struct ProjectedMiniWorldRender: View {
                     .frame(maxWidth: 150)
             }
         }
+        .sheet(isPresented: $snapshotModel.showPrompt) {
+            SnapshotExportView(model: snapshotModel)
+        }
+        .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
 }
 
 final class ProjectedMiniWorldRenderController :
-    UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
+    UIViewController, BaseProjectedMiniWorldRenderController {
 
-    static let defaultColor: UIColor = .gray
-    static let selectedColor: UIColor = .blue
-
-    let sceneView = SCNView(frame: .zero)
     let sceneNodes: [SCNNode]
-    // let offset: SCNVector3
 
     @Binding
     var height: Int
     @Binding
     var selectedStation: SurveyStation?
-
     @Binding
     var prevSelected: SurveyStation?
-
     @Binding
     var scaleBarModel: ScaleBarModel
+    @ObservedObject
+    var snapshotModel: SnapshotExportModel
 
     init(
         sceneNodes: [SCNNode],
         height: Binding<Int>,
+        snapshotModel: ObservedObject<SnapshotExportModel>,
         selection: Binding<SurveyStation?>,
         prevSelection: Binding<SurveyStation?>,
         scaleBarModel: Binding<ScaleBarModel>
     ) {
         self.sceneNodes = sceneNodes
-        // self.offset = offset
         _height = height
+        _snapshotModel = snapshotModel
         _selectedStation = selection
         _prevSelected = prevSelection
         _scaleBarModel = scaleBarModel
@@ -97,26 +101,12 @@ final class ProjectedMiniWorldRenderController :
         fatalError("init(coder:) has not been implemented")
     }
 
-    func makeUIView(context: Context) -> SCNView {
-        let (scene, cameraNode) = makeaScene()
-        sceneView.scene = scene
-        sceneView.pointOfView = cameraNode
-
-        sceneView.overlaySKScene = scaleBarModel.scene
-
-        sceneView.showsStatistics = true
-
-        sceneView.delegate = self
-
+    func postSceneAttachment(sceneView: SCNView) {
         sceneView.allowsCameraControl = true
         sceneView.defaultCameraController.interactionMode = .pan
-        sceneView.autoenablesDefaultLighting = true
-        sceneView.isPlaying = true
-
-        return sceneView
     }
 
-    func updateUIView(_ uiView: SCNView, context: Context) {
+    func viewUpdater(uiView: SCNView) {
         let pov = uiView.pointOfView
         if pov != nil {
             let pos = pov!.position
@@ -130,47 +120,19 @@ final class ProjectedMiniWorldRenderController :
             pov!.camera?.fieldOfView = uiView.frame.size.width
         }
 
-        if selectedStation != prevSelected {
-            updateSelection(uiView: uiView)
-        }
-
-        scaleBarModel.updateOverlay(bounds: uiView.frame)
-    }
-
-    private func updateSelection(uiView: SCNView) {
-        guard let scene = uiView.scene else { return }
-
-        if prevSelected != nil {
-            let previousNode = scene.rootNode.childNode(
-                withName: prevSelected!.identifier.uuidString,
-                recursively: false
+        if self.snapshotModel.multiplier != nil {
+            self.snapshotModel.renderASnapshot(
+                view: uiView,
+                overlaySKScene: self.scaleBarModel.scene
             )
-            previousNode?.geometry?.firstMaterial?.diffuse.contents =
-                ProjectedMiniWorldRenderController.defaultColor
-        }
-
-        if selectedStation != nil {
-            let node = scene.rootNode.childNode(
-                withName: selectedStation!.identifier.uuidString,
-                recursively: false
-            )
-            node?.geometry?.firstMaterial?.diffuse.contents =
-                ProjectedMiniWorldRenderController.selectedColor
-        }
-
-        DispatchQueue.main.async {
-            self.prevSelected = self.selectedStation
         }
     }
 
-    private func makeaScene() -> (SCNScene, SCNNode) {
-        let scene = SCNScene()
-
+    func makeaCamera() -> SCNNode {
         let camera = SCNCamera()
         camera.usesOrthographicProjection = true
         camera.orthographicScale = 1
         camera.projectionDirection = .horizontal
-        camera.fieldOfView = sceneView.frame.size.width
         camera.zNear = 0.1
         camera.zFar = 1000
 
@@ -179,21 +141,7 @@ final class ProjectedMiniWorldRenderController :
         cameraNode.position = SCNVector3(x: 0, y: 0, z: 0)
         cameraNode.eulerAngles = SCNVector3Make(.pi / -2, 0, 0)
 
-        scene.rootNode.addChildNode(cameraNode)
-
-        sceneNodes.forEach {
-            node in
-                // node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                scene.rootNode.addChildNode(node)
-        }
-
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light!.type = .ambient
-        ambientLightNode.light!.color = UIColor.red
-        scene.rootNode.addChildNode(ambientLightNode)
-
-        return (scene, cameraNode)
+        return cameraNode
     }
 
     func renderer(
@@ -201,17 +149,7 @@ final class ProjectedMiniWorldRenderController :
         didRenderScene scene: SCNScene,
         atTime time: TimeInterval
     ) {
-        if let camera = renderer.pointOfView?.camera {
-            let orthoScale = camera.orthographicScale
-            let scaleBar = self.scaleBarModel
-            if (
-                orthoScale != scaleBar.prevOrthoScale &&
-                scaleBar.scene.size.width > 0
-            ) {
-                scaleBar.prevOrthoScale = orthoScale
-                scaleBar.update(renderer: renderer)
-            }
-        }
+        self.updateOrthoScale(renderer)
     }
 
     override func viewDidLayoutSubviews() {

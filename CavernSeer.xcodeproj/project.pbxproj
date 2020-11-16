@@ -30,11 +30,14 @@
 		7E23DB17254570BC00BABB52 /* ObjSerializationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */; };
 		7E23DB1C2545F02400BABB52 /* ScanFile+MDL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */; };
 		7E23DB2A254E457000BABB52 /* ScaleBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E23DB29254E457000BABB52 /* ScaleBarModel.swift */; };
+		7E3AD7AB2558FFA70068D1E5 /* SnapshotExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3AD7AA2558FFA70068D1E5 /* SnapshotExportView.swift */; };
 		7E4003AB24AD579100B709BD /* Proposal.md in Resources */ = {isa = PBXBuildFile; fileRef = 7E4003AA24AD579000B709BD /* Proposal.md */; };
 		7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */; };
 		7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */; };
 		7E4003B524AD7B7500B709BD /* DrawableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003B424AD7B7500B709BD /* DrawableProtocol.swift */; };
 		7E4003B824AD8FF300B709BD /* SurveyStationEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4003B724AD8FF300B709BD /* SurveyStationEntity.swift */; };
+		7E4888342557534900894D43 /* ElevationProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */; };
+		7E488839255754B200894D43 /* BaseProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */; };
 		7E6C0EAC24A800C200129E8C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAB24A800C200129E8C /* AppDelegate.swift */; };
 		7E6C0EAE24A800C200129E8C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAD24A800C200129E8C /* SceneDelegate.swift */; };
 		7E6C0EB024A800C200129E8C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAF24A800C200129E8C /* ContentView.swift */; };
@@ -61,7 +64,6 @@
 		7E9C2CE824B3FD4B00B9FC44 /* SavedScanDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CE724B3FD4B00B9FC44 /* SavedScanDetail.swift */; };
 		7E9C2CEA24B3FD5700B9FC44 /* SavedScanRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CE924B3FD5700B9FC44 /* SavedScanRow.swift */; };
 		7E9C2CED24B55FBA00B9FC44 /* MiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CEC24B55FBA00B9FC44 /* MiniWorldRender.swift */; };
-		7E9C2CEF24B55FC600B9FC44 /* FlatWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CEE24B55FC600B9FC44 /* FlatWorldRender.swift */; };
 		7E9C2CF124B55FE800B9FC44 /* SavedScanDetailAdvanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CF024B55FE800B9FC44 /* SavedScanDetailAdvanced.swift */; };
 		7E9C2CF324B56C2400B9FC44 /* ScanFile+Nodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CF224B56C2400B9FC44 /* ScanFile+Nodes.swift */; };
 		7E9C2CF724B6937B00B9FC44 /* ScanShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2CF624B6937B00B9FC44 /* ScanShareSheet.swift */; };
@@ -117,11 +119,14 @@
 		7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjSerializationError.swift; sourceTree = "<group>"; };
 		7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScanFile+MDL.swift"; sourceTree = "<group>"; };
 		7E23DB29254E457000BABB52 /* ScaleBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleBarModel.swift; sourceTree = "<group>"; };
+		7E3AD7AA2558FFA70068D1E5 /* SnapshotExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotExportView.swift; sourceTree = "<group>"; };
 		7E4003AA24AD579000B709BD /* Proposal.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Proposal.md; sourceTree = "<group>"; };
 		7E4003AD24AD5C7E00B709BD /* NSCoder+simd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCoder+simd.swift"; sourceTree = "<group>"; };
 		7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawOverlay.swift; sourceTree = "<group>"; };
 		7E4003B424AD7B7500B709BD /* DrawableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableProtocol.swift; sourceTree = "<group>"; };
 		7E4003B724AD8FF300B709BD /* SurveyStationEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStationEntity.swift; sourceTree = "<group>"; };
+		7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
+		7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
 		7E6C0EA824A800C200129E8C /* CavernSeer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CavernSeer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E6C0EAB24A800C200129E8C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7E6C0EAD24A800C200129E8C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -154,7 +159,6 @@
 		7E9C2CE724B3FD4B00B9FC44 /* SavedScanDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanDetail.swift; sourceTree = "<group>"; };
 		7E9C2CE924B3FD5700B9FC44 /* SavedScanRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanRow.swift; sourceTree = "<group>"; };
 		7E9C2CEC24B55FBA00B9FC44 /* MiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniWorldRender.swift; sourceTree = "<group>"; };
-		7E9C2CEE24B55FC600B9FC44 /* FlatWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatWorldRender.swift; sourceTree = "<group>"; };
 		7E9C2CF024B55FE800B9FC44 /* SavedScanDetailAdvanced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanDetailAdvanced.swift; sourceTree = "<group>"; };
 		7E9C2CF224B56C2400B9FC44 /* ScanFile+Nodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScanFile+Nodes.swift"; sourceTree = "<group>"; };
 		7E9C2CF624B6937B00B9FC44 /* ScanShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanShareSheet.swift; sourceTree = "<group>"; };
@@ -227,6 +231,14 @@
 				7E23DB16254570BC00BABB52 /* ObjSerializationError.swift */,
 			);
 			path = errors;
+			sourceTree = "<group>";
+		};
+		7E3AD7A92558FF8C0068D1E5 /* SnapshotExport */ = {
+			isa = PBXGroup;
+			children = (
+				7E3AD7AA2558FFA70068D1E5 /* SnapshotExportView.swift */,
+			);
+			path = SnapshotExport;
 			sourceTree = "<group>";
 		};
 		7E4003AC24AD5A5A00B709BD /* extensions */ = {
@@ -357,6 +369,7 @@
 		7E6C0EDD24A826CA00129E8C /* ScanListTab */ = {
 			isa = PBXGroup;
 			children = (
+				7E3AD7A92558FF8C0068D1E5 /* SnapshotExport */,
 				7E0C5EEC24CA890F001C0D0E /* MakeProject */,
 				7E0C5ED824BBA29D001C0D0E /* Merge */,
 				7E9C2CEB24B55F9400B9FC44 /* Detail */,
@@ -449,8 +462,9 @@
 			isa = PBXGroup;
 			children = (
 				7E9C2CEC24B55FBA00B9FC44 /* MiniWorldRender.swift */,
-				7E9C2CEE24B55FC600B9FC44 /* FlatWorldRender.swift */,
 				7E9C2D0A24BA283400B9FC44 /* ProjectedMiniWorldRender.swift */,
+				7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */,
+				7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */,
 			);
 			path = Renders;
 			sourceTree = "<group>";
@@ -605,6 +619,7 @@
 				7E23DB122544FDA800BABB52 /* ObjSerializer.swift in Sources */,
 				7E6C0EF324A838E200129E8C /* SavedScanModel.swift in Sources */,
 				7E4003B824AD8FF300B709BD /* SurveyStationEntity.swift in Sources */,
+				7E488839255754B200894D43 /* BaseProjectedMiniWorldRender.swift in Sources */,
 				7E0C5EEB24C93446001C0D0E /* StoreProtocol.swift in Sources */,
 				7E9C2CF324B56C2400B9FC44 /* ScanFile+Nodes.swift in Sources */,
 				7E0C5EF024CA8A0E001C0D0E /* MakeProjectModel.swift in Sources */,
@@ -616,10 +631,10 @@
 				7E9C2CE824B3FD4B00B9FC44 /* SavedScanDetail.swift in Sources */,
 				7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */,
 				7E0C5EFB24CE639E001C0D0E /* FileSaveError.swift in Sources */,
-				7E9C2CEF24B55FC600B9FC44 /* FlatWorldRender.swift in Sources */,
 				7E0C5EF624CE580B001C0D0E /* FileOpener.swift in Sources */,
 				7E23DB2A254E457000BABB52 /* ScaleBarModel.swift in Sources */,
 				7E6C0EAC24A800C200129E8C /* AppDelegate.swift in Sources */,
+				7E3AD7AB2558FFA70068D1E5 /* SnapshotExportView.swift in Sources */,
 				7E4003B524AD7B7500B709BD /* DrawableProtocol.swift in Sources */,
 				7E0C5EDA24BBA2E0001C0D0E /* MergeToolModel.swift in Sources */,
 				7E0C5EEE24CA8977001C0D0E /* MakeProjectView.swift in Sources */,
@@ -631,6 +646,7 @@
 				7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */,
 				7E9C2CE624B3FBFE00B9FC44 /* SavedScanListView.swift in Sources */,
 				7E6C0EE924A82CC700129E8C /* ScannerTabView.swift in Sources */,
+				7E4888342557534900894D43 /* ElevationProjectedMiniWorldRender.swift in Sources */,
 				7E0C5EF924CE5F0B001C0D0E /* FileOpenError.swift in Sources */,
 				7E6C0EED24A834E200129E8C /* SnapshotAnchor.swift in Sources */,
 				7E0C5EE524C90746001C0D0E /* ProjectStore.swift in Sources */,
@@ -812,6 +828,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"CavernSeer/Preview Content\"";
 				DEVELOPMENT_TEAM = 7S6Y8WFB9W;
@@ -834,6 +851,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"CavernSeer/Preview Content\"";
 				DEVELOPMENT_TEAM = 7S6Y8WFB9W;

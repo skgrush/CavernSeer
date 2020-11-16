@@ -29,7 +29,6 @@ final class ScaleBarModel: ObservableObject {
 
     func updateOverlay(bounds: CGRect) {
         scene.size = bounds.size
-        scene.position = CGPoint.zero
 
         var bar = scene.childNode(withName: "scalebar") as? SKShapeNode
         if bar == nil {

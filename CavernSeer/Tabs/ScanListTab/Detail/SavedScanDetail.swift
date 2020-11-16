@@ -86,7 +86,17 @@ struct SavedScanDetail: View {
                     )
                 ) {
                     HStack {
-                        Text("Projected Render")
+                        Text("Plan Projected Render")
+                    }
+                }
+                NavigationLink(
+                    destination: ElevationProjectedMiniWorldRender(
+                        scan: self.model.scan,
+                        selection: $dummySelect
+                    )
+                ) {
+                    HStack {
+                        Text("Elevation Projected Render")
                     }
                 }
             }
