@@ -10,11 +10,14 @@ import Foundation
 import SwiftUI
 
 extension UserDefaults {
-    func color(forKey: String) -> Color? {
+    func uiColor(forKey: String) -> UIColor? {
         if let colorData = self.data(forKey: forKey) {
             do {
-                return try NSKeyedUnarchiver
-                        .unarchiveTopLevelObjectWithData(colorData) as? Color
+                let val = try NSKeyedUnarchiver
+                    .unarchiveTopLevelObjectWithData(colorData)
+                if val is UIColor {
+                    return val as? UIColor
+                }
             } catch {
                 debugPrint("Color unarchive error:", error)
             }

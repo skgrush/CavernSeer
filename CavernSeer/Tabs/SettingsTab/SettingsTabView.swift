@@ -35,7 +35,7 @@ struct SettingsTabView: View {
                 }
 
                 /// units
-                Section {
+                Section(header: Text("Units")) {
                     UnitsSettingsSection()
                 }
 

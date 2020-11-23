@@ -47,11 +47,11 @@ extension SettingsKey {
     var defaultValue: Any {
         switch self {
             case .ColorMesh:
-                return Color.clear
+                return Color(UIColor.clear)
             case .ColorMeshQuilt:
                 return false
             case .ColorLightAmbient:
-                return Color.red
+                return Color(UIColor.red)
 
             case .UnitsLength:
                 return LengthPreference.MetricMeter
@@ -65,9 +65,9 @@ extension SettingsKey {
         switch self {
             case .ColorMesh, .ColorLightAmbient:
                 return try NSKeyedArchiver.archivedData(
-                    withRootObject: value as! Color,
+                    withRootObject: UIColor(value as! Color) as Any,
                     requiringSecureCoding: false
-                ) as Data
+                ) as NSData
             case .ColorMeshQuilt:
                 return value as! Bool
 

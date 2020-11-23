@@ -31,7 +31,7 @@ final class SettingsStore : NSObject, ObservableObject {
 
     @Published
     var ColorMesh: Color! {
-        didSet { setValue(.ColorMesh, from: oldValue, to: ColorMesh) }
+        didSet { setValue(.ColorMesh, from: oldValue, to: ColorMesh!) }
     }
 
     @Published
@@ -42,7 +42,7 @@ final class SettingsStore : NSObject, ObservableObject {
     @Published
     var ColorLightAmbient: Color! {
         didSet {
-            setValue(.ColorLightAmbient, from: oldValue, to: ColorLightAmbient)
+            setValue(.ColorLightAmbient, from: oldValue, to: ColorLightAmbient!)
         }
     }
 
@@ -72,7 +72,8 @@ final class SettingsStore : NSObject, ObservableObject {
                 )
             } catch {
                 debugPrint(
-                    "Call to updateValue with unknown:",
+                    "Call to setValue with unknown:",
+                    error.localizedDescription,
                     newValue
                 )
             }
@@ -127,21 +128,27 @@ final class SettingsStore : NSObject, ObservableObject {
     private func updateValues(keys: [String?]) {
 
         keys.forEach {
-            switch $0 {
+            key in
+            switch key {
                 case SettingsKey.ColorMesh.rawValue:
-                    self.ColorMesh = def.color(
-                        forKey: SettingsKey.ColorMesh.rawValue
-                    ) ?? (SettingsKey.ColorMesh.defaultValue as! Color)
+                    if let val = def.uiColor(forKey: key!) {
+                        self.ColorMesh = Color(val)
+                    } else {
+                        self.ColorMesh =
+                            (SettingsKey.ColorMesh.defaultValue as! Color)
+                    }
 
                 case SettingsKey.ColorMeshQuilt.rawValue:
-                    self.ColorMeshQuilt = def.bool(
-                        forKey: SettingsKey.ColorMeshQuilt.rawValue
-                    )
+                    self.ColorMeshQuilt = def.bool(forKey: key!)
 
                 case SettingsKey.ColorLightAmbient.rawValue:
-                    self.ColorLightAmbient = def.color(
-                        forKey: SettingsKey.ColorLightAmbient.rawValue
-                    ) ?? (SettingsKey.ColorLightAmbient.defaultValue as! Color)
+                    if let val = def.uiColor(forKey: key!) {
+                        self.ColorLightAmbient = Color(val)
+                    } else {
+                        self.ColorLightAmbient = (
+                            SettingsKey.ColorLightAmbient.defaultValue as! Color
+                        )
+                    }
 
                 case SettingsKey.UnitsLength.rawValue:
                     let e = SettingsKey.UnitsLength
@@ -158,7 +165,7 @@ final class SettingsStore : NSObject, ObservableObject {
                 default:
                     debugPrint(
                         "Call to updateValue with unknown:",
-                        $0 as Any
+                        key as Any
                     )
             }
         }

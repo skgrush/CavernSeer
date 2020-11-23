@@ -19,11 +19,11 @@ struct UnitsSettingsSection: View {
                     SettingsKey.UnitsLength.name,
                     selection: $settings.UnitsLength
                 ) {
-                    ForEach(0..<SettingsStore.lengthPrefs.count) {
-                        Text(SettingsStore.lengthPrefs[$0].name)
-                            .tag(SettingsStore.lengthPrefs[$0])
+                    ForEach(SettingsStore.lengthPrefs, id: \.self) {
+                        Text($0.name).tag($0 as LengthPreference?)
                     }
                 }
+                .pickerStyle(SegmentedPickerStyle())
             }
         }
     }

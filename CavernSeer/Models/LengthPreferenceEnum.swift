@@ -8,9 +8,12 @@
 
 import Foundation
 
-enum LengthPreference: Int {
+enum LengthPreference: Int, Identifiable, Equatable {
+
     case MetricMeter = 1
     case CustomaryFoot = 2
+
+    var id: Int { rawValue }
 }
 
 extension LengthPreference {
