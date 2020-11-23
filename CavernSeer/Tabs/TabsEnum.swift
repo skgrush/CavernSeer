@@ -9,6 +9,7 @@
 import Foundation
 
 enum Tabs {
+    case SettingsTab
     case ScanTab
     case ScanListTab
     case ProjectListTab
