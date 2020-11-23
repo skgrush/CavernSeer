@@ -12,23 +12,72 @@ import SceneKit
 
 
 final class SettingsStore : NSObject, ObservableObject {
+    static let lengthPrefs: [LengthPreference] = [
+        .MetricMeter,
+        .CustomaryFoot
+    ]
+
+    static let modes3d: [SCNInteractionMode] = [
+        .fly,
+        .orbitAngleMapping,
+        .orbitArcball,
+        .orbitCenteredArcball,
+        .orbitTurntable,
+        .pan,
+        .truck,
+    ]
 
     private let def = UserDefaults.standard
 
     @Published
-    var ColorMesh: Color?
+    var ColorMesh: Color! {
+        didSet { setValue(.ColorMesh, from: oldValue, to: ColorMesh) }
+    }
 
     @Published
-    var ColorMeshQuilt: Bool!
+    var ColorMeshQuilt: Bool! {
+        didSet { setValue(.ColorMeshQuilt, from: oldValue, to: ColorMeshQuilt) }
+    }
 
     @Published
-    var ColorLightAmbient: Color!
+    var ColorLightAmbient: Color! {
+        didSet {
+            setValue(.ColorLightAmbient, from: oldValue, to: ColorLightAmbient)
+        }
+    }
 
     @Published
-    var UnitsLength: LengthPreference!
+    var UnitsLength: LengthPreference! {
+        didSet { setValue(.UnitsLength, from: oldValue, to: UnitsLength) }
+    }
 
     @Published
-    var InteractionMode3d: SCNInteractionMode!
+    var InteractionMode3d: SCNInteractionMode! {
+        didSet {
+            setValue(.InteractionMode3d, from: oldValue, to: InteractionMode3d)
+        }
+    }
+
+    private func setValue<ValT:Equatable>(
+        _ key: SettingsKey,
+        from oldValue: ValT,
+        to newValue: ValT
+    ) {
+        if newValue != oldValue {
+            do {
+                let encoded = try key.encodeValue(value: newValue)
+                def.set(
+                    encoded,
+                    forKey: key.rawValue
+                )
+            } catch {
+                debugPrint(
+                    "Call to updateValue with unknown:",
+                    newValue
+                )
+            }
+        }
+    }
 
     override init() {
         /// register default values for our defaults
@@ -82,7 +131,7 @@ final class SettingsStore : NSObject, ObservableObject {
                 case SettingsKey.ColorMesh.rawValue:
                     self.ColorMesh = def.color(
                         forKey: SettingsKey.ColorMesh.rawValue
-                    )
+                    ) ?? (SettingsKey.ColorMesh.defaultValue as! Color)
 
                 case SettingsKey.ColorMeshQuilt.rawValue:
                     self.ColorMeshQuilt = def.bool(
@@ -113,6 +162,5 @@ final class SettingsStore : NSObject, ObservableObject {
                     )
             }
         }
-
     }
 }

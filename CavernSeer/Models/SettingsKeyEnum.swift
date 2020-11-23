@@ -12,18 +12,18 @@ import SceneKit
 
 
 enum SettingsKey : String, CaseIterable {
-    /** a `Color`(?), but can be `nil` */
-    case ColorMesh = "Color_Mesh"
+    /** a `Color` */
+    case ColorMesh
     /** a `Bool`, overrides `ColorMesh` if true */
-    case ColorMeshQuilt = "Color_Mesh_Quilt"
-    /** a `Color` (?) */
-    case ColorLightAmbient = "Color_Light_Ambient"
+    case ColorMeshQuilt
+    /** a `Color` */
+    case ColorLightAmbient
 
     /** a `LengthPreference` value */
-    case UnitsLength = "Units_Length"
+    case UnitsLength
 
     /** an `SCNInteractionMode` */
-    case InteractionMode3d = "InteractionMode_3d"
+    case InteractionMode3d
 }
 
 extension SettingsKey {
@@ -44,10 +44,10 @@ extension SettingsKey {
         }
     }
 
-    var defaultValue: Any? {
+    var defaultValue: Any {
         switch self {
             case .ColorMesh:
-                return nil
+                return Color.clear
             case .ColorMeshQuilt:
                 return false
             case .ColorLightAmbient:
@@ -60,14 +60,32 @@ extension SettingsKey {
                 return SCNInteractionMode.orbitAngleMapping
         }
     }
+
+    func encodeValue(value: Any) throws -> Any {
+        switch self {
+            case .ColorMesh, .ColorLightAmbient:
+                return try NSKeyedArchiver.archivedData(
+                    withRootObject: value as! Color,
+                    requiringSecureCoding: false
+                ) as Data
+            case .ColorMeshQuilt:
+                return value as! Bool
+
+            case .UnitsLength:
+                return (value as! LengthPreference).rawValue
+
+            case .InteractionMode3d:
+                return (value as! SCNInteractionMode).rawValue
+        }
+    }
 }
 
 func getSettingsDefaultDictionary() -> [String:Any] {
-    return [String:Any](
-        uniqueKeysWithValues:
-            SettingsKey.allCases.map {
-                val in
-                (val.name, val.defaultValue)
-            }
-    )
+    var tups = [(String, Any)]()
+    for aCase in SettingsKey.allCases {
+        if let encoded = try? aCase.encodeValue(value: aCase.defaultValue) {
+            tups.append((aCase.name, encoded))
+        }
+    }
+    return [String:Any](uniqueKeysWithValues: tups)
 }
