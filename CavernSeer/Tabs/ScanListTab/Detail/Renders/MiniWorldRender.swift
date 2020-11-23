@@ -13,12 +13,12 @@ struct MiniWorldRender: View {
 
     var scan: ScanFile
 
-    var color: Color?
-    var ambientColor: Color = Color.red
+    var color: UIColor?
+    var ambientColor: Color?
+    var quiltMesh: Bool
 
     private var sceneNodes: [SCNNode] {
-        let uiColor: UIColor? = color == nil ? nil : UIColor(color!)
-        return scan.toSCNNodes(color: uiColor)
+        return scan.toSCNNodes(color: color, quilt: quiltMesh)
     }
 
     var offset: SCNVector3 {
@@ -46,7 +46,7 @@ final class MiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
     let sceneNodes: [SCNNode]
-    let ambientColor: Color
+    let ambientColor: Color?
 
     @ObservedObject
     var snapshotModel: SnapshotExportModel
@@ -54,7 +54,7 @@ final class MiniWorldRenderController :
     init(
         sceneNodes: [SCNNode],
         snapshotModel: ObservedObject<SnapshotExportModel>,
-        ambientColor: Color
+        ambientColor: Color?
     ) {
         self.sceneNodes = sceneNodes
         self._snapshotModel = snapshotModel
@@ -107,7 +107,9 @@ final class MiniWorldRenderController :
         let ambientLightNode = SCNNode()
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = .ambient
-        ambientLightNode.light!.color = UIColor(ambientColor)
+        if ambientColor != nil {
+            ambientLightNode.light!.color = UIColor(ambientColor!)
+        }
         scene.rootNode.addChildNode(ambientLightNode)
 
         return scene

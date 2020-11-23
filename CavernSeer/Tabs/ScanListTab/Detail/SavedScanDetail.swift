@@ -13,6 +13,8 @@ struct SavedScanDetail: View {
 
     @EnvironmentObject
     var objSerializer: ObjSerializer
+    @EnvironmentObject
+    var settings: SettingsStore
 
     @State
     private var isPresentingRender = false
@@ -33,6 +35,14 @@ struct SavedScanDetail: View {
 
     @State
     private var dummySelect: SurveyStation? = nil
+
+    private var meshColor: UIColor? {
+        let cgColor = settings.ColorMesh?.cgColor
+        if cgColor != nil && cgColor!.alpha > 0.05 {
+            return UIColor(cgColor: cgColor!)
+        }
+        return nil
+    }
 
     var body: some View {
         VStack {
@@ -73,7 +83,12 @@ struct SavedScanDetail: View {
                     }
                 }
                 NavigationLink(
-                    destination: MiniWorldRender(scan: self.model.scan)
+                    destination: MiniWorldRender(
+                        scan: self.model.scan,
+                        color: meshColor,
+                        ambientColor: settings.ColorLightAmbient,
+                        quiltMesh: settings.ColorMeshQuilt
+                    )
                 ) {
                     HStack {
                         Text("3D Render")
@@ -82,6 +97,9 @@ struct SavedScanDetail: View {
                 NavigationLink(
                     destination: ProjectedMiniWorldRender(
                         scan: self.model.scan,
+                        color: meshColor,
+                        ambientColor: settings.ColorLightAmbient,
+                        quiltMesh: settings.ColorMeshQuilt,
                         selection: $dummySelect
                     )
                 ) {
@@ -92,6 +110,9 @@ struct SavedScanDetail: View {
                 NavigationLink(
                     destination: ElevationProjectedMiniWorldRender(
                         scan: self.model.scan,
+                        color: meshColor,
+                        ambientColor: settings.ColorLightAmbient,
+                        quiltMesh: settings.ColorMeshQuilt,
                         selection: $dummySelect
                     )
                 ) {
