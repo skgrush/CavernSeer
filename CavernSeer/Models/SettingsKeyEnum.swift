@@ -81,11 +81,14 @@ extension SettingsKey {
 }
 
 func getSettingsDefaultDictionary() -> [String:Any] {
-    var tups = [(String, Any)]()
-    for aCase in SettingsKey.allCases {
-        if let encoded = try? aCase.encodeValue(value: aCase.defaultValue) {
-            tups.append((aCase.name, encoded))
-        }
-    }
-    return [String:Any](uniqueKeysWithValues: tups)
+    [String:Any](
+        uniqueKeysWithValues:
+            SettingsKey.allCases.compactMap {
+                if let encoded = try? $0.encodeValue(value: $0.defaultValue) {
+                    return ($0.name, encoded)
+                } else {
+                    return nil as (String, Any)?
+                }
+            }
+    )
 }
