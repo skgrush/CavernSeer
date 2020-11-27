@@ -14,15 +14,7 @@ struct Interaction3dSettingsSection: View {
     @EnvironmentObject
     var settings: SettingsStore
 
-    private static let modes: [SCNInteractionMode] = [
-        .fly,
-        .orbitAngleMapping,
-        .orbitArcball,
-        .orbitCenteredArcball,
-        .orbitTurntable,
-        .pan,
-        .truck
-    ]
+    private static let modes = SettingsStore.modes3d
 
     var body: some View {
         Group() {
