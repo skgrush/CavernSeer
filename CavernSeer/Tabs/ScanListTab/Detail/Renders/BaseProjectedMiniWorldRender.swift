@@ -13,6 +13,7 @@ protocol BaseProjectedMiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
     var sceneNodes: [SCNNode] { get }
+    var ambientColor: Color? { get }
 
     var selectedStation: SurveyStation? { get }
     var prevSelected: SurveyStation? { get set }
@@ -126,7 +127,9 @@ extension BaseProjectedMiniWorldRenderController {
         let ambientLightNode = SCNNode()
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = .ambient
-        ambientLightNode.light!.color = UIColor.red
+        if self.ambientColor != nil {
+            ambientLightNode.light!.color = UIColor(self.ambientColor!)
+        }
         return ambientLightNode
     }
 }

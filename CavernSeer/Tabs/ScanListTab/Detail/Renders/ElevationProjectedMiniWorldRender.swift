@@ -13,7 +13,9 @@ struct ElevationProjectedMiniWorldRender: View {
 
     var scan: ScanFile
 
-    var color: Color?
+    var color: UIColor?
+    var ambientColor: Color?
+    var quiltMesh: Bool
 
     @Binding
     var selection: SurveyStation?
@@ -25,8 +27,7 @@ struct ElevationProjectedMiniWorldRender: View {
     private var scaleBarModel = ScaleBarModel()
 
     private var sceneNodes: [SCNNode] {
-        let uiColor: UIColor? = color == nil ? nil : UIColor(color!)
-        return scan.toSCNNodes(color: uiColor)
+        return scan.toSCNNodes(color: color, quilt: quiltMesh)
     }
 
     private var offset: SCNVector3 {
@@ -56,6 +57,7 @@ struct ElevationProjectedMiniWorldRender: View {
         VStack {
             ElevationProjectedMiniWorldRenderController(
                 sceneNodes: sceneNodes,
+                ambientColor: ambientColor,
                 rotation: $rotation,
                 fly: $fly,
                 snapshotModel: _snapshotModel,
@@ -119,6 +121,7 @@ final class ElevationProjectedMiniWorldRenderController :
     BaseProjectedMiniWorldRenderController {
 
     let sceneNodes: [SCNNode]
+    let ambientColor: Color?
 
     @Binding
     var rotation: Int
@@ -135,6 +138,7 @@ final class ElevationProjectedMiniWorldRenderController :
 
     init(
         sceneNodes: [SCNNode],
+        ambientColor: Color?,
         rotation: Binding<Int>,
         fly: Binding<Int>,
         snapshotModel: ObservedObject<SnapshotExportModel>,
@@ -143,6 +147,7 @@ final class ElevationProjectedMiniWorldRenderController :
         scaleBarModel: Binding<ScaleBarModel>
     ) {
         self.sceneNodes = sceneNodes
+        self.ambientColor = ambientColor
         _rotation = rotation
         _fly = fly
         _snapshotModel = snapshotModel
@@ -212,7 +217,6 @@ final class ElevationProjectedMiniWorldRenderController :
         camera.usesOrthographicProjection = true
         camera.orthographicScale = 1
         camera.projectionDirection = .horizontal
-        camera.fieldOfView = sceneView.frame.size.width
         camera.zNear = 0.1
         camera.zFar = 1000
 

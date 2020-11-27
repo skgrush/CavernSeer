@@ -9,13 +9,14 @@
 import ARKit /// UIColor, SCNNode, ARMeshGeometry, SCNGeometry, Data, simd_float4x4
 
 extension ScanFile {
-    func toSCNNodes(color: UIColor?) -> [SCNNode] {
+    func toSCNNodes(color: UIColor?, quilt: Bool) -> [SCNNode] {
         let meshAnchorNodes = self.meshAnchors.map {
             anchor in
             meshGeometryToNode(
                 mesh: anchor.geometry,
                 transform: anchor.transform,
-                color: color
+                color: color,
+                quilt: quilt
             )
         }
 
@@ -70,19 +71,21 @@ fileprivate func meshGeometryToSCNGeometry(
 fileprivate func meshGeometryToNode(
     mesh: ARMeshGeometry,
     transform:  simd_float4x4,
-    color: UIColor?
+    color: UIColor?,
+    quilt: Bool
 ) -> SCNNode {
     let node = SCNNode(geometry: meshGeometryToSCNGeometry(mesh: mesh))
     node.simdTransform = transform
 
     let defaultMaterial = SCNMaterial()
     defaultMaterial.isDoubleSided = false
-    if (color != nil) {
-        defaultMaterial.diffuse.contents = color
-    } else {
+
+    if (quilt) {
         defaultMaterial.diffuse.contents = UIColor(
             hue: CGFloat(drand48()), saturation: 1, brightness: 1, alpha: 1)
 
+    } else if (color != nil) {
+        defaultMaterial.diffuse.contents = color
     }
 
     node.geometry!.materials = [defaultMaterial]

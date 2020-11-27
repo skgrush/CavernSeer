@@ -16,7 +16,8 @@ struct ContentView: View {
     let tabs: [TabProtocol] = [
         ProjectListTab(),
         ScanListTab(),
-        ScannerTab()
+        ScannerTab(),
+        SettingsTab(),
     ]
  
     var body: some View {

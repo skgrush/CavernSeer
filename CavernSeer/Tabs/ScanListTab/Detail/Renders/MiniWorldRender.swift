@@ -11,14 +11,17 @@ import SceneKit /// SCN*
 
 struct MiniWorldRender: View {
 
+    @EnvironmentObject
+    var settings: SettingsStore
+
     var scan: ScanFile
 
-    var color: Color?
-    var ambientColor: Color = Color.red
+    var color: UIColor?
+    var ambientColor: Color?
+    var quiltMesh: Bool
 
     private var sceneNodes: [SCNNode] {
-        let uiColor: UIColor? = color == nil ? nil : UIColor(color!)
-        return scan.toSCNNodes(color: uiColor)
+        return scan.toSCNNodes(color: color, quilt: quiltMesh)
     }
 
     var offset: SCNVector3 {
@@ -33,6 +36,7 @@ struct MiniWorldRender: View {
         MiniWorldRenderController(
             sceneNodes: sceneNodes,
             snapshotModel: _snapshotModel,
+            interactionMode: $settings.InteractionMode3d,
             ambientColor: ambientColor
         )
         .sheet(isPresented: $snapshotModel.showPrompt) {
@@ -46,18 +50,23 @@ final class MiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
     let sceneNodes: [SCNNode]
-    let ambientColor: Color
+    let ambientColor: Color?
 
     @ObservedObject
     var snapshotModel: SnapshotExportModel
 
+    @Binding
+    var interactionMode: SCNInteractionMode
+
     init(
         sceneNodes: [SCNNode],
         snapshotModel: ObservedObject<SnapshotExportModel>,
-        ambientColor: Color
+        interactionMode: Binding<SCNInteractionMode>,
+        ambientColor: Color?
     ) {
         self.sceneNodes = sceneNodes
         self._snapshotModel = snapshotModel
+        self._interactionMode = interactionMode
         self.ambientColor = ambientColor
         super.init(nibName: nil, bundle: nil)
     }
@@ -75,7 +84,8 @@ final class MiniWorldRenderController :
         sceneView.delegate = self
 
         sceneView.allowsCameraControl = true
-        sceneView.defaultCameraController.interactionMode = .orbitAngleMapping
+        sceneView.defaultCameraController.interactionMode =
+            self.interactionMode
         sceneView.autoenablesDefaultLighting = true
         sceneView.isPlaying = true
 
@@ -88,6 +98,7 @@ final class MiniWorldRenderController :
                 view: uiView
             )
         }
+        uiView.defaultCameraController.interactionMode = self.interactionMode
     }
 
     private func makeaScene() -> SCNScene {
@@ -107,7 +118,9 @@ final class MiniWorldRenderController :
         let ambientLightNode = SCNNode()
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = .ambient
-        ambientLightNode.light!.color = UIColor(ambientColor)
+        if ambientColor != nil {
+            ambientLightNode.light!.color = UIColor(ambientColor!)
+        }
         scene.rootNode.addChildNode(ambientLightNode)
 
         return scene

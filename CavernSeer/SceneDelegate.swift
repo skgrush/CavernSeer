@@ -21,6 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
+        let settingsStore = SettingsStore()
+
         let scanStore = ScanStore()
         let projectStore = ProjectStore()
         let fileOpener = FileOpener(scanStore, projectStore)
@@ -34,6 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .environmentObject(projectStore)
             .environmentObject(fileOpener)
             .environmentObject(objSerializer)
+            .environmentObject(settingsStore)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {

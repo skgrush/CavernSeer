@@ -13,7 +13,9 @@ struct ProjectedMiniWorldRender: View {
 
     var scan: ScanFile
 
-    var color: Color?
+    var color: UIColor?
+    var ambientColor: Color?
+    var quiltMesh: Bool
 
     @Binding
     var selection: SurveyStation?
@@ -25,8 +27,7 @@ struct ProjectedMiniWorldRender: View {
     private var scaleBarModel = ScaleBarModel()
 
     private var sceneNodes: [SCNNode] {
-        let uiColor: UIColor? = color == nil ? nil : UIColor(color!)
-        return scan.toSCNNodes(color: uiColor)
+        return scan.toSCNNodes(color: color, quilt: quiltMesh)
     }
 
     private var offset: SCNVector3 {
@@ -44,6 +45,7 @@ struct ProjectedMiniWorldRender: View {
         VStack {
             ProjectedMiniWorldRenderController(
                 sceneNodes: sceneNodes,
+                ambientColor: ambientColor,
                 height: $height,
                 snapshotModel: _snapshotModel,
                 selection: $selection,
@@ -66,6 +68,7 @@ final class ProjectedMiniWorldRenderController :
     UIViewController, BaseProjectedMiniWorldRenderController {
 
     let sceneNodes: [SCNNode]
+    let ambientColor: Color?
 
     @Binding
     var height: Int
@@ -80,6 +83,7 @@ final class ProjectedMiniWorldRenderController :
 
     init(
         sceneNodes: [SCNNode],
+        ambientColor: Color?,
         height: Binding<Int>,
         snapshotModel: ObservedObject<SnapshotExportModel>,
         selection: Binding<SurveyStation?>,
@@ -87,6 +91,7 @@ final class ProjectedMiniWorldRenderController :
         scaleBarModel: Binding<ScaleBarModel>
     ) {
         self.sceneNodes = sceneNodes
+        self.ambientColor = ambientColor
         _height = height
         _snapshotModel = snapshotModel
         _selectedStation = selection
