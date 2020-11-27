@@ -29,6 +29,7 @@ struct UnitsSettingsSection: View {
     }
 }
 
+#if DEBUG
 struct UnitsSettingsSection_Previews: PreviewProvider {
     static var settings = SettingsStore()
 
@@ -36,3 +37,4 @@ struct UnitsSettingsSection_Previews: PreviewProvider {
         UnitsSettingsSection().environmentObject(settings)
     }
 }
+#endif

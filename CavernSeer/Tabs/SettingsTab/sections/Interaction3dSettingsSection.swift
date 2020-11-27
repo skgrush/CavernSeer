@@ -45,6 +45,7 @@ struct Interaction3dSettingsSection: View {
     }
 }
 
+#if DEBUG
 struct Interaction3dSettingsSection_Previews: PreviewProvider {
     static var settings = SettingsStore()
 
@@ -52,3 +53,4 @@ struct Interaction3dSettingsSection_Previews: PreviewProvider {
         Interaction3dSettingsSection().environmentObject(settings)
     }
 }
+#endif

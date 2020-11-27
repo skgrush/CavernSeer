@@ -47,3 +47,13 @@ struct SettingsTabView: View {
         }
     }
 }
+
+#if DEBUG
+struct SettingsTabView_Previews: PreviewProvider {
+    static var settings = SettingsStore()
+
+    static var previews: some View {
+        SettingsTabView(isSelected: false).environmentObject(settings)
+    }
+}
+#endif
