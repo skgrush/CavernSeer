@@ -11,6 +11,9 @@ import SceneKit /// SCN*
 
 struct MiniWorldRender: View {
 
+    @EnvironmentObject
+    var settings: SettingsStore
+
     var scan: ScanFile
 
     var color: UIColor?
@@ -33,6 +36,7 @@ struct MiniWorldRender: View {
         MiniWorldRenderController(
             sceneNodes: sceneNodes,
             snapshotModel: _snapshotModel,
+            interactionMode: $settings.InteractionMode3d,
             ambientColor: ambientColor
         )
         .sheet(isPresented: $snapshotModel.showPrompt) {
@@ -51,13 +55,18 @@ final class MiniWorldRenderController :
     @ObservedObject
     var snapshotModel: SnapshotExportModel
 
+    @Binding
+    var interactionMode: SCNInteractionMode
+
     init(
         sceneNodes: [SCNNode],
         snapshotModel: ObservedObject<SnapshotExportModel>,
+        interactionMode: Binding<SCNInteractionMode>,
         ambientColor: Color?
     ) {
         self.sceneNodes = sceneNodes
         self._snapshotModel = snapshotModel
+        self._interactionMode = interactionMode
         self.ambientColor = ambientColor
         super.init(nibName: nil, bundle: nil)
     }
@@ -75,7 +84,8 @@ final class MiniWorldRenderController :
         sceneView.delegate = self
 
         sceneView.allowsCameraControl = true
-        sceneView.defaultCameraController.interactionMode = .orbitAngleMapping
+        sceneView.defaultCameraController.interactionMode =
+            self.interactionMode
         sceneView.autoenablesDefaultLighting = true
         sceneView.isPlaying = true
 
@@ -88,6 +98,7 @@ final class MiniWorldRenderController :
                 view: uiView
             )
         }
+        uiView.defaultCameraController.interactionMode = self.interactionMode
     }
 
     private func makeaScene() -> SCNScene {
