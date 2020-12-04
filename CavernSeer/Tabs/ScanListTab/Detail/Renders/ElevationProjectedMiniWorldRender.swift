@@ -69,22 +69,7 @@ struct ElevationProjectedMiniWorldRender: View {
                 Spacer()
 
                 HStack {
-                    Stepper(
-                        onIncrement: { clampRotation(+5) },
-                        onDecrement: { clampRotation(-5) },
-                        label: {
-                            Text("\(rotation)ºN")
-                            + Text("m").font(.system(size: 8)).baselineOffset(0)
-                        }
-                    )
-                        .frame(maxWidth: 150)
-
-                    Button(action: { clampRotation(-90) }) {
-                        Image(systemName: "gobackward.90")
-                    }
-                    Button(action: { clampRotation(+90) }) {
-                        Image(systemName: "goforward.90")
-                    }
+                    RotationControls(rotation: $rotation)
                 }
 
                 Spacer()
@@ -108,12 +93,6 @@ struct ElevationProjectedMiniWorldRender: View {
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
 
-    /**
-     * Clamp rotation to `[0,360)`, "overflowing" and "underflowing" on boundaries
-     */
-    private func clampRotation(_ delta: Int) {
-        self.rotation = (self.rotation + delta + 360) % 360
-    }
 }
 
 final class ElevationProjectedMiniWorldRenderController :
