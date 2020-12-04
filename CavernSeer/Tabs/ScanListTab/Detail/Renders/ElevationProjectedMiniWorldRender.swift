@@ -17,6 +17,10 @@ struct ElevationProjectedMiniWorldRender: View {
     var ambientColor: Color?
     var quiltMesh: Bool
 
+    var barSubview: AnyView? = nil
+
+    var depthOfField: Double? = nil
+
     var selection: SurveyStation?
 
     @State
@@ -58,6 +62,7 @@ struct ElevationProjectedMiniWorldRender: View {
                 sceneNodes: sceneNodes,
                 ambientColor: ambientColor,
                 rotation: $rotation,
+                depthOfField: depthOfField,
                 fly: $fly,
                 snapshotModel: _snapshotModel,
                 selection: selection,
@@ -84,6 +89,10 @@ struct ElevationProjectedMiniWorldRender: View {
                 }
 
                 Spacer()
+
+                barSubview
+
+                Spacer()
             }
         }
         .sheet(isPresented: $snapshotModel.showPrompt) {
@@ -98,9 +107,12 @@ final class ElevationProjectedMiniWorldRenderController :
     UIViewController,
     BaseProjectedMiniWorldRenderController {
 
+    private static let DefaultDepthOfField: Double = 1000
+
     let sceneNodes: [SCNNode]
     let ambientColor: Color?
 
+    var depthOfField: Double?
     @Binding
     var rotation: Int
     @Binding
@@ -117,6 +129,7 @@ final class ElevationProjectedMiniWorldRenderController :
         sceneNodes: [SCNNode],
         ambientColor: Color?,
         rotation: Binding<Int>,
+        depthOfField: Double?,
         fly: Binding<Int>,
         snapshotModel: ObservedObject<SnapshotExportModel>,
         selection: SurveyStation?,
@@ -125,6 +138,7 @@ final class ElevationProjectedMiniWorldRenderController :
     ) {
         self.sceneNodes = sceneNodes
         self.ambientColor = ambientColor
+        self.depthOfField = depthOfField
         _rotation = rotation
         _fly = fly
         _snapshotModel = snapshotModel
@@ -169,7 +183,8 @@ final class ElevationProjectedMiniWorldRenderController :
                     self.fly = 0
                 }
             }
-
+            
+            pov!.camera?.zFar = depthOfField ?? Self.DefaultDepthOfField
             pov!.camera?.fieldOfView = uiView.frame.size.width
         }
 
@@ -195,7 +210,7 @@ final class ElevationProjectedMiniWorldRenderController :
         camera.orthographicScale = 1
         camera.projectionDirection = .horizontal
         camera.zNear = 0.1
-        camera.zFar = 1000
+        camera.zFar = depthOfField ?? Self.DefaultDepthOfField
 
         let cameraNode = SCNNode()
         cameraNode.camera = camera
