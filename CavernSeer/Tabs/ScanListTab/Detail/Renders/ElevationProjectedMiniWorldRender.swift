@@ -17,7 +17,6 @@ struct ElevationProjectedMiniWorldRender: View {
     var ambientColor: Color?
     var quiltMesh: Bool
 
-    @Binding
     var selection: SurveyStation?
 
     @State
@@ -61,7 +60,7 @@ struct ElevationProjectedMiniWorldRender: View {
                 rotation: $rotation,
                 fly: $fly,
                 snapshotModel: _snapshotModel,
-                selection: $selection,
+                selection: selection,
                 prevSelection: $prevSelection,
                 scaleBarModel: $scaleBarModel
             )
@@ -106,7 +105,6 @@ final class ElevationProjectedMiniWorldRenderController :
     var rotation: Int
     @Binding
     var fly: Int
-    @Binding
     var selectedStation: SurveyStation?
     @Binding
     var prevSelected: SurveyStation?
@@ -121,7 +119,7 @@ final class ElevationProjectedMiniWorldRenderController :
         rotation: Binding<Int>,
         fly: Binding<Int>,
         snapshotModel: ObservedObject<SnapshotExportModel>,
-        selection: Binding<SurveyStation?>,
+        selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
         scaleBarModel: Binding<ScaleBarModel>
     ) {
@@ -130,7 +128,7 @@ final class ElevationProjectedMiniWorldRenderController :
         _rotation = rotation
         _fly = fly
         _snapshotModel = snapshotModel
-        _selectedStation = selection
+        self.selectedStation = selection
         _prevSelected = prevSelection
         _scaleBarModel = scaleBarModel
 

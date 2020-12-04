@@ -17,8 +17,7 @@ struct PlanProjectedMiniWorldRender: View {
     var ambientColor: Color?
     var quiltMesh: Bool
 
-    @Binding
-    var selection: SurveyStation?
+    var selection: SurveyStation? = nil
 
     @State
     private var prevSelection: SurveyStation?
@@ -72,7 +71,6 @@ final class PlanProjectedMiniWorldRenderController :
 
     @Binding
     var height: Int
-    @Binding
     var selectedStation: SurveyStation?
     @Binding
     var prevSelected: SurveyStation?
@@ -86,7 +84,7 @@ final class PlanProjectedMiniWorldRenderController :
         ambientColor: Color?,
         height: Binding<Int>,
         snapshotModel: ObservedObject<SnapshotExportModel>,
-        selection: Binding<SurveyStation?>,
+        selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
         scaleBarModel: Binding<ScaleBarModel>
     ) {
@@ -94,7 +92,7 @@ final class PlanProjectedMiniWorldRenderController :
         self.ambientColor = ambientColor
         _height = height
         _snapshotModel = snapshotModel
-        _selectedStation = selection
+        self.selectedStation = selection
         _prevSelected = prevSelection
         _scaleBarModel = scaleBarModel
 
