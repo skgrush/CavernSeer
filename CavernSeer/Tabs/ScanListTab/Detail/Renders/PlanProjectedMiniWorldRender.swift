@@ -1,5 +1,5 @@
 //
-//  ProjectedMiniWorldRender.swift
+//  PlanProjectedMiniWorldRender.swift
 //  CavernSeer
 //
 //  Created by Samuel Grush on 7/11/20.
@@ -9,7 +9,7 @@
 import SwiftUI /// View
 import SceneKit /// SCN*
 
-struct ProjectedMiniWorldRender: View {
+struct PlanProjectedMiniWorldRender: View {
 
     var scan: ScanFile
 
@@ -43,7 +43,7 @@ struct ProjectedMiniWorldRender: View {
 
     var body: some View {
         VStack {
-            ProjectedMiniWorldRenderController(
+            PlanProjectedMiniWorldRenderController(
                 sceneNodes: sceneNodes,
                 ambientColor: ambientColor,
                 height: $height,
@@ -64,7 +64,7 @@ struct ProjectedMiniWorldRender: View {
     }
 }
 
-final class ProjectedMiniWorldRenderController :
+final class PlanProjectedMiniWorldRenderController :
     UIViewController, BaseProjectedMiniWorldRenderController {
 
     let sceneNodes: [SCNNode]

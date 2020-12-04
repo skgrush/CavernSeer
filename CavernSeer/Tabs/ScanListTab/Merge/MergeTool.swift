@@ -116,7 +116,7 @@ import SwiftUI
 //                        selected == station ? Color.red : nil
 //                    )
 //                }
-//                ProjectedMiniWorldRender(
+//                PlanProjectedMiniWorldRender(
 //                    scan: model.scan,
 //                    selection: $viewModel.currentlySelectedStations[modelId]
 //                )

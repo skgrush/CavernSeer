@@ -95,7 +95,7 @@ struct SavedScanDetail: View {
                     }
                 }
                 NavigationLink(
-                    destination: ProjectedMiniWorldRender(
+                    destination: PlanProjectedMiniWorldRender(
                         scan: self.model.scan,
                         color: meshColor,
                         ambientColor: settings.ColorLightAmbient,
