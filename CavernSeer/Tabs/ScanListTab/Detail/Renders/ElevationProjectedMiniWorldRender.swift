@@ -9,6 +9,10 @@
 import SwiftUI /// View
 import SceneKit /// SCN*
 
+protocol SCNRenderObserver {
+    func observationUpdated(view: SCNView)
+}
+
 struct ElevationProjectedMiniWorldRender: View {
 
     var scan: ScanFile
@@ -22,6 +26,8 @@ struct ElevationProjectedMiniWorldRender: View {
     var depthOfField: Double? = nil
 
     var selection: SurveyStation?
+
+    var observer: SCNRenderObserver?
 
     @State
     private var prevSelection: SurveyStation?
@@ -58,17 +64,20 @@ struct ElevationProjectedMiniWorldRender: View {
 
     var body: some View {
         VStack {
-            ElevationProjectedMiniWorldRenderController(
-                sceneNodes: sceneNodes,
-                ambientColor: ambientColor,
-                rotation: $rotation,
-                depthOfField: depthOfField,
-                fly: $fly,
-                snapshotModel: _snapshotModel,
-                selection: selection,
-                prevSelection: $prevSelection,
-                scaleBarModel: $scaleBarModel
-            )
+            ZStack {
+                ElevationProjectedMiniWorldRenderController(
+                    sceneNodes: sceneNodes,
+                    ambientColor: ambientColor,
+                    rotation: $rotation,
+                    depthOfField: depthOfField,
+                    fly: $fly,
+                    snapshotModel: _snapshotModel,
+                    selection: selection,
+                    prevSelection: $prevSelection,
+                    observer: observer,
+                    scaleBarModel: $scaleBarModel
+                )
+            }
             HStack {
                 Spacer()
 
@@ -100,10 +109,9 @@ struct ElevationProjectedMiniWorldRender: View {
         }
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
-
 }
 
-final class ElevationProjectedMiniWorldRenderController :
+fileprivate final class ElevationProjectedMiniWorldRenderController :
     UIViewController,
     BaseProjectedMiniWorldRenderController {
 
@@ -124,6 +132,7 @@ final class ElevationProjectedMiniWorldRenderController :
     var scaleBarModel: ScaleBarModel
     @ObservedObject
     var snapshotModel: SnapshotExportModel
+    var observer: SCNRenderObserver?
 
     init(
         sceneNodes: [SCNNode],
@@ -134,21 +143,22 @@ final class ElevationProjectedMiniWorldRenderController :
         snapshotModel: ObservedObject<SnapshotExportModel>,
         selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
+        observer: SCNRenderObserver?,
         scaleBarModel: Binding<ScaleBarModel>
     ) {
         self.sceneNodes = sceneNodes
         self.ambientColor = ambientColor
         self.depthOfField = depthOfField
-        _rotation = rotation
-        _fly = fly
-        _snapshotModel = snapshotModel
+        self._rotation = rotation
+        self._fly = fly
+        self._snapshotModel = snapshotModel
         self.selectedStation = selection
-        _prevSelected = prevSelection
-        _scaleBarModel = scaleBarModel
+        self._prevSelected = prevSelection
+        self.observer = observer
+        self._scaleBarModel = scaleBarModel
 
         super.init(nibName: nil, bundle: nil)
     }
-
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
