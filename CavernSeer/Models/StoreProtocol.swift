@@ -8,23 +8,8 @@
 
 import Foundation
 
-protocol StoredFileProtocol : NSObject, NSSecureCoding {
-    static var fileExtension: String { get }
-    func getTimestamp() -> Date
-}
-
-protocol SavedStoredFileProtocol {
-    associatedtype FileType: StoredFileProtocol
-
-    var id: String { get }
-    init(url: URL) throws
-    func getURL() -> URL
-    func getFile() -> FileType
-}
-
 protocol StoreProtocol : ObservableObject {
     associatedtype ModelType: SavedStoredFileProtocol
-    // associatedtype FileType: StoredFileProtocol
     associatedtype FileType: StoredFileProtocol = ModelType.FileType
 
     var directoryName: String { get }
