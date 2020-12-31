@@ -1,5 +1,5 @@
 //
-//  SavedStoredFileProtocol.swift
+//  PreviewStoredFileProtocol.swift
 //  CavernSeer
 //
 //  Created by Samuel Grush on 12/30/20.
@@ -8,12 +8,12 @@
 
 import Foundation
 
-protocol SavedStoredFileProtocol {
-    associatedtype FileType: StoredFileProtocol
-    associatedtype PreviewType: PreviewStoredFileProtocol
-
+/**
+ * A minimal representation of a `SavedStoredFileProtocol` implementation.
+ */
+protocol PreviewStoredFileProtocol {
     var id: String { get }
+    var imageData: Data? { get }
     init(url: URL) throws
     func getURL() -> URL
-    func getFile() -> FileType
 }

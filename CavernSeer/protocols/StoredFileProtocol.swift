@@ -11,4 +11,5 @@ import Foundation
 protocol StoredFileProtocol : NSObject, NSSecureCoding {
     static var fileExtension: String { get }
     func getTimestamp() -> Date
+    var name: String { get }
 }

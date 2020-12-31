@@ -13,8 +13,9 @@ import Foundation
  */
 struct SavedScanModel: Identifiable, Hashable, SavedStoredFileProtocol {
     typealias FileType = ScanFile
+    typealias PreviewType = PreviewScanModel
 
-    /// the file basename, e.g. `scan_\(ISO8601-timestamp)`
+    /// the file name, e.g. `scan_\(ISO8601-timestamp).\(FileType.fileExtension)`
     let id: String
     /// the URL the file was read from
     let url: URL
