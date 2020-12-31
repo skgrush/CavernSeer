@@ -30,6 +30,8 @@ protocol StoreProtocol : ObservableObject {
 
 extension StoreProtocol {
 
+    static var MaxCachedModels: Int { 2 }
+
     /**
      * Try to get a model from a baseName; first try the cache, then try the file
      *  otherwise throws from the `ModelType` constructor.
@@ -40,7 +42,13 @@ extension StoreProtocol {
         }
 
         let model = try ModelType(url: url)
-//        cachedModelData.append(model)
+
+        let cacheToRemove = cachedModelData.count - Self.MaxCachedModels + 1
+        if cacheToRemove > 0 {
+            cachedModelData.removeFirst(cacheToRemove)
+        }
+        cachedModelData.append(model)
+
         return model
     }
 
