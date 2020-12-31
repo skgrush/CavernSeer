@@ -37,7 +37,7 @@ extension StoreProtocol {
      *  otherwise throws from the `ModelType` constructor.
      */
     func getModel(url: URL) throws -> ModelType {
-        if let model = cachedModelData.first(where: { $0.getURL() == url }) {
+        if let model = cachedModelData.first(where: { $0.url == url }) {
             return model
         }
 
@@ -76,8 +76,8 @@ extension StoreProtocol {
     func update() throws {
         let newURLs = getDirectoryURLs()
 
-        let alreadyPreviewedURLs = previews.map { preview in preview.getURL() }
-        let alreadyCachedURLs = cachedModelData.map { model in model.getURL() }
+        let alreadyPreviewedURLs = previews.map { preview in preview.url }
+        let alreadyCachedURLs = cachedModelData.map { model in model.url }
 
         let indicesToRemove = IndexSet(
             alreadyCachedURLs.indices.filter {
@@ -105,7 +105,7 @@ extension StoreProtocol {
         let modelIndex = cachedModelData.firstIndex { $0.id == id }
 
         if previewIndex != nil {
-            let url = previews[previewIndex!].getURL()
+            let url = previews[previewIndex!].url
             do {
                 try fileManager.removeItem(at: url)
             } catch {

@@ -35,6 +35,4 @@ struct PreviewProjectModel: Identifiable, Hashable, PreviewStoredFileProtocol {
         self.imageData = project.scans.first?.scan.startSnapshot?.imageData
 
     }
-
-    func getURL() -> URL { self.url }
 }

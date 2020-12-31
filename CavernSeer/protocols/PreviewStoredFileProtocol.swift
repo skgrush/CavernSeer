@@ -13,7 +13,7 @@ import Foundation
  */
 protocol PreviewStoredFileProtocol {
     var id: String { get }
+    var url: URL { get }
     var imageData: Data? { get }
     init(url: URL) throws
-    func getURL() -> URL
 }

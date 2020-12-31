@@ -13,7 +13,7 @@ protocol SavedStoredFileProtocol {
     associatedtype PreviewType: PreviewStoredFileProtocol
 
     var id: String { get }
+    var url: URL { get }
     init(url: URL) throws
-    func getURL() -> URL
     func getFile() -> FileType
 }
