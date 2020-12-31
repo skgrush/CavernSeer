@@ -21,15 +21,15 @@ struct SavedScanListView: View {
 
     var body: some View {
         List(selection: $scanStore.selection) {
-            ForEach(scanStore.modelData) {
-                model
+            ForEach(scanStore.previews) {
+                preview
                 in
                 NavigationLink(
-                    destination: SavedScanDetail(model: model),
-                    tag: model.id,
+                    destination: SavedScanDetail(url: preview.url),
+                    tag: preview.id,
                     selection: $scanStore.visibleScan
                 ) {
-                    SavedScanRow(model: model)
+                    SavedScanRow(preview: preview)
                 }
             }
             .onDelete(perform: delete)
@@ -54,10 +54,11 @@ struct SavedScanListView: View {
     }
 
     func delete(at offset: IndexSet) {
-        let modelData = scanStore.modelData
+        let previews = self.scanStore.previews
+
         offset
-            .map { modelData[$0] }
-            .forEach { self.scanStore.deleteFile(model: $0) }
+            .map { previews[$0] }
+            .forEach { self.scanStore.deleteFile(id: $0.id) }
     }
 }
 

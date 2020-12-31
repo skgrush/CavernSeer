@@ -11,14 +11,17 @@ import Foundation
 final class ScanStore : StoreProtocol {
     typealias FileType = ScanFile
     typealias ModelType = SavedScanModel
+    typealias PreviewType = PreviewScanModel
 
-    var directoryName: String { "scans" }
-    var filePrefix: String { "scan" }
-    var fileExtension: String { FileType.fileExtension }
+    let directoryName: String = "scans"
+    let filePrefix: String = "scan"
+    let fileExtension: String = FileType.fileExtension
     var directory: URL!
 
+    var cachedModelData: [SavedScanModel] = []
+
     @Published
-    var modelData: [SavedScanModel]
+    var previews: [PreviewType] = []
 
     @Published
     var selection = Set<String>()
@@ -29,14 +32,29 @@ final class ScanStore : StoreProtocol {
     internal var fileManager = FileManager.default
     internal var dateFormatter = ISO8601DateFormatter()
 
-    init(data: [SavedScanModel] = []) {
-        modelData = data
-
+    init() {
         directory = getOrCreateDirectory()
     }
 
     func setVisible(visible: URL) {
         self.visibleScan = visible.lastPathComponent
+    }
+
+    func getSelectionModels() -> [SavedScanModel] {
+        do {
+            return try self.selection
+                .compactMap {
+                    id in
+                    self.previews.first { $0.id == id }?.url
+                }
+                .map {
+                    try self.getModel(url: $0)
+                }
+        } catch {
+            fatalError(
+                "Failed to get selected models: \(error.localizedDescription)"
+            )
+        }
     }
 }
 
