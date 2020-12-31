@@ -42,6 +42,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         lines: [SurveyLineEntity]
     ) {
         self.init(
+            name: name,
             timestamp: date ?? Date(),
             center: map.center,
             extent: map.extent,

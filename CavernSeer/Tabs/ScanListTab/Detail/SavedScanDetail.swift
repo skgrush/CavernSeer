@@ -9,13 +9,17 @@
 import SwiftUI /// View
 
 struct SavedScanDetail: View {
-    var model: SavedScanModel
+    var url: URL
 
     @EnvironmentObject
     var objSerializer: ObjSerializer
     @EnvironmentObject
     var settings: SettingsStore
+    @EnvironmentObject
+    var scanStore: ScanStore
 
+    @State
+    private var model: SavedScanModel? = nil
     @State
     private var isPresentingRender = false
     @State
@@ -44,13 +48,23 @@ struct SavedScanDetail: View {
         return nil
     }
 
+    private func loadModel() {
+        if self.model?.url != self.url {
+            do {
+                self.model = try scanStore.getModel(url: url)
+            } catch {
+                fatalError("Failed to find model: \(error.localizedDescription)")
+            }
+        }
+    }
+
     var body: some View {
         VStack {
             if showExportLoading {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Exporting '\(self.fileExt)' file...").bold()
-                        Text(self.model.scan.name)
+                        Text(self.model?.scan.name ?? "ERROR finding scan name")
                     }
                     Spacer()
                 }
@@ -61,63 +75,65 @@ struct SavedScanDetail: View {
 
             /// side-by-side start and end snapshots
             HStack {
-                self.showSnapshot(snapshot: self.model.scan.startSnapshot)
+                self.showSnapshot(snapshot: self.model?.scan.startSnapshot)
                     .map { styleSnapshot(img: $0) }
-                self.showSnapshot(snapshot: self.model.scan.endSnapshot)
+                self.showSnapshot(snapshot: self.model?.scan.endSnapshot)
                     .map { styleSnapshot(img: $0) }
             }
             .frame(height: 300)
 
             Spacer()
 
-            Text(model.id)
+            Text(model?.id ?? "Loading...")
                 .font(.title)
                 .padding()
 
-            List {
-                NavigationLink(
-                    destination: SavedScanDetailAdvanced(model: self.model)
-                ) {
-                    HStack {
-                        Text("Advanced")
+            if let model = self.model {
+                List {
+                    NavigationLink(
+                        destination: SavedScanDetailAdvanced(model: model)
+                    ) {
+                        HStack {
+                            Text("Advanced")
+                        }
                     }
-                }
-                NavigationLink(
-                    destination: MiniWorldRender(
-                        scan: self.model.scan,
-                        color: meshColor,
-                        ambientColor: settings.ColorLightAmbient,
-                        quiltMesh: settings.ColorMeshQuilt
-                    )
-                ) {
-                    HStack {
-                        Text("3D Render")
+                    NavigationLink(
+                        destination: MiniWorldRender(
+                            scan: model.scan,
+                            color: meshColor,
+                            ambientColor: settings.ColorLightAmbient,
+                            quiltMesh: settings.ColorMeshQuilt
+                        )
+                    ) {
+                        HStack {
+                            Text("3D Render")
+                        }
                     }
-                }
-                NavigationLink(
-                    destination: ProjectedMiniWorldRender(
-                        scan: self.model.scan,
-                        color: meshColor,
-                        ambientColor: settings.ColorLightAmbient,
-                        quiltMesh: settings.ColorMeshQuilt,
-                        selection: $dummySelect
-                    )
-                ) {
-                    HStack {
-                        Text("Plan Projected Render")
+                    NavigationLink(
+                        destination: ProjectedMiniWorldRender(
+                            scan: model.scan,
+                            color: meshColor,
+                            ambientColor: settings.ColorLightAmbient,
+                            quiltMesh: settings.ColorMeshQuilt,
+                            selection: $dummySelect
+                        )
+                    ) {
+                        HStack {
+                            Text("Plan Projected Render")
+                        }
                     }
-                }
-                NavigationLink(
-                    destination: ElevationProjectedMiniWorldRender(
-                        scan: self.model.scan,
-                        color: meshColor,
-                        ambientColor: settings.ColorLightAmbient,
-                        quiltMesh: settings.ColorMeshQuilt,
-                        selection: $dummySelect
-                    )
-                ) {
-                    HStack {
-                        Text("Elevation Projected Render")
+                    NavigationLink(
+                        destination: ElevationProjectedMiniWorldRender(
+                            scan: model.scan,
+                            color: meshColor,
+                            ambientColor: settings.ColorLightAmbient,
+                            quiltMesh: settings.ColorMeshQuilt,
+                            selection: $dummySelect
+                        )
+                    ) {
+                        HStack {
+                            Text("Elevation Projected Render")
+                        }
                     }
                 }
             }
@@ -143,9 +159,11 @@ struct SavedScanDetail: View {
             }
         }
         .sheet(isPresented: $showShare) {
-            ScanShareSheet(activityItems: [
-                self.showObjExport ? self.objExportUrl! : self.model.url
-            ])
+            if let model = self.model {
+                ScanShareSheet(activityItems: [
+                    self.showObjExport ? self.objExportUrl! : model.url
+                ])
+            }
         }
         .alert(isPresented: $showObjPrompt) {
             Alert(
@@ -157,6 +175,7 @@ struct SavedScanDetail: View {
                 secondaryButton: .cancel()
             )
         }
+        .onAppear(perform: { self.loadModel() })
     }
 
     private func showSnapshot(snapshot: SnapshotAnchor?) -> Image? {
@@ -176,6 +195,10 @@ struct SavedScanDetail: View {
     }
 
     private func generateObj() {
+        guard let model = self.model else {
+            return
+        }
+
         self.showObjPrompt = false
         self.showShare = false
         DispatchQueue.global().async {
@@ -183,7 +206,7 @@ struct SavedScanDetail: View {
         }
 
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
-        let name = self.model.scan.name
+        let name = model.scan.name
             .replacingOccurrences(of: ":", with: "")
             .replacingOccurrences(of: "/", with: "")
 
@@ -197,7 +220,7 @@ struct SavedScanDetail: View {
         DispatchQueue.global().async {
             do {
                 try objSerializer.serializeScanViaMDL(
-                    scan: self.model.scan,
+                    scan: model.scan,
                     url: tempUrl
                 )
             } catch {
@@ -213,10 +236,10 @@ struct SavedScanDetail: View {
     }
 }
 
-#if DEBUG
-struct SavedScanDetail_Previews: PreviewProvider {
-    static var previews: some View {
-        SavedScanDetail(model: dummyData[1])
-    }
-}
-#endif
+//#if DEBUG
+//struct SavedScanDetail_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SavedScanDetail(model: dummyData[1])
+//    }
+//}
+//#endif

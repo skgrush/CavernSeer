@@ -62,9 +62,7 @@ class MakeProjectModel : ObservableObject {
 
     convenience init(store: ScanStore, projectStore: ProjectStore) {
         self.init(
-            modelPool: store.modelData.filter {
-                store.selection.contains($0.id)
-            },
+            modelPool: store.getSelectionModels(),
             store,
             projectStore
         )

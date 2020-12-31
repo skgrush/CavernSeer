@@ -8,24 +8,11 @@
 
 import Foundation
 
-protocol StoredFileProtocol : NSObject, NSSecureCoding {
-    static var fileExtension: String { get }
-    func getTimestamp() -> Date
-}
-
-protocol SavedStoredFileProtocol {
-    associatedtype FileType: StoredFileProtocol
-
-    var id: String { get }
-    init(url: URL) throws
-    func getURL() -> URL
-    func getFile() -> FileType
-}
-
 protocol StoreProtocol : ObservableObject {
     associatedtype ModelType: SavedStoredFileProtocol
-    // associatedtype FileType: StoredFileProtocol
     associatedtype FileType: StoredFileProtocol = ModelType.FileType
+    associatedtype PreviewType: PreviewStoredFileProtocol
+        = ModelType.PreviewType
 
     var directoryName: String { get }
     var filePrefix: String { get }
@@ -35,11 +22,35 @@ protocol StoreProtocol : ObservableObject {
     var fileManager: FileManager { get }
     var dateFormatter: ISO8601DateFormatter { get }
 
-    var modelData: [ModelType] { get set }
+    var cachedModelData: [ModelType] { get set }
+
+    var previews: [PreviewType] { get set }
 }
 
 
 extension StoreProtocol {
+
+    static var MaxCachedModels: Int { 2 }
+
+    /**
+     * Try to get a model from a baseName; first try the cache, then try the file
+     *  otherwise throws from the `ModelType` constructor.
+     */
+    func getModel(url: URL) throws -> ModelType {
+        if let model = cachedModelData.first(where: { $0.url == url }) {
+            return model
+        }
+
+        let model = try ModelType(url: url)
+
+        let cacheToRemove = cachedModelData.count - Self.MaxCachedModels + 1
+        if cacheToRemove > 0 {
+            cachedModelData.removeFirst(cacheToRemove)
+        }
+        cachedModelData.append(model)
+
+        return model
+    }
 
     /**
      * Save a file to the store directory.
@@ -59,41 +70,59 @@ extension StoreProtocol {
         return newSaveUrl
     }
 
-    func update(urls: [URL]? = nil) throws {
-        let newURLs = urls ?? getDirectoryURLs()
+    /**
+     * Update the `previews` and `cachedModelData` based on the files in `directory`.
+     */
+    func update() throws {
+        let newURLs = getDirectoryURLs()
 
-        let cachedURLs = modelData.map { model in model.getURL() }
+        let alreadyPreviewedURLs = previews.map { preview in preview.url }
+        let alreadyCachedURLs = cachedModelData.map { model in model.url }
 
-        let difference = newURLs.difference(from: cachedURLs)
+        let indicesToRemove = IndexSet(
+            alreadyCachedURLs.indices.filter {
+                (index: Int) -> Bool in
+                let url = alreadyCachedURLs[index]
+                return  !newURLs.contains(url)
+            }
+        )
+        cachedModelData.remove(atOffsets: indicesToRemove)
 
-        for change in difference {
+        // add or remove previews
+        for change in newURLs.difference(from: alreadyPreviewedURLs) {
             switch change {
                 case let .remove(offset, _, _):
-                    modelData.remove(at: offset)
+                    previews.remove(at: offset)
                 case let .insert(offset, url, _):
-                    let newDatum = try ModelType(url: url)
-                    modelData.insert(newDatum, at: offset)
+                    let newDatum = try PreviewType(url: url)
+                    previews.insert(newDatum, at: offset)
             }
         }
     }
 
-    func deleteFile(model: ModelType) {
-        let modelURL = model.getURL()
-        let index = modelData.firstIndex(where: { $0.getURL() == modelURL })
-        if index != nil {
+    func deleteFile(id: String) {
+        let previewIndex = previews.firstIndex { $0.id == id }
+        let modelIndex = cachedModelData.firstIndex { $0.id == id }
+
+        if previewIndex != nil {
+            let url = previews[previewIndex!].url
             do {
-                try fileManager.removeItem(at: modelURL)
+                try fileManager.removeItem(at: url)
             } catch {
                 fatalError("Deletion failed: \(error.localizedDescription)")
             }
-            modelData.remove(at: index!)
+            previews.remove(at: previewIndex!)
         } else {
             fatalError("Model not found in modelData")
+        }
+
+        if modelIndex != nil {
+            cachedModelData.remove(at: modelIndex!)
         }
     }
 
     func importFile(model: ModelType) throws -> URL {
-        if modelData.contains(where: { $0.id == model.id }) {
+        if previews.contains(where: { $0.id == model.id }) {
             throw FileSaveError.AlreadyExists
         }
 
@@ -102,15 +131,14 @@ extension StoreProtocol {
     }
 
     internal func getSaveURL(file: FileType, baseName: String? = nil) -> URL {
-        var base: String? = baseName
-        if base == nil {
-            dateFormatter.timeZone = TimeZone.current
-            let dateString = dateFormatter.string(from: file.getTimestamp())
-            base = "\(filePrefix)_\(dateString)"
-        }
+        let base = baseName ?? file.name
 
+        return baseNameToURL(base: base)
+    }
+
+    internal func baseNameToURL(base: String) -> URL {
         return directory
-            .appendingPathComponent(base!)
+            .appendingPathComponent(base)
             .appendingPathExtension(fileExtension)
     }
 
@@ -156,4 +184,6 @@ extension StoreProtocol {
             fatalError("Could not resolve directory contents")
         }
     }
+
+
 }

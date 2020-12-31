@@ -11,14 +11,17 @@ import Foundation
 final class ProjectStore : StoreProtocol {
     typealias FileType = ProjectFile
     typealias ModelType = SavedProjectModel
+    typealias PreviewType = PreviewProjectModel
 
-    var directoryName: String { "projects" }
-    var filePrefix: String { "proj" }
-    var fileExtension: String { FileType.fileExtension }
+    let directoryName: String = "projects"
+    let filePrefix: String = "proj"
+    let fileExtension: String = FileType.fileExtension
     var directory: URL!
 
+    var cachedModelData: [ModelType] = []
+
     @Published
-    var modelData: [SavedProjectModel] = []
+    var previews: [PreviewType] = []
 
     @Published
     /// selected `ProjectFile.id`s

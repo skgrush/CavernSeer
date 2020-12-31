@@ -78,9 +78,9 @@ struct ScanListTabView: View {
         let ids = scanStore.selection
         scanStore.selection.removeAll()
 
-        scanStore.modelData
+        scanStore.previews
             .filter { ids.contains($0.id) }
-            .forEach { self.scanStore.deleteFile(model: $0) }
+            .forEach { self.scanStore.deleteFile(id: $0.id) }
 
         do {
             try scanStore.update()

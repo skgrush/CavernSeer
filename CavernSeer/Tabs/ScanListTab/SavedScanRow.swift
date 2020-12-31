@@ -9,48 +9,49 @@
 import SwiftUI /// View
 
 struct SavedScanRow: View {
-    var model: SavedScanModel
+    var preview: PreviewScanModel
+
+    var image: Image?
 
     var body: some View {
         HStack {
-            self.showSnapshot(snapshot: model.scan.startSnapshot)
+            self.image
                 .map {
                     $0
                         .resizable()
                         .frame(width: 50, height: 50)
                 }
 
-            Text(model.id)
+            Text(preview.id)
 
             Spacer()
         }
     }
 
-    func showSnapshot(snapshot: SnapshotAnchor?) -> Image? {
+    init(preview: PreviewScanModel, image: Image? = nil) {
+        self.preview = preview
+        self.image = image ?? makeSnapshot(preview: preview)
+    }
+
+    private func makeSnapshot(preview: PreviewScanModel) -> Image? {
+
         guard
-            let imageData = snapshot?.imageData,
+            let imageData = preview.imageData,
             let uiImg = UIImage(data: imageData)
         else { return nil }
 
         return Image(uiImage: uiImg)
     }
+}
 
-//    func styleSnapshot(img: Image) -> some View {
-//        return img
-//            .resizable()
-//            .scaledToFill()
-//            .frame(height: 300)
+//#if DEBUG
+//struct SavedScanRow_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group {
+//            SavedScanRow(model: dummyData[0])
+//            SavedScanRow(model: dummyData[1])
+//        }
+//        .previewLayout(.fixed(width: 300, height: 70))
 //    }
-}
-
-#if DEBUG
-struct SavedScanRow_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            SavedScanRow(model: dummyData[0])
-            SavedScanRow(model: dummyData[1])
-        }
-        .previewLayout(.fixed(width: 300, height: 70))
-    }
-}
-#endif
+//}
+//#endif
