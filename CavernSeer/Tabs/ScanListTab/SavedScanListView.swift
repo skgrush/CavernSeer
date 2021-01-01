@@ -8,16 +8,21 @@
 
 import SwiftUI /// View
 
-struct SavedScanListView: View {
+struct SavedScanListView<ListStyleT: ListStyle>: View {
 
     @EnvironmentObject
     var scanStore: ScanStore
 
-    @Binding
-    var editMode: EditMode
+    var listStyle: ListStyleT
+
+    @State
+    private var editMode: EditMode = .inactive
 
     @State
     private var showShare = false
+
+//    @State
+//    private var showMergeTool = false
 
     var body: some View {
         List(selection: $scanStore.selection) {
@@ -36,7 +41,46 @@ struct SavedScanListView: View {
         }
         .environment(\.editMode, self.$editMode)
         .navigationTitle("Scan List")
-        .navigationBarItems(trailing: editButton)
+        .navigationBarItems(
+            trailing: HStack {
+                Button(
+                    action: { self.refresh() },
+                    label: { Image(systemName: "arrow.clockwise") }
+                )
+                editButton
+            }
+        )
+        .toolbar {
+            ToolbarItem(placement: .bottomBar) {
+                Button(
+                    action: { self.deleteSelected() },
+                    label: { Image(systemName: "trash") }
+                )
+                .disabled(self.scanStore.selection.isEmpty)
+            }
+
+// TODO: Merge Tool
+//            ToolbarItem(placement: .bottomBar) {
+//                Button(
+//                    action: { self.showMergeTool = true },
+//                    label: {
+//                        HStack {
+//                            Spacer()
+//                            Text("Merge")
+//                            Image(systemName: "arrow.merge")
+//                        }
+//                    }
+//                )
+//                .disabled(self.scanStore.selection.isEmpty)
+//            }
+        }
+//        .sheet(isPresented: $showMergeTool) {
+//            MergeTool(
+//                scanStore: scanStore,
+//                viewModel: MergeToolModel(store: scanStore)
+//            )
+//        }
+        .onAppear(perform: self.refresh)
     }
 
     private var editButton: some View {
@@ -53,12 +97,32 @@ struct SavedScanListView: View {
         })
     }
 
-    func delete(at offset: IndexSet) {
+    private func deleteSelected() {
+        let ids = self.scanStore.selection
+        let previews = self.scanStore.previews
+        let offsets = IndexSet(
+            previews
+            .indices
+            .filter { idx in ids.contains(previews[idx].id) }
+        )
+
+        self.delete(at: offsets)
+    }
+
+    private func delete(at offset: IndexSet) {
         let previews = self.scanStore.previews
 
         offset
             .map { previews[$0] }
             .forEach { self.scanStore.deleteFile(id: $0.id) }
+    }
+
+    private func refresh() {
+        do {
+            try self.scanStore.update()
+        } catch {
+            fatalError("Update failed: \(error.localizedDescription)")
+        }
     }
 }
 
