@@ -14,7 +14,7 @@ struct ContentView: View {
     @EnvironmentObject var fileOpener: FileOpener
 
     let tabs: [TabProtocol] = [
-        ProjectListTab(),
+//        ProjectListTab(),
         ScanListTab(),
         ScannerTab(),
         SettingsTab(),
