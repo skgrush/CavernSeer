@@ -139,15 +139,7 @@ struct ElevationCrossSectionRender: View {
     private var observer = PlanRenderInsetIntoElevation()
 
     var body: some View {
-        ZStack {
-            PlanProjectedMiniWorldRender(
-                scan: scan,
-                color: color,
-                ambientColor: ambientColor,
-                quiltMesh: quiltMesh,
-                overlays: [observer]
-            )
-            .frame(width: 50, height: 50, alignment: .bottomTrailing)
+        ZStack(alignment: .bottomTrailing) {
             ElevationProjectedMiniWorldRender(
                 scan: scan,
                 color: color,
@@ -157,6 +149,17 @@ struct ElevationCrossSectionRender: View {
                 depthOfField: depthOfField,
                 observer: observer
             )
+
+            PlanProjectedMiniWorldRender(
+                scan: scan,
+                color: color,
+                ambientColor: ambientColor,
+                quiltMesh: quiltMesh,
+                overlays: [observer],
+                showUI: false
+            )
+            .frame(width: 150, height: 150, alignment: .bottomTrailing)
+            .offset(x: 0, y: -80)
         }
     }
 
