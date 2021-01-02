@@ -10,7 +10,7 @@ import SwiftUI /// View
 import SceneKit /// SCN*
 
 protocol SCNRenderObserver {
-    func observationUpdated(view: SCNView)
+    func renderObserver(renderer: SCNSceneRenderer)
 }
 
 struct ElevationProjectedMiniWorldRender: View {
@@ -221,6 +221,7 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
         atTime time: TimeInterval
     ) {
         self.updateOrthoScale(renderer)
+        self.observer?.renderObserver(renderer: renderer)
     }
 
     func makeaCamera() -> SCNNode {

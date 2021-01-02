@@ -8,32 +8,36 @@
 
 import SwiftUI
 import SceneKit
+import Combine /// Cancellable
 
 class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
 
-    private weak var view: SCNView? = nil
-
-//    private var cameraPosition: simd_float3?
-//    private var cameraRotation: simd_float4?
-//    private var cameraRight: simd_float3?
+    private weak var parentView: SCNView? = nil
 
     private var left: SCNVector3?
     private var right: SCNVector3?
 
+    private var previousScale: Double?
+    private var previousPOV: simd_float4x4?
 
     /**
      * Plan view made.
      */
     override func parentMade(view: SCNView) {
-//        self.view = view
+        self.parentView = view
+
+        self.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(self)
 
-//        NSLayoutConstraint.activate([
-//            self.topAnchor.constraint(equalTo: view.topAnchor),
-//            self.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            self.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            self.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//        ])
+        self.backgroundColor = UIColor.clear
+
+        NSLayoutConstraint.activate([
+            self.topAnchor.constraint(equalTo: view.topAnchor),
+            self.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            self.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            self.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
     }
 
     /**
@@ -50,20 +54,38 @@ class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
 
     }
 
-    func observationUpdated(view: SCNView) {
-        if let pov = view.pointOfView {
+    func renderObserver(renderer: SCNSceneRenderer) {
+        if
+            let pov = renderer.pointOfView,
+            let camera = pov.camera
+        {
+            let povTx = pov.simdTransform
+            let povScale = camera.orthographicScale
 
-//            self.cameraPosition = pov.simdPosition
-//            self.cameraRotation = pov.simdRotation
-//            self.cameraRight = pov.simdWorldRight
+            if (
+                self.previousPOV == nil ||
+                !simd_equal(self.previousPOV!, povTx) ||
+                self.previousScale != povScale
+            ) {
+                self.previousPOV = povTx
+                self.previousScale = povScale
+                self.updateLinePosition(pov: pov, scale: povScale)
 
-            let offset10 = 10 * pov.simdWorldRight
-            let left = pov.simdPosition - offset10
-            let right = pov.simdPosition + offset10
-
-            self.left = SCNVector3(left.x, left.y, left.z)
-            self.right = SCNVector3(right.x, right.y, right.z)
+                DispatchQueue.main.async {
+                    self.setNeedsDisplay()
+                }
+            }
         }
+    }
+
+    func updateLinePosition(pov: SCNNode, scale: Double) {
+
+        let offset10 = Float(scale) * pov.simdWorldRight
+        let left = pov.simdPosition - offset10
+        let right = pov.simdPosition + offset10
+
+        self.left = SCNVector3(left.x, left.y, left.z)
+        self.right = SCNVector3(right.x, right.y, right.z)
     }
 
     override func draw(_ rect: CGRect) {
@@ -74,27 +96,17 @@ class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
         if let context = UIGraphicsGetCurrentContext() {
 
             context.clear(bounds)
-            context.setFillColor(UIColor.clear.cgColor)
-            context.fill(bounds)
 
             self.alpha = 0.8
 
-            context.setLineWidth(5)
+            context.setLineWidth(2)
             context.setStrokeColor(UIColor.black.cgColor)
 
             if
-                let view = self.view,
-//                let cameraPos = self.cameraPosition,
-//                let cameraRot = self.cameraRotation,
-//                let cameraRight = self.cameraRight
+                let view = self.parentView,
                 let left = self.left,
                 let right = self.right
             {
-//                let offset10 = 10 * cameraRight
-//
-//                let left = cameraPos - offset10
-//                let right = cameraPos + offset10
-//
                 let projLeft = view.projectPoint(left)
                 let projRight = view.projectPoint(right)
 
