@@ -29,6 +29,8 @@ struct ElevationProjectedMiniWorldRender: View {
 
     var observer: SCNRenderObserver?
 
+    var showUI: Bool = true
+
     @State
     private var prevSelection: SurveyStation?
 
@@ -75,33 +77,37 @@ struct ElevationProjectedMiniWorldRender: View {
                     selection: selection,
                     prevSelection: $prevSelection,
                     observer: observer,
-                    scaleBarModel: $scaleBarModel
+                    scaleBarModel: $scaleBarModel,
+                    showUI: showUI
                 )
             }
-            HStack {
-                Spacer()
 
+            if self.showUI {
                 HStack {
-                    RotationControls(rotation: $rotation)
-                }
+                    Spacer()
 
-                Spacer()
-
-                HStack {
-                    Button(action: { fly += 2 }) {
-                        Image(systemName: "arrow.up.square")
+                    HStack {
+                        RotationControls(rotation: $rotation)
                     }
-                    Text("depth")
-                    Button(action: { fly -= 2 }) {
-                        Image(systemName: "arrow.down.square")
+
+                    Spacer()
+
+                    HStack {
+                        Button(action: { fly += 2 }) {
+                            Image(systemName: "arrow.up.square")
+                        }
+                        Text("depth")
+                        Button(action: { fly -= 2 }) {
+                            Image(systemName: "arrow.down.square")
+                        }
                     }
+
+                    Spacer()
+
+                    barSubview
+
+                    Spacer()
                 }
-
-                Spacer()
-
-                barSubview
-
-                Spacer()
             }
         }
         .sheet(isPresented: $snapshotModel.showPrompt) {
@@ -119,6 +125,7 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
 
     let sceneNodes: [SCNNode]
     let ambientColor: Color?
+    let showUI: Bool
 
     var depthOfField: Double?
     @Binding
@@ -144,7 +151,8 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
         selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
         observer: SCNRenderObserver?,
-        scaleBarModel: Binding<ScaleBarModel>
+        scaleBarModel: Binding<ScaleBarModel>,
+        showUI: Bool
     ) {
         self.sceneNodes = sceneNodes
         self.ambientColor = ambientColor
@@ -156,6 +164,7 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
         self._prevSelected = prevSelection
         self.observer = observer
         self._scaleBarModel = scaleBarModel
+        self.showUI = showUI
 
         super.init(nibName: nil, bundle: nil)
     }

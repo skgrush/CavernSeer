@@ -21,6 +21,8 @@ struct PlanProjectedMiniWorldRender: View {
 
     var overlays: [SCNDrawSubview]? = nil
 
+    var showUI: Bool = true
+
     @State
     private var prevSelection: SurveyStation?
 
@@ -52,11 +54,14 @@ struct PlanProjectedMiniWorldRender: View {
                 selection: selection,
                 prevSelection: $prevSelection,
                 overlays: overlays,
-                scaleBarModel: $scaleBarModel
+                scaleBarModel: $scaleBarModel,
+                showUI: self.showUI
             )
-            HStack {
-                Stepper("Height: \(height)m", value: $height)
-                    .frame(maxWidth: 150)
+            if self.showUI {
+                HStack {
+                    Stepper("Height: \(height)m", value: $height)
+                        .frame(maxWidth: 150)
+                }
             }
         }
         .sheet(isPresented: $snapshotModel.showPrompt) {
@@ -86,6 +91,7 @@ final class PlanProjectedMiniWorldRenderController :
 
     let sceneNodes: [SCNNode]
     let ambientColor: Color?
+    let showUI: Bool
 
     var overlays: [SCNDrawSubview]?
 
@@ -107,7 +113,8 @@ final class PlanProjectedMiniWorldRenderController :
         selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
         overlays: [SCNDrawSubview]?,
-        scaleBarModel: Binding<ScaleBarModel>
+        scaleBarModel: Binding<ScaleBarModel>,
+        showUI: Bool
     ) {
         self.sceneNodes = sceneNodes
         self.ambientColor = ambientColor
@@ -117,6 +124,7 @@ final class PlanProjectedMiniWorldRenderController :
         self._prevSelected = prevSelection
         self.overlays = overlays
         self._scaleBarModel = scaleBarModel
+        self.showUI = showUI
 
         super.init(nibName: nil, bundle: nil)
     }
