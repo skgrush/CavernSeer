@@ -170,7 +170,9 @@ struct ElevationCrossSectionRender: View {
                 initialHeight: 20
             )
             .frame(width: 150, height: 150, alignment: .bottomTrailing)
-            .offset(x: 0, y: -80)
+            .shadow(radius: 2)
+            .border(Color.primary, width: 2)
+            .offset(x: 0, y: -100)
         }
     }
 
