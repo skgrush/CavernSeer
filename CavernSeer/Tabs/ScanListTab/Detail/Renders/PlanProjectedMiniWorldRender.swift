@@ -23,6 +23,8 @@ struct PlanProjectedMiniWorldRender: View {
 
     var showUI: Bool = true
 
+    var initialHeight: Int? = nil
+
     @State
     private var prevSelection: SurveyStation?
 
@@ -68,6 +70,13 @@ struct PlanProjectedMiniWorldRender: View {
             SnapshotExportView(model: snapshotModel)
         }
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
+        .onAppear(perform: self.onAppear)
+    }
+
+    private func onAppear() {
+        if (self.initialHeight != nil) {
+            self.height = self.initialHeight!
+        }
     }
 }
 

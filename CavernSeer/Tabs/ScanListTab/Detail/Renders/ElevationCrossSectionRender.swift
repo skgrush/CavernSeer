@@ -91,8 +91,6 @@ class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
 
-        defer { setNeedsDisplay() }
-
         if let context = UIGraphicsGetCurrentContext() {
 
             context.clear(bounds)
@@ -168,7 +166,8 @@ struct ElevationCrossSectionRender: View {
                 ambientColor: ambientColor,
                 quiltMesh: quiltMesh,
                 overlays: [observer],
-                showUI: false
+                showUI: false,
+                initialHeight: 20
             )
             .frame(width: 150, height: 150, alignment: .bottomTrailing)
             .offset(x: 0, y: -80)
