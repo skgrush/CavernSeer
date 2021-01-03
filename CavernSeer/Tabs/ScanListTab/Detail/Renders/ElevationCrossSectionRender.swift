@@ -10,7 +10,7 @@ import SwiftUI
 import SceneKit
 import Combine /// Cancellable
 
-class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
+class CrossSectionPlanDrawOverlay : SCNDrawSubview, SCNRenderObserver {
 
     private weak var parentView: SCNView? = nil
 
@@ -20,8 +20,13 @@ class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
     private var previousScale: Double?
     private var previousPOV: simd_float4x4?
 
+    private var previousParentScale: Double?
+    private var previousParentPov: simd_float4x4?
+
     /**
-     * Plan view made.
+     * The (parent) plan view was made.
+     *
+     * Add ourselves as a subview and wait for it to render.
      */
     override func parentMade(view: SCNView) {
         self.parentView = view
@@ -32,23 +37,46 @@ class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
 
         self.backgroundColor = UIColor.clear
 
-        NSLayoutConstraint.activate([
-            self.topAnchor.constraint(equalTo: view.topAnchor),
-            self.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            self.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            self.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        self.constrainToParent()
     }
 
     /**
-     * Plan view updated.
+     * The (parent) plan view updated.
      */
     override func parentUpdated(view: SCNView) {
 
     }
 
     /**
-     * Plan view dismantled
+     * The (parent) plan view rendered.
+     *
+     * If-and-only-if the parent's position or camera scale changed, we need to redraw the line.
+     */
+    override func parentRender(renderer: SCNSceneRenderer) {
+        if
+            let parentPov = renderer.pointOfView,
+            let camera = parentPov.camera
+        {
+            let parentPovTx = parentPov.simdTransform
+            let parentScale = camera.orthographicScale
+
+            if (
+                self.previousParentPov == nil ||
+                !simd_equal(self.previousParentPov!, parentPovTx) ||
+                self.previousParentScale != parentScale
+            ) {
+                self.previousParentPov = parentPovTx
+                self.previousParentScale = parentScale
+
+                DispatchQueue.main.async {
+                    self.setNeedsDisplay()
+                }
+            }
+        }
+    }
+
+    /**
+     * The (parent) plan view dismantled
      */
     override func parentDismantled(view: SCNView) {
 
@@ -78,7 +106,7 @@ class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
         }
     }
 
-    func updateLinePosition(pov: SCNNode, scale: Double) {
+    private func updateLinePosition(pov: SCNNode, scale: Double) {
 
         let offset10 = Float(scale) * pov.simdWorldRight
         let left = pov.simdPosition - offset10
@@ -124,6 +152,17 @@ class PlanRenderInsetIntoElevation : SCNDrawSubview, SCNRenderObserver {
             }
         }
     }
+
+    private func constrainToParent() {
+        if let view = self.parentView {
+            NSLayoutConstraint.activate([
+                self.topAnchor.constraint(equalTo: view.topAnchor),
+                self.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                self.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                self.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ])
+        }
+    }
 }
 
 
@@ -146,7 +185,7 @@ struct ElevationCrossSectionRender: View {
     @State
     private var dummyHeight = 100
     @State
-    private var observer = PlanRenderInsetIntoElevation()
+    private var drawOverlay = CrossSectionPlanDrawOverlay()
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -157,7 +196,7 @@ struct ElevationCrossSectionRender: View {
                 quiltMesh: quiltMesh,
                 barSubview: barSubview,
                 depthOfField: depthOfField,
-                observer: observer
+                observer: drawOverlay
             )
 
             PlanProjectedMiniWorldRender(
@@ -165,7 +204,7 @@ struct ElevationCrossSectionRender: View {
                 color: color,
                 ambientColor: ambientColor,
                 quiltMesh: quiltMesh,
-                overlays: [observer],
+                overlays: [drawOverlay],
                 showUI: false,
                 initialHeight: 20
             )

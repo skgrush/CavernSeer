@@ -80,17 +80,10 @@ struct PlanProjectedMiniWorldRender: View {
     }
 }
 
-protocol DrawSubview: UIView {
-    associatedtype UIViewType: UIView
-
-    func parentMade(view: UIViewType)
-    func parentUpdated(view: UIViewType)
-    func parentDismantled(view: UIViewType)
-}
-
-class SCNDrawSubview : UIView, DrawSubview {
+class SCNDrawSubview : UIView {
     func parentMade(view: SCNView) {}
     func parentUpdated(view: SCNView) {}
+    func parentRender(renderer: SCNSceneRenderer) {}
     func parentDismantled(view: SCNView) {}
 }
 
@@ -195,6 +188,7 @@ final class PlanProjectedMiniWorldRenderController :
         atTime time: TimeInterval
     ) {
         self.updateOrthoScale(renderer)
+        self.overlays?.forEach { $0.parentRender(renderer: renderer) }
     }
 
     override func viewDidLayoutSubviews() {
