@@ -30,18 +30,20 @@ final class ScaleBarModel: ObservableObject {
     func updateOverlay(bounds: CGRect) {
         scene.size = bounds.size
 
+        let path = CGPath(
+            rect: CGRect(x: 0, y: 0, width: bounds.width, height: 60),
+            transform: nil
+        )
+
         var bar = scene.childNode(withName: "scalebar") as? SKShapeNode
         if bar == nil {
-            bar = SKShapeNode(rectOf: CGSize(width: bounds.width, height: 60))
+            bar = SKShapeNode(path: path)
             bar!.name = "scalebar"
             bar!.fillColor = .white
             bar!.position = CGPoint.zero
             scene.addChild(bar!)
         } else {
-            bar!.path = CGPath(
-                rect: CGRect(x: 0, y: 0, width: bounds.width, height: 60),
-                transform: nil
-            )
+            bar!.path = path
             bar!.position = CGPoint.zero
         }
     }
