@@ -217,10 +217,10 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
 
     func renderer(
         _ renderer: SCNSceneRenderer,
-        didRenderScene scene: SCNScene,
+        willRenderScene scene: SCNScene,
         atTime time: TimeInterval
     ) {
-        self.updateOrthoScale(renderer)
+        self.willRenderScene(renderer, scene: scene, atTime: time)
         self.observer?.renderObserver(renderer: renderer)
     }
 

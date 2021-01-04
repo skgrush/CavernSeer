@@ -184,10 +184,10 @@ final class PlanProjectedMiniWorldRenderController :
 
     func renderer(
         _ renderer: SCNSceneRenderer,
-        didRenderScene scene: SCNScene,
+        willRenderScene scene: SCNScene,
         atTime time: TimeInterval
     ) {
-        self.updateOrthoScale(renderer)
+        self.willRenderScene(renderer, scene: scene, atTime: time)
         self.overlays?.forEach { $0.parentRender(renderer: renderer) }
     }
 
