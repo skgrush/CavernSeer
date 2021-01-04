@@ -10,7 +10,8 @@ import SwiftUI
 import SceneKit
 import Combine /// Cancellable
 
-class CrossSectionPlanDrawOverlay : SCNDrawSubview, SCNRenderObserver {
+fileprivate class CrossSectionPlanDrawOverlay :
+    SCNDrawSubview, SCNRenderObserver {
 
     private weak var parentView: SCNView? = nil
 
