@@ -14,8 +14,10 @@ class CrossSectionPlanDrawOverlay : SCNDrawSubview, SCNRenderObserver {
 
     private weak var parentView: SCNView? = nil
 
-    private var left: SCNVector3?
-    private var right: SCNVector3?
+    /// three points making up a 1m wide and 1m tall triangle pointing in the camera view's direction.
+    private var centersAndForward: (SCNVector3, SCNVector3, SCNVector3)?
+    /// points representing the left and right edges of the field of view
+    private var leftAndRight: (SCNVector3, SCNVector3)?
 
     private var previousScale: Double?
     private var previousPOV: simd_float4x4?
@@ -108,12 +110,26 @@ class CrossSectionPlanDrawOverlay : SCNDrawSubview, SCNRenderObserver {
 
     private func updateLinePosition(pov: SCNNode, scale: Double) {
 
-        let offset10 = Float(scale) * pov.simdWorldRight
-        let left = pov.simdPosition - offset10
-        let right = pov.simdPosition + offset10
+        let center = pov.simdPosition
+        let rightOffset10 = Float(scale) * pov.simdWorldRight
+        let rightOffset0_5 = 0.5 * pov.simdWorldRight
 
-        self.left = SCNVector3(left.x, left.y, left.z)
-        self.right = SCNVector3(right.x, right.y, right.z)
+        let left = center - rightOffset10
+        let right = center + rightOffset10
+
+        self.leftAndRight = (
+            SCNVector3(left.x, left.y, left.z),
+            SCNVector3(right.x, right.y, right.z)
+        )
+
+        let forward = center + pov.simdWorldFront
+        let centerLeft = center - rightOffset0_5
+        let centerRight = center + rightOffset0_5
+        self.centersAndForward = (
+            SCNVector3(centerLeft.x, centerLeft.y, centerLeft.z),
+            SCNVector3(centerRight.x, centerRight.y, centerRight.z),
+            SCNVector3(forward.x, forward.y, forward.z)
+        )
     }
 
     override func draw(_ rect: CGRect) {
@@ -130,25 +146,21 @@ class CrossSectionPlanDrawOverlay : SCNDrawSubview, SCNRenderObserver {
 
             if
                 let view = self.parentView,
-                let left = self.left,
-                let right = self.right
+                let (left, right) = self.leftAndRight,
+                let (centerL, centerR, forward) = self.centersAndForward
             {
-                let projLeft = view.projectPoint(left)
-                let projRight = view.projectPoint(right)
 
-
-                context.beginPath()
-                let start = CGPoint(
-                    x: Double(projLeft.x),
-                    y: Double(projLeft.y)
+                self.projectAndDrawLines(
+                    view: view,
+                    ctx: context,
+                    points: [
+                        left,
+                        centerL,
+                        forward,
+                        centerR,
+                        right
+                    ]
                 )
-                let end = CGPoint(
-                    x: Double(projRight.x),
-                    y: Double(projRight.y)
-                )
-                context.move(to: start)
-                context.addLine(to: end)
-                context.strokePath()
             }
         }
     }
@@ -162,6 +174,25 @@ class CrossSectionPlanDrawOverlay : SCNDrawSubview, SCNRenderObserver {
                 self.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
         }
+    }
+
+    /**
+     * Project the points into the view, then draw lines between them.
+     *
+     * Don't forget to line width and stroke color ahead of time!
+     */
+    private func projectAndDrawLines(
+        view: SCNView,
+        ctx: CGContext,
+        points: [SCNVector3]
+    ) {
+        let projectedPoints = points
+            .map { view.projectPoint($0) }
+            .map { CGPoint(x: Double($0.x), y: Double($0.y)) }
+
+        ctx.beginPath()
+        ctx.addLines(between: projectedPoints)
+        ctx.strokePath()
     }
 }
 
