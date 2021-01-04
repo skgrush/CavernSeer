@@ -219,7 +219,7 @@ struct ElevationCrossSectionRender: View {
     private var drawOverlay = CrossSectionPlanDrawOverlay()
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack(alignment: .topTrailing) {
             ElevationProjectedMiniWorldRender(
                 scan: scan,
                 color: color,
@@ -239,10 +239,9 @@ struct ElevationCrossSectionRender: View {
                 showUI: false,
                 initialHeight: 20
             )
-            .frame(width: 150, height: 150, alignment: .bottomTrailing)
+            .frame(width: 150, height: 150)
             .shadow(radius: 2)
             .border(Color.primary, width: 2)
-            .offset(x: 0, y: -100)
         }
     }
 
