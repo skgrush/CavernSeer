@@ -42,6 +42,9 @@
 		7E43C632256B599600170C17 /* SCNInteractionMode+name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E43C631256B599600170C17 /* SCNInteractionMode+name.swift */; };
 		7E4888342557534900894D43 /* ElevationProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */; };
 		7E488839255754B200894D43 /* BaseProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */; };
+		7E5213F42579D1420015FA54 /* RotationControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5213F32579D1420015FA54 /* RotationControls.swift */; };
+		7E5213FC2579D6F90015FA54 /* ElevationCrossSectionRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5213FB2579D6F90015FA54 /* ElevationCrossSectionRender.swift */; };
+		7E5214012579DD610015FA54 /* SavedScanDetailLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5214002579DD610015FA54 /* SavedScanDetailLinks.swift */; };
 		7E6C0EAC24A800C200129E8C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAB24A800C200129E8C /* AppDelegate.swift */; };
 		7E6C0EAE24A800C200129E8C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAD24A800C200129E8C /* SceneDelegate.swift */; };
 		7E6C0EB024A800C200129E8C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EAF24A800C200129E8C /* ContentView.swift */; };
@@ -76,12 +79,12 @@
 		7E9C2D0724B8116500B9FC44 /* icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E9C2D0324B8116400B9FC44 /* icon-40.png */; };
 		7E9C2D0824B8116500B9FC44 /* icon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E9C2D0424B8116500B9FC44 /* icon-1024.png */; };
 		7E9C2D0924B8116500B9FC44 /* icon-58.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E9C2D0524B8116500B9FC44 /* icon-58.png */; };
-		7E9C2D0B24BA283400B9FC44 /* ProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9C2D0A24BA283400B9FC44 /* ProjectedMiniWorldRender.swift */; };
 		7E9CF3CC259D3D5F0036F6F7 /* PreviewStoredFileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF3CB259D3D5F0036F6F7 /* PreviewStoredFileProtocol.swift */; };
 		7E9CF3D1259D3DDA0036F6F7 /* StoredFileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF3D0259D3DDA0036F6F7 /* StoredFileProtocol.swift */; };
 		7E9CF3D6259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF3D5259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift */; };
 		7E9CF3DB259D5D140036F6F7 /* PreviewScanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF3DA259D5D140036F6F7 /* PreviewScanModel.swift */; };
 		7E9CF3EE259D6C6F0036F6F7 /* PreviewProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF3ED259D6C6F0036F6F7 /* PreviewProjectModel.swift */; };
+		7E9CF42E259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF42D259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift */; };
 		7EAE9CCD2561B88600EA66D0 /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CCC2561B88600EA66D0 /* SettingsTabView.swift */; };
 		7EAE9CD52561C6B700EA66D0 /* SettingsKeyEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CD42561C6B700EA66D0 /* SettingsKeyEnum.swift */; };
 		7EAE9CE92561FF5900EA66D0 /* UserDefaults+color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CE82561FF5900EA66D0 /* UserDefaults+color.swift */; };
@@ -144,6 +147,9 @@
 		7E43C631256B599600170C17 /* SCNInteractionMode+name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNInteractionMode+name.swift"; sourceTree = "<group>"; };
 		7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
 		7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
+		7E5213F32579D1420015FA54 /* RotationControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationControls.swift; sourceTree = "<group>"; };
+		7E5213FB2579D6F90015FA54 /* ElevationCrossSectionRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationCrossSectionRender.swift; sourceTree = "<group>"; };
+		7E5214002579DD610015FA54 /* SavedScanDetailLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanDetailLinks.swift; sourceTree = "<group>"; };
 		7E6C0EA824A800C200129E8C /* CavernSeer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CavernSeer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E6C0EAB24A800C200129E8C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7E6C0EAD24A800C200129E8C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -184,12 +190,12 @@
 		7E9C2D0324B8116400B9FC44 /* icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-40.png"; sourceTree = "<group>"; };
 		7E9C2D0424B8116500B9FC44 /* icon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-1024.png"; sourceTree = "<group>"; };
 		7E9C2D0524B8116500B9FC44 /* icon-58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-58.png"; sourceTree = "<group>"; };
-		7E9C2D0A24BA283400B9FC44 /* ProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
 		7E9CF3CB259D3D5F0036F6F7 /* PreviewStoredFileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewStoredFileProtocol.swift; sourceTree = "<group>"; };
 		7E9CF3D0259D3DDA0036F6F7 /* StoredFileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredFileProtocol.swift; sourceTree = "<group>"; };
 		7E9CF3D5259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStoredFileProtocol.swift; sourceTree = "<group>"; };
 		7E9CF3DA259D5D140036F6F7 /* PreviewScanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewScanModel.swift; sourceTree = "<group>"; };
 		7E9CF3ED259D6C6F0036F6F7 /* PreviewProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewProjectModel.swift; sourceTree = "<group>"; };
+		7E9CF42D259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlanProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
 		7EAE9CCC2561B88600EA66D0 /* SettingsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabView.swift; sourceTree = "<group>"; };
 		7EAE9CD42561C6B700EA66D0 /* SettingsKeyEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsKeyEnum.swift; sourceTree = "<group>"; };
 		7EAE9CE82561FF5900EA66D0 /* UserDefaults+color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+color.swift"; sourceTree = "<group>"; };
@@ -313,6 +319,14 @@
 				7E43C62C256B49AB00170C17 /* Interaction3dSettingsSection.swift */,
 			);
 			path = sections;
+			sourceTree = "<group>";
+		};
+		7E5213F22579CC490015FA54 /* shared-components */ = {
+			isa = PBXGroup;
+			children = (
+				7E5213F32579D1420015FA54 /* RotationControls.swift */,
+			);
+			path = "shared-components";
 			sourceTree = "<group>";
 		};
 		7E6C0E9F24A800C200129E8C = {
@@ -471,6 +485,7 @@
 			children = (
 				7E9C2CE724B3FD4B00B9FC44 /* SavedScanDetail.swift */,
 				7E9C2CF024B55FE800B9FC44 /* SavedScanDetailAdvanced.swift */,
+				7E5214002579DD610015FA54 /* SavedScanDetailLinks.swift */,
 				7E9C2D0C24BA2B7F00B9FC44 /* Renders */,
 			);
 			path = Detail;
@@ -507,10 +522,12 @@
 		7E9C2D0C24BA2B7F00B9FC44 /* Renders */ = {
 			isa = PBXGroup;
 			children = (
+				7E5213F22579CC490015FA54 /* shared-components */,
 				7E9C2CEC24B55FBA00B9FC44 /* MiniWorldRender.swift */,
-				7E9C2D0A24BA283400B9FC44 /* ProjectedMiniWorldRender.swift */,
+				7E9CF42D259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift */,
 				7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */,
 				7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */,
+				7E5213FB2579D6F90015FA54 /* ElevationCrossSectionRender.swift */,
 			);
 			path = Renders;
 			sourceTree = "<group>";
@@ -668,7 +685,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E9C2D0B24BA283400B9FC44 /* ProjectedMiniWorldRender.swift in Sources */,
 				7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */,
 				7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */,
 				7E23DB122544FDA800BABB52 /* ObjSerializer.swift in Sources */,
@@ -695,6 +711,7 @@
 				7EAE9CF32562212D00EA66D0 /* SettingsStore.swift in Sources */,
 				7E3AD7AB2558FFA70068D1E5 /* SnapshotExportView.swift in Sources */,
 				7E4003B524AD7B7500B709BD /* DrawableProtocol.swift in Sources */,
+				7E5214012579DD610015FA54 /* SavedScanDetailLinks.swift in Sources */,
 				7E0C5EDA24BBA2E0001C0D0E /* MergeToolModel.swift in Sources */,
 				7E0C5EEE24CA8977001C0D0E /* MakeProjectView.swift in Sources */,
 				7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */,
@@ -714,7 +731,9 @@
 				7E9CF3DB259D5D140036F6F7 /* PreviewScanModel.swift in Sources */,
 				7E0C5EE524C90746001C0D0E /* ProjectStore.swift in Sources */,
 				7EAE9CCD2561B88600EA66D0 /* SettingsTabView.swift in Sources */,
+				7E5213FC2579D6F90015FA54 /* ElevationCrossSectionRender.swift in Sources */,
 				7E0C5ED524BACECE001C0D0E /* MergeTool.swift in Sources */,
+				7E9CF42E259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift in Sources */,
 				7E0C5EDE24BD5D4E001C0D0E /* ProjectFile.swift in Sources */,
 				7E6C0EAE24A800C200129E8C /* SceneDelegate.swift in Sources */,
 				7E9C2CF124B55FE800B9FC44 /* SavedScanDetailAdvanced.swift in Sources */,
@@ -727,6 +746,7 @@
 				7E6C0EEF24A8388C00129E8C /* ScanFile.swift in Sources */,
 				7E23DB17254570BC00BABB52 /* ObjSerializationError.swift in Sources */,
 				7E6C0EB024A800C200129E8C /* ContentView.swift in Sources */,
+				7E5213F42579D1420015FA54 /* RotationControls.swift in Sources */,
 				7E43C632256B599600170C17 /* SCNInteractionMode+name.swift in Sources */,
 				7E43C628256B48A800170C17 /* UnitsSettingsSection.swift in Sources */,
 				7E9C2CE224B3F74E00B9FC44 /* ScanListTabView.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  ProjectedMiniWorldRender.swift
+//  PlanProjectedMiniWorldRender.swift
 //  CavernSeer
 //
 //  Created by Samuel Grush on 7/11/20.
@@ -9,7 +9,7 @@
 import SwiftUI /// View
 import SceneKit /// SCN*
 
-struct ProjectedMiniWorldRender: View {
+struct PlanProjectedMiniWorldRender: View {
 
     var scan: ScanFile
 
@@ -17,8 +17,13 @@ struct ProjectedMiniWorldRender: View {
     var ambientColor: Color?
     var quiltMesh: Bool
 
-    @Binding
-    var selection: SurveyStation?
+    var selection: SurveyStation? = nil
+
+    var overlays: [SCNDrawSubview]? = nil
+
+    var showUI: Bool = true
+
+    var initialHeight: Int? = nil
 
     @State
     private var prevSelection: SurveyStation?
@@ -43,36 +48,57 @@ struct ProjectedMiniWorldRender: View {
 
     var body: some View {
         VStack {
-            ProjectedMiniWorldRenderController(
+            PlanProjectedMiniWorldRenderController(
                 sceneNodes: sceneNodes,
                 ambientColor: ambientColor,
                 height: $height,
                 snapshotModel: _snapshotModel,
-                selection: $selection,
+                selection: selection,
                 prevSelection: $prevSelection,
-                scaleBarModel: $scaleBarModel
+                overlays: overlays,
+                scaleBarModel: $scaleBarModel,
+                showUI: self.showUI
             )
-            HStack {
-                Stepper("Height: \(height)m", value: $height)
-                    .frame(maxWidth: 150)
+            if self.showUI {
+                HStack {
+                    Stepper("Height: \(height)m", value: $height)
+                        .frame(maxWidth: 150)
+                }
             }
         }
         .sheet(isPresented: $snapshotModel.showPrompt) {
             SnapshotExportView(model: snapshotModel)
         }
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
+        .onAppear(perform: self.onAppear)
+    }
+
+    private func onAppear() {
+        if (self.initialHeight != nil) {
+            self.height = self.initialHeight!
+        }
     }
 }
 
-final class ProjectedMiniWorldRenderController :
+class SCNDrawSubview : UIView {
+    func parentMade(view: SCNView) {}
+    func parentUpdated(view: SCNView) {}
+    func parentRender(renderer: SCNSceneRenderer) {}
+    func parentDismantled(view: SCNView) {}
+}
+
+
+final class PlanProjectedMiniWorldRenderController :
     UIViewController, BaseProjectedMiniWorldRenderController {
 
     let sceneNodes: [SCNNode]
     let ambientColor: Color?
+    let showUI: Bool
+
+    var overlays: [SCNDrawSubview]?
 
     @Binding
     var height: Int
-    @Binding
     var selectedStation: SurveyStation?
     @Binding
     var prevSelected: SurveyStation?
@@ -86,17 +112,21 @@ final class ProjectedMiniWorldRenderController :
         ambientColor: Color?,
         height: Binding<Int>,
         snapshotModel: ObservedObject<SnapshotExportModel>,
-        selection: Binding<SurveyStation?>,
+        selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
-        scaleBarModel: Binding<ScaleBarModel>
+        overlays: [SCNDrawSubview]?,
+        scaleBarModel: Binding<ScaleBarModel>,
+        showUI: Bool
     ) {
         self.sceneNodes = sceneNodes
         self.ambientColor = ambientColor
-        _height = height
-        _snapshotModel = snapshotModel
-        _selectedStation = selection
-        _prevSelected = prevSelection
-        _scaleBarModel = scaleBarModel
+        self._height = height
+        self._snapshotModel = snapshotModel
+        self.selectedStation = selection
+        self._prevSelected = prevSelection
+        self.overlays = overlays
+        self._scaleBarModel = scaleBarModel
+        self.showUI = showUI
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -109,6 +139,7 @@ final class ProjectedMiniWorldRenderController :
     func postSceneAttachment(sceneView: SCNView) {
         sceneView.allowsCameraControl = true
         sceneView.defaultCameraController.interactionMode = .pan
+        self.overlays?.forEach { $0.parentMade(view: sceneView) }
     }
 
     func viewUpdater(uiView: SCNView) {
@@ -131,6 +162,8 @@ final class ProjectedMiniWorldRenderController :
                 overlaySKScene: self.scaleBarModel.scene
             )
         }
+
+        self.overlays?.forEach { $0.parentUpdated(view: uiView) }
     }
 
     func makeaCamera() -> SCNNode {
@@ -151,14 +184,21 @@ final class ProjectedMiniWorldRenderController :
 
     func renderer(
         _ renderer: SCNSceneRenderer,
-        didRenderScene scene: SCNScene,
+        willRenderScene scene: SCNScene,
         atTime time: TimeInterval
     ) {
-        self.updateOrthoScale(renderer)
+        self.willRenderScene(renderer, scene: scene, atTime: time)
+        self.overlays?.forEach { $0.parentRender(renderer: renderer) }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         scaleBarModel.updateOverlay(bounds: view.frame)
+    }
+
+    static func dismantleUIView(_ uiView: SCNView, coordinator: ()) {
+        uiView.subviews
+            .compactMap { return $0 as? SCNDrawSubview }
+            .forEach { $0.parentDismantled(view: uiView) }
     }
 }

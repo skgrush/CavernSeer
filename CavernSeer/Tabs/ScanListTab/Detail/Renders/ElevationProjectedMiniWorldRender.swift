@@ -9,6 +9,10 @@
 import SwiftUI /// View
 import SceneKit /// SCN*
 
+protocol SCNRenderObserver {
+    func renderObserver(renderer: SCNSceneRenderer)
+}
+
 struct ElevationProjectedMiniWorldRender: View {
 
     var scan: ScanFile
@@ -17,8 +21,15 @@ struct ElevationProjectedMiniWorldRender: View {
     var ambientColor: Color?
     var quiltMesh: Bool
 
-    @Binding
+    var barSubview: AnyView? = nil
+
+    var depthOfField: Double? = nil
+
     var selection: SurveyStation?
+
+    var observer: SCNRenderObserver?
+
+    var showUI: Bool = true
 
     @State
     private var prevSelection: SurveyStation?
@@ -55,51 +66,48 @@ struct ElevationProjectedMiniWorldRender: View {
 
     var body: some View {
         VStack {
-            ElevationProjectedMiniWorldRenderController(
-                sceneNodes: sceneNodes,
-                ambientColor: ambientColor,
-                rotation: $rotation,
-                fly: $fly,
-                snapshotModel: _snapshotModel,
-                selection: $selection,
-                prevSelection: $prevSelection,
-                scaleBarModel: $scaleBarModel
-            )
-            HStack {
-                Spacer()
+            ZStack {
+                ElevationProjectedMiniWorldRenderController(
+                    sceneNodes: sceneNodes,
+                    ambientColor: ambientColor,
+                    rotation: $rotation,
+                    depthOfField: depthOfField,
+                    fly: $fly,
+                    snapshotModel: _snapshotModel,
+                    selection: selection,
+                    prevSelection: $prevSelection,
+                    observer: observer,
+                    scaleBarModel: $scaleBarModel,
+                    showUI: showUI
+                )
+            }
 
+            if self.showUI {
                 HStack {
-                    Stepper(
-                        onIncrement: { clampRotation(+5) },
-                        onDecrement: { clampRotation(-5) },
-                        label: {
-                            Text("\(rotation)ºN")
-                            + Text("m").font(.system(size: 8)).baselineOffset(0)
+                    Spacer()
+
+                    HStack {
+                        RotationControls(rotation: $rotation)
+                    }
+
+                    Spacer()
+
+                    HStack {
+                        Button(action: { fly += 2 }) {
+                            Image(systemName: "arrow.up.square")
                         }
-                    )
-                        .frame(maxWidth: 150)
+                        Text("depth")
+                        Button(action: { fly -= 2 }) {
+                            Image(systemName: "arrow.down.square")
+                        }
+                    }
 
-                    Button(action: { clampRotation(-90) }) {
-                        Image(systemName: "gobackward.90")
-                    }
-                    Button(action: { clampRotation(+90) }) {
-                        Image(systemName: "goforward.90")
-                    }
+                    Spacer()
+
+                    barSubview
+
+                    Spacer()
                 }
-
-                Spacer()
-
-                HStack {
-                    Button(action: { fly += 2 }) {
-                        Image(systemName: "arrow.up.square")
-                    }
-                    Text("depth")
-                    Button(action: { fly -= 2 }) {
-                        Image(systemName: "arrow.down.square")
-                    }
-                }
-
-                Spacer()
             }
         }
         .sheet(isPresented: $snapshotModel.showPrompt) {
@@ -107,27 +115,23 @@ struct ElevationProjectedMiniWorldRender: View {
         }
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
-
-    /**
-     * Clamp rotation to `[0,360)`, "overflowing" and "underflowing" on boundaries
-     */
-    private func clampRotation(_ delta: Int) {
-        self.rotation = (self.rotation + delta + 360) % 360
-    }
 }
 
-final class ElevationProjectedMiniWorldRenderController :
+fileprivate final class ElevationProjectedMiniWorldRenderController :
     UIViewController,
     BaseProjectedMiniWorldRenderController {
 
+    private static let DefaultDepthOfField: Double = 1000
+
     let sceneNodes: [SCNNode]
     let ambientColor: Color?
+    let showUI: Bool
 
+    var depthOfField: Double?
     @Binding
     var rotation: Int
     @Binding
     var fly: Int
-    @Binding
     var selectedStation: SurveyStation?
     @Binding
     var prevSelected: SurveyStation?
@@ -135,29 +139,35 @@ final class ElevationProjectedMiniWorldRenderController :
     var scaleBarModel: ScaleBarModel
     @ObservedObject
     var snapshotModel: SnapshotExportModel
+    var observer: SCNRenderObserver?
 
     init(
         sceneNodes: [SCNNode],
         ambientColor: Color?,
         rotation: Binding<Int>,
+        depthOfField: Double?,
         fly: Binding<Int>,
         snapshotModel: ObservedObject<SnapshotExportModel>,
-        selection: Binding<SurveyStation?>,
+        selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
-        scaleBarModel: Binding<ScaleBarModel>
+        observer: SCNRenderObserver?,
+        scaleBarModel: Binding<ScaleBarModel>,
+        showUI: Bool
     ) {
         self.sceneNodes = sceneNodes
         self.ambientColor = ambientColor
-        _rotation = rotation
-        _fly = fly
-        _snapshotModel = snapshotModel
-        _selectedStation = selection
-        _prevSelected = prevSelection
-        _scaleBarModel = scaleBarModel
+        self.depthOfField = depthOfField
+        self._rotation = rotation
+        self._fly = fly
+        self._snapshotModel = snapshotModel
+        self.selectedStation = selection
+        self._prevSelected = prevSelection
+        self.observer = observer
+        self._scaleBarModel = scaleBarModel
+        self.showUI = showUI
 
         super.init(nibName: nil, bundle: nil)
     }
-
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -192,7 +202,8 @@ final class ElevationProjectedMiniWorldRenderController :
                     self.fly = 0
                 }
             }
-
+            
+            pov!.camera?.zFar = depthOfField ?? Self.DefaultDepthOfField
             pov!.camera?.fieldOfView = uiView.frame.size.width
         }
 
@@ -206,10 +217,11 @@ final class ElevationProjectedMiniWorldRenderController :
 
     func renderer(
         _ renderer: SCNSceneRenderer,
-        didRenderScene scene: SCNScene,
+        willRenderScene scene: SCNScene,
         atTime time: TimeInterval
     ) {
-        self.updateOrthoScale(renderer)
+        self.willRenderScene(renderer, scene: scene, atTime: time)
+        self.observer?.renderObserver(renderer: renderer)
     }
 
     func makeaCamera() -> SCNNode {
@@ -218,7 +230,7 @@ final class ElevationProjectedMiniWorldRenderController :
         camera.orthographicScale = 1
         camera.projectionDirection = .horizontal
         camera.zNear = 0.1
-        camera.zFar = 1000
+        camera.zFar = depthOfField ?? Self.DefaultDepthOfField
 
         let cameraNode = SCNNode()
         cameraNode.camera = camera

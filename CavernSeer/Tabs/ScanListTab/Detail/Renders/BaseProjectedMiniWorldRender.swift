@@ -12,6 +12,8 @@ import SceneKit /// SCN*
 protocol BaseProjectedMiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
+    var showUI: Bool { get }
+
     var sceneNodes: [SCNNode] { get }
     var ambientColor: Color? { get }
 
@@ -38,9 +40,11 @@ extension BaseProjectedMiniWorldRenderController {
         sceneView.scene = scene
         sceneView.pointOfView = cameraNode
 
-        sceneView.overlaySKScene = self.scaleBarModel.scene
+        if self.showUI {
+            sceneView.overlaySKScene = self.scaleBarModel.scene
 
-        sceneView.showsStatistics = true
+            sceneView.showsStatistics = true
+        }
 
         sceneView.delegate = self
 
@@ -61,13 +65,40 @@ extension BaseProjectedMiniWorldRenderController {
 
         uiView.delegate = self
 
-        scaleBarModel.updateOverlay(bounds: uiView.frame)
+        if self.showUI {
+            scaleBarModel.updateOverlay(bounds: uiView.frame)
+        }
     }
 
-    func updateOrthoScale(_ renderer: SCNSceneRenderer) {
+    /**
+     * Must be called by the implementer during rendering.
+     */
+    func willRenderScene(
+        _ renderer: SCNSceneRenderer,
+        scene: SCNScene,
+        atTime time: TimeInterval
+    ) {
+        if self.showUI && self.scaleBarModel.scene.size.width == 0 {
+            /// this really doesn't seem like the
+            DispatchQueue.main.async {
+                if let scn = renderer as? SCNView {
+
+                    self.scaleBarModel.updateOverlay(bounds: scn.frame)
+                }
+            }
+        }
+
+        self.updateOrthoScale(renderer)
+    }
+
+
+    fileprivate func updateOrthoScale(_ renderer: SCNSceneRenderer) {
+        guard self.showUI else { return }
+
         if let camera = renderer.pointOfView?.camera {
             let orthoScale = camera.orthographicScale
             let scaleBar = self.scaleBarModel
+
             if (
                 orthoScale != scaleBar.prevOrthoScale &&
                 scaleBar.scene.size.width > 0

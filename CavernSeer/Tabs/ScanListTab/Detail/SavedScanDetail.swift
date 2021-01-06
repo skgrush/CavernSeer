@@ -37,17 +37,6 @@ struct SavedScanDetail: View {
     @State
     private var fileExt = "obj"
 
-    @State
-    private var dummySelect: SurveyStation? = nil
-
-    private var meshColor: UIColor? {
-        let cgColor = settings.ColorMesh?.cgColor
-        if cgColor != nil && cgColor!.alpha > 0.05 {
-            return UIColor(cgColor: cgColor!)
-        }
-        return nil
-    }
-
     private func loadModel() {
         if self.model?.url != self.url {
             do {
@@ -89,53 +78,7 @@ struct SavedScanDetail: View {
                 .padding()
 
             if let model = self.model {
-                List {
-                    NavigationLink(
-                        destination: SavedScanDetailAdvanced(model: model)
-                    ) {
-                        HStack {
-                            Text("Advanced")
-                        }
-                    }
-                    NavigationLink(
-                        destination: MiniWorldRender(
-                            scan: model.scan,
-                            color: meshColor,
-                            ambientColor: settings.ColorLightAmbient,
-                            quiltMesh: settings.ColorMeshQuilt
-                        )
-                    ) {
-                        HStack {
-                            Text("3D Render")
-                        }
-                    }
-                    NavigationLink(
-                        destination: ProjectedMiniWorldRender(
-                            scan: model.scan,
-                            color: meshColor,
-                            ambientColor: settings.ColorLightAmbient,
-                            quiltMesh: settings.ColorMeshQuilt,
-                            selection: $dummySelect
-                        )
-                    ) {
-                        HStack {
-                            Text("Plan Projected Render")
-                        }
-                    }
-                    NavigationLink(
-                        destination: ElevationProjectedMiniWorldRender(
-                            scan: model.scan,
-                            color: meshColor,
-                            ambientColor: settings.ColorLightAmbient,
-                            quiltMesh: settings.ColorMeshQuilt,
-                            selection: $dummySelect
-                        )
-                    ) {
-                        HStack {
-                            Text("Elevation Projected Render")
-                        }
-                    }
-                }
+                SavedScanDetailLinks(model: model)
             }
 
             Spacer()
