@@ -85,11 +85,7 @@ struct PlanProjectedMiniWorldRender: View {
     }
 
     private var stepperLabel: String {
-        let metric = Measurement<UnitLength>(
-            value: Double(height),
-            unit: .meters
-        )
-        var preferred = unitsLength.convert(metric)
+        var preferred = unitsLength.fromMetric(Double(height))
         preferred.value = preferred.value.roundedTo(places: 1)
 
         return "Height: \(preferred.description)"

@@ -170,11 +170,8 @@ extension SurveyLine {
         _ endPos: simd_float3,
         lengthPref: LengthPreference
     ) -> String {
-        let metricDistance = Measurement<UnitLength>(
-            value: Double(simd_length(startPos - endPos)),
-            unit: .meters
-        )
-        var preferredDistance = lengthPref.convert(metricDistance)
+        let dist = Double(simd_length(startPos - endPos))
+        var preferredDistance = lengthPref.fromMetric(dist)
         preferredDistance.value = preferredDistance.value.roundedTo(places: 3)
         return preferredDistance.description
     }

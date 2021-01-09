@@ -40,4 +40,12 @@ extension LengthPreference {
     {
         measure.converted(to: self.unit)
     }
+
+    func fromMetric(_ length: Double) -> Measurement<UnitLength> {
+        let metricLength = Measurement<UnitLength>(
+            value: length,
+            unit: .meters
+        )
+        return self.convert(metricLength)
+    }
 }
