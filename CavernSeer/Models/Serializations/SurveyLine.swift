@@ -50,7 +50,10 @@ final class SurveyLine: NSObject, NSSecureCoding {
 
 
 extension SurveyLine {
-    func toSCNNode(stationDict: [SurveyStation.Identifier:SCNNode]) -> SCNNode {
+    func toSCNNode(
+        stationDict: [SurveyStation.Identifier:SCNNode],
+        lengthPref: LengthPreference
+    ) -> SCNNode {
         guard
             let start = stationDict[self.startIdentifier],
             let end = stationDict[self.endIdentifier]
@@ -63,7 +66,7 @@ extension SurveyLine {
 
         let lineNode = drawLine(startPos, endPos)
 
-        let textWrapperNode = drawText(startPos, endPos)
+        let textWrapperNode = drawText(startPos, endPos, lengthPref)
         lineNode.addChildNode(textWrapperNode)
 
         return lineNode
@@ -116,12 +119,19 @@ extension SurveyLine {
 
     private func drawText(
         _ startPos: simd_float3,
-        _ endPos: simd_float3
+        _ endPos: simd_float3,
+        _ lengthPref: LengthPreference
     ) -> SCNNode {
         let constraints = SCNBillboardConstraint()
-        constraints.freeAxes = .Y
-        let distance = simd_length(startPos - endPos)
-        let textGeo = SCNText(string: "\(distance)m", extrusionDepth: 0.01)
+        constraints.freeAxes = .all
+
+        let distance = self.getDistanceString(
+            startPos,
+            endPos,
+            lengthPref: lengthPref
+        )
+
+        let textGeo = SCNText(string: distance, extrusionDepth: 0.01)
         textGeo.flatness = 0
         textGeo.alignmentMode = CATextLayerAlignmentMode.center.rawValue
 
@@ -150,8 +160,23 @@ extension SurveyLine {
             y: (startPos.y + endPos.y) / 2.0 + 0.01,
             z: (startPos.z + endPos.z) / 2.0
         )
+        textWrapperNode.renderingOrder = 1
 
         return textWrapperNode
+    }
+
+    private func getDistanceString(
+        _ startPos: simd_float3,
+        _ endPos: simd_float3,
+        lengthPref: LengthPreference
+    ) -> String {
+        let metricDistance = Measurement<UnitLength>(
+            value: Double(simd_length(startPos - endPos)),
+            unit: .meters
+        )
+        var preferredDistance = lengthPref.convert(metricDistance)
+        preferredDistance.value = preferredDistance.value.roundedTo(places: 3)
+        return preferredDistance.description
     }
 }
 

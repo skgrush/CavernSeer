@@ -9,7 +9,11 @@
 import ARKit /// UIColor, SCNNode, ARMeshGeometry, SCNGeometry, Data, simd_float4x4
 
 extension ScanFile {
-    func toSCNNodes(color: UIColor?, quilt: Bool) -> [SCNNode] {
+    func toSCNNodes(
+        color: UIColor?,
+        quilt: Bool,
+        lengthPref: LengthPreference
+    ) -> [SCNNode] {
         let meshAnchorNodes = self.meshAnchors.map {
             anchor in
             meshGeometryToNode(
@@ -33,7 +37,8 @@ extension ScanFile {
         let stationNodes = Array(stationDict.values)
 
         let lineNodes = self.lines.map {
-            line in line.toSCNNode(stationDict: stationDict)
+            line in
+            line.toSCNNode(stationDict: stationDict, lengthPref: lengthPref)
         }
 
         return meshAnchorNodes + lineNodes + stationNodes
