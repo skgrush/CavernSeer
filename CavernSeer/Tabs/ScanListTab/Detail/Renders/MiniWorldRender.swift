@@ -11,20 +11,19 @@ import SceneKit /// SCN*
 
 struct MiniWorldRender: View {
 
-    @EnvironmentObject
-    var settings: SettingsStore
-
     var scan: ScanFile
 
     var color: UIColor?
     var ambientColor: Color?
     var quiltMesh: Bool
+    var unitsLength: LengthPreference
+    var interactionMode3d: SCNInteractionMode
 
     private var sceneNodes: [SCNNode] {
         return scan.toSCNNodes(
             color: color,
             quilt: quiltMesh,
-            lengthPref: settings.UnitsLength
+            lengthPref: unitsLength
         )
     }
 
@@ -40,7 +39,7 @@ struct MiniWorldRender: View {
         MiniWorldRenderController(
             sceneNodes: sceneNodes,
             snapshotModel: _snapshotModel,
-            interactionMode: $settings.InteractionMode3d,
+            interactionMode: interactionMode3d,
             ambientColor: ambientColor
         )
         .sheet(isPresented: $snapshotModel.showPrompt) {
@@ -59,18 +58,17 @@ final class MiniWorldRenderController :
     @ObservedObject
     var snapshotModel: SnapshotExportModel
 
-    @Binding
     var interactionMode: SCNInteractionMode
 
     init(
         sceneNodes: [SCNNode],
         snapshotModel: ObservedObject<SnapshotExportModel>,
-        interactionMode: Binding<SCNInteractionMode>,
+        interactionMode: SCNInteractionMode,
         ambientColor: Color?
     ) {
         self.sceneNodes = sceneNodes
         self._snapshotModel = snapshotModel
-        self._interactionMode = interactionMode
+        self.interactionMode = interactionMode
         self.ambientColor = ambientColor
         super.init(nibName: nil, bundle: nil)
     }
