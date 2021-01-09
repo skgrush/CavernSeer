@@ -66,7 +66,7 @@ struct PlanProjectedMiniWorldRender: View {
             )
             if self.showUI {
                 HStack {
-                    Stepper("Height: \(height)m", value: $height)
+                    Stepper(stepperLabel, value: $height)
                         .frame(maxWidth: 150)
                 }
             }
@@ -82,6 +82,17 @@ struct PlanProjectedMiniWorldRender: View {
         if (self.initialHeight != nil) {
             self.height = self.initialHeight!
         }
+    }
+
+    private var stepperLabel: String {
+        let metric = Measurement<UnitLength>(
+            value: Double(height),
+            unit: .meters
+        )
+        var preferred = unitsLength.convert(metric)
+        preferred.value = preferred.value.roundedTo(places: 1)
+
+        return "Height: \(preferred.description)"
     }
 }
 

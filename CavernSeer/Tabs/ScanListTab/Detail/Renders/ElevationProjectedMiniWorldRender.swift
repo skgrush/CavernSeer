@@ -98,11 +98,11 @@ struct ElevationProjectedMiniWorldRender: View {
                     Spacer()
 
                     HStack {
-                        Button(action: { fly += 2 }) {
+                        Button(action: { fly += 1 }) {
                             Image(systemName: "arrow.up.square")
                         }
                         Text("depth")
-                        Button(action: { fly -= 2 }) {
+                        Button(action: { fly -= 1 }) {
                             Image(systemName: "arrow.down.square")
                         }
                     }
