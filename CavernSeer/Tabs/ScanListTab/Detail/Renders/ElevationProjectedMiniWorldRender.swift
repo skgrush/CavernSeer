@@ -20,6 +20,7 @@ struct ElevationProjectedMiniWorldRender: View {
     var color: UIColor?
     var ambientColor: Color?
     var quiltMesh: Bool
+    var unitsLength: LengthPreference
 
     var barSubview: AnyView? = nil
 
@@ -38,7 +39,11 @@ struct ElevationProjectedMiniWorldRender: View {
     private var scaleBarModel = ScaleBarModel()
 
     private var sceneNodes: [SCNNode] {
-        return scan.toSCNNodes(color: color, quilt: quiltMesh)
+        return scan.toSCNNodes(
+            color: color,
+            quilt: quiltMesh,
+            lengthPref: unitsLength
+        )
     }
 
     private var offset: SCNVector3 {

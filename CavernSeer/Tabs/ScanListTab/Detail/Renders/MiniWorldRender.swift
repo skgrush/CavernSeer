@@ -21,7 +21,11 @@ struct MiniWorldRender: View {
     var quiltMesh: Bool
 
     private var sceneNodes: [SCNNode] {
-        return scan.toSCNNodes(color: color, quilt: quiltMesh)
+        return scan.toSCNNodes(
+            color: color,
+            quilt: quiltMesh,
+            lengthPref: settings.UnitsLength
+        )
     }
 
     var offset: SCNVector3 {

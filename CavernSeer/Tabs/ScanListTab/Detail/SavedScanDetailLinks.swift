@@ -49,7 +49,8 @@ struct SavedScanDetailLinks: View {
                     scan: self.model.scan,
                     color: meshColor,
                     ambientColor: settings.ColorLightAmbient,
-                    quiltMesh: settings.ColorMeshQuilt
+                    quiltMesh: settings.ColorMeshQuilt,
+                    unitsLength: settings.UnitsLength
                 )
             ) {
                 HStack {
@@ -61,7 +62,8 @@ struct SavedScanDetailLinks: View {
                     scan: self.model.scan,
                     color: meshColor,
                     ambientColor: settings.ColorLightAmbient,
-                    quiltMesh: settings.ColorMeshQuilt
+                    quiltMesh: settings.ColorMeshQuilt,
+                    unitsLength: settings.UnitsLength
                 )
             ) {
                 HStack {
@@ -73,7 +75,8 @@ struct SavedScanDetailLinks: View {
                 scan: self.model.scan,
                 color: meshColor,
                 ambientColor: settings.ColorLightAmbient,
-                quiltMesh: settings.ColorMeshQuilt
+                quiltMesh: settings.ColorMeshQuilt,
+                unitsLength: settings.UnitsLength
             )
             ) {
                 HStack {
