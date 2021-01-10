@@ -58,6 +58,12 @@ final class SettingsStore : NSObject, ObservableObject {
         }
     }
 
+    @Published
+    var formatter: NumberFormatter
+
+    @Published
+    var measureFormatter: MeasurementFormatter
+
     private func setValue<ValT:Equatable>(
         _ key: SettingsKey,
         from oldValue: ValT,
@@ -83,6 +89,8 @@ final class SettingsStore : NSObject, ObservableObject {
     override init() {
         /// register default values for our defaults
         def.register(defaults: getSettingsDefaultDictionary())
+
+        (self.formatter, self.measureFormatter) = Self.setupFormatters()
 
         super.init()
 
@@ -169,5 +177,24 @@ final class SettingsStore : NSObject, ObservableObject {
                     )
             }
         }
+    }
+
+    private static func setupFormatters()
+        -> (NumberFormatter, MeasurementFormatter)
+    {
+        let locale = NSLocale.current
+
+        let formatter = NumberFormatter()
+        formatter.locale = locale
+        formatter.allowsFloats = true
+        formatter.maximumFractionDigits = 5
+        formatter.usesGroupingSeparator = true
+        formatter.groupingSize = 3
+
+        let measurementFormatter = MeasurementFormatter()
+        measurementFormatter.numberFormatter = formatter
+        measurementFormatter.unitOptions = .providedUnit
+
+        return (formatter, measurementFormatter)
     }
 }

@@ -207,6 +207,7 @@ struct ElevationCrossSectionRender: View {
     var color: UIColor?
     var ambientColor: Color?
     var quiltMesh: Bool
+    var unitsLength: LengthPreference
 
     @State
     private var doCrossSection = false
@@ -226,6 +227,7 @@ struct ElevationCrossSectionRender: View {
                 color: color,
                 ambientColor: ambientColor,
                 quiltMesh: quiltMesh,
+                unitsLength: unitsLength,
                 barSubview: barSubview,
                 depthOfField: depthOfField,
                 observer: drawOverlay
@@ -236,6 +238,7 @@ struct ElevationCrossSectionRender: View {
                 color: color,
                 ambientColor: ambientColor,
                 quiltMesh: quiltMesh,
+                unitsLength: unitsLength,
                 overlays: [drawOverlay],
                 showUI: false,
                 initialHeight: 20

@@ -16,6 +16,7 @@ struct PlanProjectedMiniWorldRender: View {
     var color: UIColor?
     var ambientColor: Color?
     var quiltMesh: Bool
+    var unitsLength: LengthPreference
 
     var selection: SurveyStation? = nil
 
@@ -32,7 +33,11 @@ struct PlanProjectedMiniWorldRender: View {
     private var scaleBarModel = ScaleBarModel()
 
     private var sceneNodes: [SCNNode] {
-        return scan.toSCNNodes(color: color, quilt: quiltMesh)
+        return scan.toSCNNodes(
+            color: color,
+            quilt: quiltMesh,
+            lengthPref: unitsLength
+        )
     }
 
     private var offset: SCNVector3 {
@@ -61,7 +66,7 @@ struct PlanProjectedMiniWorldRender: View {
             )
             if self.showUI {
                 HStack {
-                    Stepper("Height: \(height)m", value: $height)
+                    Stepper(stepperLabel, value: $height)
                         .frame(maxWidth: 150)
                 }
             }
@@ -77,6 +82,13 @@ struct PlanProjectedMiniWorldRender: View {
         if (self.initialHeight != nil) {
             self.height = self.initialHeight!
         }
+    }
+
+    private var stepperLabel: String {
+        var preferred = unitsLength.fromMetric(Double(height))
+        preferred.value = preferred.value.roundedTo(places: 1)
+
+        return "Height: \(preferred.description)"
     }
 }
 
