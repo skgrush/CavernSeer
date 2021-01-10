@@ -26,7 +26,12 @@ struct SavedScanDetailLinks: View {
     var body: some View {
         List {
             NavigationLink(
-                destination: SavedScanDetailAdvanced(model: self.model)
+                destination: SavedScanDetailAdvanced(
+                    model: self.model,
+                    unitLength: settings.UnitsLength,
+                    formatter: settings.formatter,
+                    measureFormatter: settings.measureFormatter
+                )
             ) {
                 HStack {
                     Text("Advanced")

@@ -12,6 +12,11 @@ import ARKit /// ARMeshAnchor
 struct SavedScanDetailAdvanced: View {
     var model: SavedScanModel
 
+    var unitLength: LengthPreference
+
+    var formatter: NumberFormatter
+    var measureFormatter: MeasurementFormatter
+
     private var totalVertices: Int {
         model.scan.meshAnchors.map {
             anchor in anchor.geometry.vertices.count
@@ -24,17 +29,15 @@ struct SavedScanDetailAdvanced: View {
         }.reduce(0, { acc, next in acc + next })
     }
 
+    private let columns2: [GridItem] = [
+        .init(.flexible()),
+        .init(.flexible())
+    ]
+
     var body: some View {
-        VStack {
-            GroupBox(label: Text("WorldMap Attributes")) {
-                Text("center: \(model.scan.center.description)")
-                Text("extent: \(model.scan.extent.description)")
-                Text("anchor count: \(model.scan.meshAnchors.count)")
-                Text("vertex count: \(totalVertices)")
-                Text("triangle count: \(totalFaces)")
-                Text("URL: \(model.url.absoluteString)")
-                Text("file size: \(showMegabytes(amount: model.fileSize))")
-            }
+        ScrollView(.vertical) {
+
+            worldMapAttributeGroup
 
             GroupBox(label: Text("Anchors")) {
                 List(model.scan.meshAnchors, id: \.identifier) {
@@ -49,6 +52,8 @@ struct SavedScanDetailAdvanced: View {
                     }
                 }
             }
+            .frame(minHeight: 200)
+
             GroupBox(label: Text("Stations")) {
                 List(model.scan.stations, id: \.identifier) {
                     station in
@@ -58,6 +63,8 @@ struct SavedScanDetailAdvanced: View {
                     }
                 }
             }
+            .frame(minHeight: 200)
+
             GroupBox(label: Text("Lines")) {
                 List(model.scan.lines, id: \.identifier) {
                     line in
@@ -67,7 +74,44 @@ struct SavedScanDetailAdvanced: View {
                     }
                 }
             }
+            .frame(minHeight: 200)
         }
+    }
+
+    private var worldMapAttributeGroup: some View {
+        GroupBox(label: Text("WorldMap Attributes")) {
+            ForEach(worldMapAttributesPairs, id: \.0) {
+                (txt, view) in
+                HStack {
+                    Text(txt).frame(width: 100)
+                    view.frame(maxWidth: .infinity, alignment: .leading)
+                }.padding(.top, 2)
+            }
+        }
+    }
+
+    private var worldMapAttributesPairs: [(String,AnyView)] {
+        [
+            ("Center", xyzView(model.scan.center)),
+            ("Extent", xyzView(model.scan.extent)),
+            ("anchor count", AnyView(Text(format(model.scan.meshAnchors.count)))),
+            ("vertex count", AnyView(Text(format(totalVertices)))),
+            ("triangle count", AnyView(Text(format(totalFaces)))),
+            ("URL", AnyView(Text(model.url.absoluteString))),
+            ("file size", AnyView(Text(showMegabytes(amount: model.fileSize))))
+        ]
+    }
+
+    private func xyzView(_ triple: simd_float3) -> AnyView {
+        let x = self.unitLength.fromMetric(Double(triple.x))
+        let y = self.unitLength.fromMetric(Double(triple.y))
+        let z = self.unitLength.fromMetric(Double(triple.z))
+
+        return AnyView(VStack {
+            Text("x: \(self.measureFormatter.string(from: x))")
+            Text("y: \(self.measureFormatter.string(from: y))")
+            Text("z: \(self.measureFormatter.string(from: z))")
+        })
     }
 
     private func showMegabytes(amount: Int64)-> String {
@@ -78,6 +122,11 @@ struct SavedScanDetailAdvanced: View {
         return byteFormatter.string(fromByteCount: amount)
     }
 
+    private func format(_ value: Int) -> String {
+        return self.formatter.string(
+            from: NSNumber(value: value)
+        ) ?? "??"
+    }
 }
 
 
@@ -101,7 +150,12 @@ struct MeshAnchorDetail: View {
 #if DEBUG
 struct SavedScanDetailAdvanced_Previews: PreviewProvider {
     static var previews: some View {
-        SavedScanDetailAdvanced(model: dummyData[1])
+        SavedScanDetailAdvanced(
+            model: dummyData[1],
+            unitLength: .MetricMeter,
+            formatter: NumberFormatter(),
+            measureFormatter: MeasurementFormatter()
+        )
     }
 }
 #endif
