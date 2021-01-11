@@ -23,8 +23,8 @@ struct ScannerTabView: View {
     @EnvironmentObject
     var scanStore: ScanStore
 
-    @ObservedObject
-    var scanModel = ScannerModel()
+    @EnvironmentObject
+    var scanModel: ScannerModel
 
     var isSelected: Bool
 
