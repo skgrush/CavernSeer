@@ -12,44 +12,39 @@ import UIKit /// UIView, CGRect
 class DrawOverlay: UIView {
 
     var clearing = false
-    var toDraw: DrawableContainer
+    weak var toDraw: DrawableContainer?
 
     init(frame: CGRect, toDraw: DrawableContainer) {
         self.toDraw = toDraw
         super.init(frame: frame)
     }
 
-    override init(frame: CGRect) {
-        self.toDraw = DrawableContainer()
-        super.init(frame: frame)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        self.toDraw = DrawableContainer()
-        super.init(coder: aDecoder)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
 
-        defer { setNeedsDisplay() }
-        let context = UIGraphicsGetCurrentContext()
+        guard let toDraw = self.toDraw else { return }
 
-        if context != nil {
+        defer { setNeedsDisplay() }
+
+        if let context = UIGraphicsGetCurrentContext() {
 
             //if clearing {
-            context!.clear(bounds)
-            context!.setFillColor(UIColor.clear.cgColor)
-            context!.fill(bounds)
+            context.clear(bounds)
+            context.setFillColor(UIColor.clear.cgColor)
+            context.fill(bounds)
             //}
 
             self.alpha = 0.8
 
-            context?.setLineWidth(5)
-            context?.setStrokeColor(UIColor.red.cgColor)
+            context.setLineWidth(5)
+            context.setStrokeColor(UIColor.red.cgColor)
 
             for drawable in toDraw.drawables {
-                drawable.draw(context: context!)
+                drawable.draw(context: context)
             }
         }
     }
