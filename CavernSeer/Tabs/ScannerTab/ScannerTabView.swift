@@ -9,6 +9,8 @@
 import SwiftUI /// AnyView, View, Image, EnvironmentObject
 
 final class ScannerTab : TabProtocol {
+    var isSupported: Bool { ScannerModel.supportsScan }
+
     var tab: Tabs = Tabs.ScanTab
     var tabName = "Scanner"
     var tabImage: Image { Image(systemName: "camera.viewfinder") }

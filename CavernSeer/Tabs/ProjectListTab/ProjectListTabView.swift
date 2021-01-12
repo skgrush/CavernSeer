@@ -9,6 +9,9 @@
 import SwiftUI
 
 final class ProjectListTab : TabProtocol {
+    /// `false` as this is incomplete
+    let isSupported: Bool = false
+
     var tab = Tabs.ProjectListTab
     var tabName = "Project List"
     var tabImage: Image { Image(systemName: "list.bullet.indent") }
