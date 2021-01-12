@@ -10,15 +10,41 @@ import SwiftUI /// UIViewRepresentable, Context
 import RealityKit /// ARView
 
 struct ARViewScannerContainer: UIViewRepresentable {
-    var scanModel: ScannerModel
+    weak var scanModel: ScannerModel?
 
     func makeUIView(context: Context) -> ARView {
-        scanModel.arView
+        let arView = ARView(frame: .zero)
+
+        scanModel?.onViewAppear(arView: arView)
+        return arView
     }
 
-    func updateUIView(_ uiView: ARView, context: Context) {
-        scanModel.drawView.frame = uiView.frame
-        scanModel.updateDrawConstraints()
-        scanModel.arView.bringSubviewToFront(scanModel.drawView)
+    func updateUIView(_ arView: ARView, context: Context) {
+        guard let drawView = scanModel?.drawView else { return }
+
+        drawView.frame = arView.frame
+//        scanModel.updateDrawConstraints()
+        drawView.updateConstraints()
+        arView.bringSubviewToFront(drawView)
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(scanModel: self.scanModel)
+    }
+
+    static func dismantleUIView(_ arView: ARView, coordinator: Coordinator) {
+        arView.removeFromSuperview()
+        coordinator.scanModel?.onViewDisappear()
+    }
+}
+
+
+extension ARViewScannerContainer {
+    class Coordinator {
+        weak var scanModel: ScannerModel?
+
+        init(scanModel: ScannerModel?) {
+            self.scanModel = scanModel
+        }
     }
 }

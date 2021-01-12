@@ -16,17 +16,17 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     static let supportsScan =
         ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh)
 
-    var sceneUpdateSubscription: Cancellable!
+    var sceneUpdateSubscription: Cancellable?
 
-    /// the layer containing the AR render of the scan
-    let arView: ARView
+    /// the layer containing the AR render of the scan; owned by the `ARViewScannerContainer`
+    weak var arView: ARView?
     /// the layer that can draw on top of the arView (e.g. for line drawing)
-    let drawView: UIView
+    weak var drawView: UIView?
 
     @Published
     var message: String = ""
     @Published
-    var scanEnabled: Bool! {
+    var scanEnabled: Bool = false {
         didSet {
             if oldValue != scanEnabled {
                 scanEnabled
@@ -36,12 +36,12 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         }
     }
     @Published
-    var showDebug: Bool! {
+    var showDebug: Bool = false {
         didSet {
             if showDebug {
-                arView.debugOptions.insert(.showStatistics)
+                arView?.debugOptions.insert(.showStatistics)
             } else {
-                arView.debugOptions.remove(.showStatistics)
+                arView?.debugOptions.remove(.showStatistics)
             }
         }
     }
@@ -51,60 +51,105 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     /// the current state of survey scans
     var surveyStations: [SurveyStationEntity] = []
     /// state manager for survey lines, currently the only Drawables in the scene
-    var surveyLines = DrawableContainer()
+    var surveyLines: DrawableContainer?
 
-    var scanConfiguration: ARWorldTrackingConfiguration!
-    var passiveConfiguration: ARConfiguration!
+    var scanConfiguration: ARWorldTrackingConfiguration?
+    var passiveConfiguration: ARConfiguration?
 
-    init() {
+    private var tapRecognizer: UITapGestureRecognizer?
 
-        let arView = ARView(frame: .zero)
+    func onViewAppear(arView: ARView) {
+        let surveyLines = DrawableContainer()
         let drawView = DrawOverlay(frame: arView.frame, toDraw: surveyLines)
+
         self.arView = arView
         self.drawView = drawView
+        self.surveyLines = surveyLines
 
-        super.init(target: arView, action: nil)
-
-        setupARView()
-        setupDrawView()
+        setupARView(arView: arView)
+        setupDrawView(drawView: drawView, arView: arView)
         sceneUpdateSubscription = arView.scene.subscribe(
             to: SceneEvents.Update.self
         ) {
-            [unowned self] in self.updateScene(on: $0)
+            [weak self] in self?.updateScene(on: $0)
         }
+
+        setupPassiveConfig()
+        setupScanConfig()
 
         self.showDebug = false
         self.scanEnabled = false
+
+        self.stopScan()
     }
 
-    func updateDrawConstraints() {
-        NSLayoutConstraint.activate([
+    func onViewDisappear() {
+        NSLayoutConstraint.deactivate(self.getConstraints())
+
+        self.stopScan()
+
+        self.sceneUpdateSubscription?.cancel()
+        self.sceneUpdateSubscription = nil
+
+        self.pause()
+        self.cleanupGestures()
+
+        self.drawView?.removeFromSuperview()
+
+        self.arView?.session.delegate = nil
+        self.arView?.scene.anchors.removeAll()
+        self.arView = nil
+        self.drawView = nil
+
+        self.scanConfiguration = nil
+        self.passiveConfiguration = nil
+
+        self.scanEnabled = false
+
+        self.startSnapshot = nil
+        self.surveyStations = []
+        self.surveyLines = nil
+    }
+
+    private func getConstraints() -> [NSLayoutConstraint] {
+        guard
+            let arView = self.arView,
+            let drawView = self.drawView
+        else { return [] }
+
+        return [
             drawView.topAnchor.constraint(equalTo: arView.topAnchor),
             drawView.leadingAnchor.constraint(equalTo: arView.leadingAnchor),
             drawView.trailingAnchor.constraint(equalTo: arView.trailingAnchor),
             drawView.bottomAnchor.constraint(equalTo: arView.bottomAnchor)
-        ])
+        ]
     }
 
     /// stop the scan and export all data to a `ScanFile`
     func showMesh(_ show: Bool) {
         if show {
-            arView.debugOptions.insert(.showSceneUnderstanding)
-            arView.debugOptions.insert(.showWorldOrigin)
+            arView?.debugOptions.insert(.showSceneUnderstanding)
+            arView?.debugOptions.insert(.showWorldOrigin)
         } else {
-            arView.debugOptions.remove(.showSceneUnderstanding)
-            arView.debugOptions.remove(.showWorldOrigin)
+            arView?.debugOptions.remove(.showSceneUnderstanding)
+            arView?.debugOptions.remove(.showWorldOrigin)
         }
     }
 
     func saveScan(scanStore: ScanStore) {
+        guard
+            let arView = self.arView,
+            let surveyLines = self.surveyLines
+        else { return }
+
         self.message = "Starting save..."
         pause()
 
-        let arView = self.arView
         let date = Date()
 
-        arView.session.getCurrentWorldMap { worldMap, error in
+        arView.session.getCurrentWorldMap { [weak self] worldMap, error in
+
+            guard let self = self else { return }
 
             self.message = "Saving..."
 
@@ -120,7 +165,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
                 self.message = "Failed to take snapshot"
             }
 
-            let lines = self.surveyLines.drawables.compactMap {
+            let lines = surveyLines.drawables.compactMap {
                 $0 as? SurveyLineEntity
             }
 
@@ -144,11 +189,11 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     }
 
     private func pause() {
-        arView.session.pause()
+        arView?.session.pause()
     }
 
     private func unpause() {
-        arView.session.run(arView.session.configuration!)
+        arView?.session.run(arView!.session.configuration!)
     }
 
     /// Start a new scan with `scanConfiguration`
@@ -160,6 +205,10 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
                 with a LiDAR Scanner, such as the fourth-generation iPad Pro.
             """)
         }
+        guard
+            let arView = self.arView,
+            let scanConfiguration = self.scanConfiguration
+        else { return }
 
         showMesh(true)
 
@@ -178,11 +227,18 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
         startSnapshot = SnapshotAnchor(capturing: arView, suffix: "start")
 
-        setupGestures()
+        setupGestures(arView: arView)
     }
 
     /// transfer to passive-mode, clearing the current state
     private func stopScan() {
+        guard
+            let arView = self.arView,
+            let drawView = self.drawView,
+            let surveyLines = self.surveyLines,
+            let passiveConfiguration = self.passiveConfiguration
+        else { return }
+
         showMesh(false)
 
         arView.environment.sceneUnderstanding.options = []
@@ -211,12 +267,12 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
     private func setupScanConfig() {
         scanConfiguration = ARWorldTrackingConfiguration()
-        scanConfiguration.sceneReconstruction = .mesh
-        scanConfiguration.environmentTexturing = .none
-        scanConfiguration.worldAlignment = .gravityAndHeading
+        scanConfiguration!.sceneReconstruction = .mesh
+        scanConfiguration!.environmentTexturing = .none
+        scanConfiguration!.worldAlignment = .gravityAndHeading
     }
 
-    private func setupARView() {
+    private func setupARView(arView: ARView) {
         arView.automaticallyConfigureSession = false
         arView.renderOptions = [
             .disablePersonOcclusion,
@@ -224,24 +280,25 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             .disableHDR,
             .disableMotionBlur,
         ]
-
-        setupPassiveConfig()
-        setupScanConfig()
     }
 
-    private func setupDrawView() {
+    private func setupDrawView(drawView: DrawOverlay, arView: ARView) {
         drawView.translatesAutoresizingMaskIntoConstraints = false
         arView.addSubview(drawView)
 
         drawView.backgroundColor = UIColor.clear
 
-        updateDrawConstraints()
+        NSLayoutConstraint.activate(self.getConstraints())
     }
 
 
 
     private func updateScene(on event: SceneEvents.Update) {
-        guard !surveyLines.drawables.isEmpty
+        guard
+            let arView = self.arView,
+            let drawView = self.drawView,
+            let surveyLines = self.surveyLines,
+            !surveyLines.drawables.isEmpty
         else { return }
 
         print("updating scene...")
@@ -256,19 +313,32 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
 /// +gestures
 extension ScannerModel {
-    func setupGestures() {
+    func setupGestures(arView: ARView) {
         let tapRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(handleTap(_:))
         )
         arView.addGestureRecognizer(tapRecognizer)
+        self.tapRecognizer = tapRecognizer
+    }
+
+    func cleanupGestures() {
+        if
+            let arView = self.arView,
+            let tapRecog = self.tapRecognizer
+        {
+            arView.removeGestureRecognizer(tapRecog)
+        }
+        self.tapRecognizer = nil
     }
 
     @objc
     func handleTap(_ sender: UITapGestureRecognizer) {
+        guard let arView = self.arView else { return }
+
         let tapLoc = sender.location(in: arView)
 
-        let hitResult: [CollisionCastHit] = self.arView.hitTest(tapLoc)
+        let hitResult: [CollisionCastHit] = arView.hitTest(tapLoc)
         if let hitFirst = hitResult.first {
             tappedOnEntity(hitFirst: hitFirst)
             return
@@ -287,10 +357,13 @@ extension ScannerModel {
     }
 
     private func tappedOnNonentity(tapLoc: CGPoint) {
-        guard let raycast = self.arView.raycast(
-            from: tapLoc,
-            allowing: .estimatedPlane,
-            alignment: .any
+        guard
+            let arView = self.arView,
+            let surveyLines = self.surveyLines,
+            let raycast = arView.raycast(
+                from: tapLoc,
+                allowing: .estimatedPlane,
+                alignment: .any
             ).first
         else {
             return ///  no surface detected
@@ -300,8 +373,8 @@ extension ScannerModel {
 
         let result = SurveyStationEntity(worldTransform: raycast.worldTransform)
         self.surveyStations.append(result)
-        self.arView.scene.addAnchor(result)
-        self.arView.installGestures(for: result)
+        arView.scene.addAnchor(result)
+        arView.installGestures(for: result)
 
         if lastEntity != nil {
             let line = lastEntity!.lineTo(result)
