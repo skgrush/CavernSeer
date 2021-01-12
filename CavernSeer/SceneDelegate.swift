@@ -27,7 +27,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let projectStore = ProjectStore()
         let fileOpener = FileOpener(scanStore, projectStore)
         let objSerializer = ObjSerializer()
-        let scanModel = ScannerModel()
         self.fileOpener = fileOpener
 
         // Create the SwiftUI view that provides the window contents.
@@ -38,7 +37,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .environmentObject(fileOpener)
             .environmentObject(objSerializer)
             .environmentObject(settingsStore)
-            .environmentObject(scanModel)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
