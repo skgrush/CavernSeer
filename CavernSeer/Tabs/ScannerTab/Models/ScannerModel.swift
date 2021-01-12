@@ -53,8 +53,8 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     /// state manager for survey lines, currently the only Drawables in the scene
     var surveyLines: DrawableContainer?
 
-    var scanConfiguration: ARWorldTrackingConfiguration!
-    var passiveConfiguration: ARConfiguration!
+    var scanConfiguration: ARWorldTrackingConfiguration?
+    var passiveConfiguration: ARConfiguration?
 
     private var tapRecognizer: UITapGestureRecognizer?
 
@@ -71,7 +71,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         sceneUpdateSubscription = arView.scene.subscribe(
             to: SceneEvents.Update.self
         ) {
-            [unowned self] in self.updateScene(on: $0)
+            [weak self] in self?.updateScene(on: $0)
         }
 
         setupPassiveConfig()
@@ -86,16 +86,25 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     func onViewDisappear() {
         NSLayoutConstraint.deactivate(self.getConstraints())
 
+        self.stopScan()
+
+        self.sceneUpdateSubscription?.cancel()
+        self.sceneUpdateSubscription = nil
+
         self.pause()
         self.cleanupGestures()
 
         self.drawView?.removeFromSuperview()
 
+        self.arView?.session.delegate = nil
+        self.arView?.scene.anchors.removeAll()
         self.arView = nil
         self.drawView = nil
 
+        self.scanConfiguration = nil
+        self.passiveConfiguration = nil
+
         self.scanEnabled = false
-        self.sceneUpdateSubscription?.cancel()
 
         self.startSnapshot = nil
         self.surveyStations = []
@@ -138,7 +147,9 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
         let date = Date()
 
-        arView.session.getCurrentWorldMap { worldMap, error in
+        arView.session.getCurrentWorldMap { [weak self] worldMap, error in
+
+            guard let self = self else { return }
 
             self.message = "Saving..."
 
@@ -194,7 +205,10 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
                 with a LiDAR Scanner, such as the fourth-generation iPad Pro.
             """)
         }
-        guard let arView = self.arView else { return }
+        guard
+            let arView = self.arView,
+            let scanConfiguration = self.scanConfiguration
+        else { return }
 
         showMesh(true)
 
@@ -221,7 +235,8 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         guard
             let arView = self.arView,
             let drawView = self.drawView,
-            let surveyLines = self.surveyLines
+            let surveyLines = self.surveyLines,
+            let passiveConfiguration = self.passiveConfiguration
         else { return }
 
         showMesh(false)
@@ -252,9 +267,9 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
     private func setupScanConfig() {
         scanConfiguration = ARWorldTrackingConfiguration()
-        scanConfiguration.sceneReconstruction = .mesh
-        scanConfiguration.environmentTexturing = .none
-        scanConfiguration.worldAlignment = .gravityAndHeading
+        scanConfiguration!.sceneReconstruction = .mesh
+        scanConfiguration!.environmentTexturing = .none
+        scanConfiguration!.worldAlignment = .gravityAndHeading
     }
 
     private func setupARView(arView: ARView) {
@@ -308,10 +323,11 @@ extension ScannerModel {
     }
 
     func cleanupGestures() {
-        if let arView = self.arView {
-            if let tapRecog = self.tapRecognizer {
-                arView.removeGestureRecognizer(tapRecog)
-            }
+        if
+            let arView = self.arView,
+            let tapRecog = self.tapRecognizer
+        {
+            arView.removeGestureRecognizer(tapRecog)
         }
         self.tapRecognizer = nil
     }
