@@ -10,6 +10,8 @@ import SwiftUI /// View, Image
 
 final class ScanListTab : TabProtocol {
 
+    let isSupported = true
+
     var tab: Tabs = Tabs.ScanListTab
     var tabName = "Scan List"
     var tabImage: Image { Image(systemName: "list.dash") }

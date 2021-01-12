@@ -96,7 +96,9 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
         self.drawView?.removeFromSuperview()
 
+        #if !targetEnvironment(simulator)
         self.arView?.session.delegate = nil
+        #endif
         self.arView?.scene.anchors.removeAll()
         self.arView = nil
         self.drawView = nil
@@ -127,6 +129,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
     /// stop the scan and export all data to a `ScanFile`
     func showMesh(_ show: Bool) {
+        #if !targetEnvironment(simulator)
         if show {
             arView?.debugOptions.insert(.showSceneUnderstanding)
             arView?.debugOptions.insert(.showWorldOrigin)
@@ -134,6 +137,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             arView?.debugOptions.remove(.showSceneUnderstanding)
             arView?.debugOptions.remove(.showWorldOrigin)
         }
+        #endif
     }
 
     func saveScan(scanStore: ScanStore) {
@@ -147,6 +151,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
         let date = Date()
 
+        #if !targetEnvironment(simulator)
         arView.session.getCurrentWorldMap { [weak self] worldMap, error in
 
             guard let self = self else { return }
@@ -186,14 +191,19 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
             self.scanEnabled = false
         }
+        #endif
     }
 
     private func pause() {
+        #if !targetEnvironment(simulator)
         arView?.session.pause()
+        #endif
     }
 
     private func unpause() {
+        #if !targetEnvironment(simulator)
         arView?.session.run(arView!.session.configuration!)
+        #endif
     }
 
     /// Start a new scan with `scanConfiguration`
@@ -212,6 +222,8 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
         showMesh(true)
 
+        #if !targetEnvironment(simulator)
+
         arView.environment.sceneUnderstanding.options = [
             .occlusion
         ]
@@ -224,6 +236,8 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
                 .resetTracking
             ]
         )
+
+        #endif
 
         startSnapshot = SnapshotAnchor(capturing: arView, suffix: "start")
 
@@ -241,6 +255,8 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
         showMesh(false)
 
+        #if !targetEnvironment(simulator)
+
         arView.environment.sceneUnderstanding.options = []
         let clearingOptions: ARSession.RunOptions = [
             .resetSceneReconstruction,
@@ -252,13 +268,16 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             arView.session.run(currentConfig, options: clearingOptions)
         }
 
+        #endif
+
         arView.scene.anchors.removeAll()
         surveyStations.removeAll()
         surveyLines.drawables.removeAll()
         drawView.setNeedsDisplay()
 
+        #if !targetEnvironment(simulator)
         arView.session.run(passiveConfiguration, options: clearingOptions)
-
+        #endif
     }
 
     private func setupPassiveConfig() {
@@ -273,6 +292,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     }
 
     private func setupARView(arView: ARView) {
+        #if !targetEnvironment(simulator)
         arView.automaticallyConfigureSession = false
         arView.renderOptions = [
             .disablePersonOcclusion,
@@ -280,6 +300,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             .disableHDR,
             .disableMotionBlur,
         ]
+        #endif
     }
 
     private func setupDrawView(drawView: DrawOverlay, arView: ARView) {
@@ -357,6 +378,7 @@ extension ScannerModel {
     }
 
     private func tappedOnNonentity(tapLoc: CGPoint) {
+        #if !targetEnvironment(simulator)
         guard
             let arView = self.arView,
             let surveyLines = self.surveyLines,
@@ -381,5 +403,6 @@ extension ScannerModel {
             surveyLines.drawables.append(line)
             line.updateProjections(arView: arView)
         }
+        #endif
     }
 }

@@ -11,6 +11,8 @@ import SwiftUI /// Image, AnyView
 
 protocol TabProtocol {
 
+    var isSupported: Bool { get }
+
     var tab: Tabs { get }
     var tabName: String { get }
     var tabImage: Image { get }

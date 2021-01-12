@@ -8,17 +8,19 @@
 
 import SwiftUI
 
+fileprivate let supportedTabs: [TabProtocol] = [
+    ProjectListTab(),
+    ScanListTab(),
+    ScannerTab(),
+    SettingsTab(),
+].filter({ $0.isSupported })
+
 struct ContentView: View {
     @State private var selection: Tabs = Tabs.ScanListTab
     @EnvironmentObject var scanStore: ScanStore
     @EnvironmentObject var fileOpener: FileOpener
 
-    let tabs: [TabProtocol] = [
-//        ProjectListTab(),
-        ScanListTab(),
-        ScannerTab(),
-        SettingsTab(),
-    ]
+    let tabs: [TabProtocol] = supportedTabs
  
     var body: some View {
         TabView(selection: $selection){

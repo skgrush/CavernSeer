@@ -9,6 +9,8 @@
 import SwiftUI
 
 final class SettingsTab : TabProtocol {
+    let isSupported: Bool = true
+    
     var tab: Tabs = .SettingsTab
     var tabName = "Settings"
     var tabImage: Image { Image(systemName: "gear") }
