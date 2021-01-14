@@ -16,6 +16,8 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     static let supportsScan =
         ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh)
 
+    static let supportsTorch = isTorchSupported()
+
     var sceneUpdateSubscription: Cancellable?
 
     /// the layer containing the AR render of the scan; owned by the `ARViewScannerContainer`
@@ -43,6 +45,19 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             } else {
                 arView?.debugOptions.remove(.showStatistics)
             }
+        }
+    }
+    @Published
+    var meshEnabled: Bool = false {
+        didSet {
+            showMesh(meshEnabled)
+        }
+    }
+
+    @Published
+    var torchEnabled: Bool = false {
+        didSet {
+            toggleTorch(on: torchEnabled)
         }
     }
 
@@ -128,7 +143,7 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     }
 
     /// stop the scan and export all data to a `ScanFile`
-    func showMesh(_ show: Bool) {
+    private func showMesh(_ show: Bool) {
         #if !targetEnvironment(simulator)
         if show {
             arView?.debugOptions.insert(.showSceneUnderstanding)
@@ -328,6 +343,35 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             line in line.prepareToDraw(arView: arView)
         }
         drawView.setNeedsDisplay()
+    }
+
+    private func toggleTorch(on: Bool) {
+        guard
+            Self.supportsTorch,
+            let device = AVCaptureDevice.default(for: .video)
+        else { return }
+
+        do {
+            try device.lockForConfiguration()
+
+            if on {
+                try device.setTorchModeOn(
+                    level: AVCaptureDevice.maxAvailableTorchLevel
+                )
+            } else {
+                device.torchMode = .off
+            }
+
+        } catch {
+            fatalError("Failed to toggle torch, \(error.localizedDescription)")
+        }
+    }
+
+    private static func isTorchSupported() -> Bool {
+        guard let device = AVCaptureDevice.default(for: .video)
+        else { return false }
+
+        return device.hasTorch && device.isTorchModeSupported(.on)
     }
 }
 
