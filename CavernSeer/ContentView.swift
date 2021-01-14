@@ -99,7 +99,15 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
+
     static var previews: some View {
+
+        let scanStore = ScanStore()
+        let projStore = ProjectStore()
+        let fileOpener = FileOpener(scanStore, projStore)
+
         ContentView()
+            .environmentObject(scanStore)
+            .environmentObject(fileOpener)
     }
 }

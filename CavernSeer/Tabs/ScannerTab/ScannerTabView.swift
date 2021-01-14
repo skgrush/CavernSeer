@@ -73,3 +73,40 @@ struct ScannerTabView: View {
         }
     }
 }
+
+
+#if DEBUG
+
+struct ScannerTabView_Previews: PreviewProvider {
+
+    private static let store = ScanStore()
+
+    private static let tab = ScannerTab()
+
+    static var previews: some View {
+        Group {
+            view
+                .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
+                .environment(\.colorScheme, .dark)
+
+            view
+                .previewDevice(PreviewDevice(rawValue: "iPad Pro (11-inch)"))
+                .environment(\.colorScheme, .light)
+
+        }.environmentObject(store)
+    }
+
+    private static var view: some View {
+        TabView {
+            tab.getTabPanelView(selected: true)
+                .tabItem {
+                    VStack {
+                        tab.tabImage
+                        Text(tab.tabName)
+                    }
+                }
+        }
+    }
+}
+
+#endif

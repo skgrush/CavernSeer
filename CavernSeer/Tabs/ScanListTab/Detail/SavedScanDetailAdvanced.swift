@@ -151,7 +151,7 @@ struct MeshAnchorDetail: View {
 struct SavedScanDetailAdvanced_Previews: PreviewProvider {
     static var previews: some View {
         SavedScanDetailAdvanced(
-            model: dummyData[1],
+            model: dummySavedScans[1],
             unitLength: .MetricMeter,
             formatter: NumberFormatter(),
             measureFormatter: MeasurementFormatter()
