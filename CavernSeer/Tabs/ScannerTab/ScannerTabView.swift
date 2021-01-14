@@ -22,54 +22,126 @@ final class ScannerTab : TabProtocol {
 
 struct ScannerTabView: View {
 
-    @EnvironmentObject
-    var scanStore: ScanStore
-
-    @ObservedObject
-    var scanModel = ScannerModel()
-
     var isSelected: Bool
 
-    var body: some View {
-        VStack {
+    @EnvironmentObject
+    private var scanStore: ScanStore
 
+    @ObservedObject
+    private var scanModel = ScannerModel()
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
             if isSelected {
                 ARViewScannerContainer(scanModel: scanModel)
                     .edgesIgnoringSafeArea(.all)
             }
 
+            controls
+        }
+    }
+
+    private var controls: some View {
+        VStack {
             HStack {
-                HStack {
-                    Button(action: {
-                        self.scanModel.scanEnabled = true
-                    }) {
-                        Text("Start Scan")
-                    }.disabled(scanModel.scanEnabled)
+                Text(scanModel.message)
+            }
 
-                    Button(action: {
-                        self.scanModel.scanEnabled = false
-                    }) {
-                        Text("Cancel Scan")
-                    }.disabled(!scanModel.scanEnabled)
+            // controls
+            HStack {
+                debugButtons.frame(width: 100)
 
-                    Button(action: {
-                        self.scanModel.saveScan(scanStore: self.scanStore)
-                    }) {
-                        Text("Save")
-                    }.disabled(!scanModel.scanEnabled)
-                }
+                Spacer()
 
-                HStack {
-                    Toggle("Debug", isOn: $scanModel.showDebug)
-                        .frame(maxWidth: 100)
+                if scanModel.scanEnabled {
+                    saveOrCancel
+                } else {
+                    captureButton
                 }
 
                 Spacer()
 
-                HStack {
-                    Text(scanModel.message)
-                }
+                flashButton.frame(width: 100)
             }
+            .padding(10)
+        }
+    }
+
+    private var captureButton: some View {
+
+        let color: Color = .primary
+
+        /// the standard start-capture button
+        return Button(
+            action: { self.scanModel.scanEnabled = true },
+            label: {
+                Circle()
+                    .foregroundColor(color)
+                    .frame(width: 70, height: 70, alignment: .center)
+                    .overlay(
+                        Circle()
+                            .stroke(color, lineWidth: 2)
+                            .frame(width: 80, height: 80, alignment: .center)
+                    )
+            }
+        )
+
+    }
+
+    private var saveOrCancel: some View {
+        ZStack(alignment: .topTrailing) {
+            /// save-capture button
+            Button(
+                action: { self.scanModel.saveScan(scanStore: self.scanStore) },
+                label: {
+                    Circle()
+                        .foregroundColor(.secondary)
+                        .frame(width: 70, height: 70, alignment: .center)
+                }
+            )
+            /// cancel button
+            Button(
+                action: { self.scanModel.scanEnabled = false },
+                label: {
+                    Circle()
+                        .frame(width: 20, height: 20, alignment: .center)
+                        .overlay(
+                            Image(systemName: "trash")
+                                .font(.system(size: 20, weight: .medium, design: .default))
+                                .foregroundColor(.red)
+                        )
+                }
+            )
+        }
+    }
+
+    private var flashButton: some View {
+        let enabled = self.scanModel.torchEnabled
+
+        return Button(
+            action: { self.scanModel.torchEnabled = !enabled },
+            label: {
+                Image(systemName: enabled ? "bolt.fill" : "bolt.slash.fill")
+                    .font(.system(size: 20, weight: .medium, design: .default))
+            }
+        )
+        .accentColor(enabled ? .yellow : .white)
+    }
+
+    private var debugButtons: some View {
+        let debug = self.scanModel.showDebug
+        let mesh = self.scanModel.meshEnabled
+
+        return VStack {
+            Button(
+                action: { self.scanModel.showDebug = !debug },
+                label: { Text("Debug").accentColor(debug ? .primary : .secondary) }
+            )
+            .padding(.bottom, 5)
+            Button(
+                action: { self.scanModel.meshEnabled = !mesh },
+                label: { Text("Mesh").accentColor(mesh ? .primary : .secondary) }
+            )
         }
     }
 }
