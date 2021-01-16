@@ -27,6 +27,9 @@ struct ScannerTabView: View {
     @EnvironmentObject
     private var scanStore: ScanStore
 
+    @Environment(\.fakeScan)
+    private var fakeScan: Bool
+
     @ObservedObject
     private var scanModel = ScannerModel()
 
@@ -44,6 +47,10 @@ struct ScannerTabView: View {
         }
     }
 
+    private var scanEnabled: Bool {
+        return self.scanModel.scanEnabled || self.fakeScan
+    }
+
     private var controls: some View {
         VStack {
             HStack {
@@ -56,7 +63,7 @@ struct ScannerTabView: View {
 
                 Spacer()
 
-                if scanModel.scanEnabled {
+                if scanEnabled {
                     saveOrCancel
                 } else {
                     captureButton
@@ -163,6 +170,7 @@ struct ScannerTabView_Previews: PreviewProvider {
             view
                 .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
                 .environment(\.colorScheme, .dark)
+                .environment(\.fakeScan, true)
 
             view
                 .previewDevice(PreviewDevice(rawValue: "iPad Pro (11-inch)"))
@@ -185,3 +193,18 @@ struct ScannerTabView_Previews: PreviewProvider {
 }
 
 #endif
+
+fileprivate struct FakeScanEnvironmentKey: EnvironmentKey {
+    static let defaultValue: Bool = false
+}
+
+fileprivate extension EnvironmentValues {
+    var fakeScan: Bool {
+        get {
+            return self[FakeScanEnvironmentKey]
+        }
+        set {
+            self[FakeScanEnvironmentKey] = newValue
+        }
+    }
+}
