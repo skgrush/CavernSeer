@@ -18,6 +18,13 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
     static let supportsTorch = isTorchSupported()
 
+    let clearingOptions: ARSession.RunOptions = [
+        .resetSceneReconstruction,
+        .removeExistingAnchors,
+        .resetTracking,
+        .stopTrackedRaycasts,
+    ]
+
     var sceneUpdateSubscription: Cancellable?
 
     /// the layer containing the AR render of the scan; owned by the `ARViewScannerContainer`
@@ -106,7 +113,6 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         self.sceneUpdateSubscription?.cancel()
         self.sceneUpdateSubscription = nil
 
-        self.pause()
         self.cleanupGestures()
 
         self.drawView?.removeFromSuperview()
@@ -148,9 +154,13 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         if show {
             arView?.debugOptions.insert(.showSceneUnderstanding)
             arView?.debugOptions.insert(.showWorldOrigin)
+            arView?.debugOptions.insert(.showAnchorGeometry)
+            arView?.debugOptions.insert(.showAnchorOrigins)
         } else {
             arView?.debugOptions.remove(.showSceneUnderstanding)
             arView?.debugOptions.remove(.showWorldOrigin)
+            arView?.debugOptions.remove(.showAnchorGeometry)
+            arView?.debugOptions.remove(.showAnchorOrigins)
         }
         #endif
     }
@@ -206,6 +216,8 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
             self.scanEnabled = false
         }
+        #else
+        self.scanEnabled = false
         #endif
     }
 
@@ -235,23 +247,16 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             let scanConfiguration = self.scanConfiguration
         else { return }
 
-        showMesh(true)
+        showMesh(self.meshEnabled)
 
         #if !targetEnvironment(simulator)
-
         arView.environment.sceneUnderstanding.options = [
             .occlusion
         ]
-
         arView.session.run(
             scanConfiguration,
-            options: [
-                .resetSceneReconstruction,
-                .removeExistingAnchors,
-                .resetTracking
-            ]
+            options: self.clearingOptions
         )
-
         #endif
 
         startSnapshot = SnapshotAnchor(capturing: arView, suffix: "start")
@@ -268,22 +273,11 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             let passiveConfiguration = self.passiveConfiguration
         else { return }
 
-        showMesh(false)
+        self.pause()
 
-        #if !targetEnvironment(simulator)
-
-        arView.environment.sceneUnderstanding.options = []
-        let clearingOptions: ARSession.RunOptions = [
-            .resetSceneReconstruction,
-            .removeExistingAnchors,
-            .resetTracking
-        ]
-
-        if let currentConfig = arView.session.configuration {
-            arView.session.run(currentConfig, options: clearingOptions)
-        }
-
-        #endif
+        /// we must hide the mesh so it doesn't show between scans,
+        /// BUT we _should_ persist the user's `meshEnabled` choice and reset to it next time
+        self.showMesh(false)
 
         arView.scene.anchors.removeAll()
         surveyStations.removeAll()
