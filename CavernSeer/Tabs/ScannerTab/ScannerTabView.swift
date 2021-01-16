@@ -55,8 +55,10 @@ struct ScannerTabView: View {
 
     private var controls: some View {
         VStack {
-            HStack {
-                Text(scanModel.message)
+            if !self.scanModel.message.isEmpty {
+                HStack {
+                    Text(scanModel.message)
+                }
             }
 
             // controls
@@ -105,7 +107,17 @@ struct ScannerTabView: View {
     }
 
     private var saveOrCancel: some View {
-        ZStack(alignment: .topTrailing) {
+        VStack(alignment: .center) {
+            /// cancel button
+            Button(
+                action: { self.scanModel.scanEnabled = false },
+                label: {
+                    Text("Cancel Scan")
+                        .foregroundColor(.red)
+                        .padding(5)
+                }
+            )
+
             /// save-capture button
             Button(
                 action: { self.scanModel.saveScan(scanStore: self.scanStore) },
@@ -113,19 +125,6 @@ struct ScannerTabView: View {
                     Circle()
                         .foregroundColor(.secondary)
                         .frame(width: 70, height: 70, alignment: .center)
-                }
-            )
-            /// cancel button
-            Button(
-                action: { self.scanModel.scanEnabled = false },
-                label: {
-                    Circle()
-                        .frame(width: 20, height: 20, alignment: .center)
-                        .overlay(
-                            Image(systemName: "trash")
-                                .font(.system(size: 20, weight: .medium, design: .default))
-                                .foregroundColor(.red)
-                        )
                 }
             )
         }
