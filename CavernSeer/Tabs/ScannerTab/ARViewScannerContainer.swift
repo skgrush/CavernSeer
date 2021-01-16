@@ -14,6 +14,7 @@ struct ARViewScannerContainer: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
+        arView.backgroundColor = UIColor.systemBackground
 
         scanModel?.onViewAppear(arView: arView)
         return arView

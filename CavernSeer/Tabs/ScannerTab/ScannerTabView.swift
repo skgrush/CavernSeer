@@ -38,6 +38,9 @@ struct ScannerTabView: View {
             }
 
             controls
+                .background(
+                    Color(UIColor.systemGray6).opacity(0.4).ignoresSafeArea()
+                )
         }
     }
 
