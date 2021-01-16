@@ -22,6 +22,8 @@ final class ScannerTab : TabProtocol {
 
 struct ScannerTabView: View {
 
+    private let controlFrameHeight: CGFloat = 80
+
     var isSelected: Bool
 
     @EnvironmentObject
@@ -58,8 +60,8 @@ struct ScannerTabView: View {
             }
 
             // controls
-            HStack {
-                debugButtons.frame(width: 100)
+            HStack(alignment: .bottom) {
+                debugButtons.frame(width: 100, height: controlFrameHeight)
 
                 Spacer()
 
@@ -71,9 +73,13 @@ struct ScannerTabView: View {
 
                 Spacer()
 
-                flashButton.frame(width: 100)
+                if scanEnabled {
+                    flashButton.frame(width: 100, height: controlFrameHeight)
+                } else {
+                    Spacer().frame(width: 100, height: controlFrameHeight)
+                }
             }
-            .padding(10)
+            .padding(.init(top: 5, leading: 10, bottom: 20, trailing: 10))
         }
     }
 
@@ -133,9 +139,10 @@ struct ScannerTabView: View {
             label: {
                 Image(systemName: enabled ? "bolt.fill" : "bolt.slash.fill")
                     .font(.system(size: 20, weight: .medium, design: .default))
+                    .padding(10)
             }
         )
-        .accentColor(enabled ? .yellow : .white)
+        .accentColor(enabled ? .yellow : .primary)
     }
 
     private var debugButtons: some View {
