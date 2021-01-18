@@ -9,19 +9,43 @@
 import SwiftUI /// UIViewRepresentable, Context
 import RealityKit /// ARView
 
-struct ARViewScannerContainer: UIViewRepresentable {
-    weak var scanModel: ScannerModel?
+struct ARViewScannerContainer : View {
+
+    @EnvironmentObject
+    var scanStore: ScanStore
+
+    @ObservedObject
+    var control: ScannerControlModel
+
+    private var usePassiveCam: Bool {
+        control.cameraEnabled != true ||
+        !control.renderingARView ||
+            control.model == nil
+    }
+
+    var body: some View {
+        if usePassiveCam {
+            PassiveCameraViewContainer(control: control)
+        } else {
+            ARViewScannerContainerInner(control: control)
+        }
+    }
+}
+
+fileprivate struct ARViewScannerContainerInner: UIViewRepresentable {
+//    weak var scanModel: ScannerModel?
+    weak var control: ScannerControlModel?
 
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
         arView.backgroundColor = UIColor.systemBackground
 
-        scanModel?.onViewAppear(arView: arView)
+        control?.model?.onViewAppear(arView: arView)
         return arView
     }
 
     func updateUIView(_ arView: ARView, context: Context) {
-        guard let drawView = scanModel?.drawView else { return }
+        guard let drawView = control?.model?.drawView else { return }
 
         drawView.frame = arView.frame
 //        scanModel.updateDrawConstraints()
@@ -30,22 +54,22 @@ struct ARViewScannerContainer: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(scanModel: self.scanModel)
+        Coordinator(control: self.control)
     }
 
     static func dismantleUIView(_ arView: ARView, coordinator: Coordinator) {
         arView.removeFromSuperview()
-        coordinator.scanModel?.onViewDisappear()
+        coordinator.control?.scanDisappearing()
     }
 }
 
 
-extension ARViewScannerContainer {
+extension ARViewScannerContainerInner {
     class Coordinator {
-        weak var scanModel: ScannerModel?
+        weak var control: ScannerControlModel?
 
-        init(scanModel: ScannerModel?) {
-            self.scanModel = scanModel
+        init(control: ScannerControlModel?) {
+            self.control = control
         }
     }
 }
