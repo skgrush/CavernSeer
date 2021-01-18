@@ -25,48 +25,10 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         .stopTrackedRaycasts,
     ]
 
-    var sceneUpdateSubscription: Cancellable?
-
     /// the layer containing the AR render of the scan; owned by the `ARViewScannerContainer`
     weak var arView: ARView?
     /// the layer that can draw on top of the arView (e.g. for line drawing)
     weak var drawView: UIView?
-
-    @Published
-    var message: String = ""
-    @Published
-    var scanEnabled: Bool = false {
-        didSet {
-            if oldValue != scanEnabled {
-                scanEnabled
-                    ? self.startScan()
-                    : self.stopScan()
-            }
-        }
-    }
-    @Published
-    var showDebug: Bool = false {
-        didSet {
-            if showDebug {
-                arView?.debugOptions.insert(.showStatistics)
-            } else {
-                arView?.debugOptions.remove(.showStatistics)
-            }
-        }
-    }
-    @Published
-    var meshEnabled: Bool = false {
-        didSet {
-            showMesh(meshEnabled)
-        }
-    }
-
-    @Published
-    var torchEnabled: Bool = false {
-        didSet {
-            toggleTorch(on: torchEnabled)
-        }
-    }
 
     /// snapshot at the beginning of a scan
     var startSnapshot: SnapshotAnchor?
@@ -76,9 +38,36 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     var surveyLines: DrawableContainer?
 
     var scanConfiguration: ARWorldTrackingConfiguration?
-    var passiveConfiguration: ARConfiguration?
 
     private var tapRecognizer: UITapGestureRecognizer?
+    private var cancelBag = Set<AnyCancellable>()
+
+    private var initialMesh: Bool
+    private var initialDebug: Bool
+    private var initialTorch: Bool
+
+    init(control: ScannerControlModel) {
+        self.initialMesh = control.meshEnabled
+        self.initialDebug = control.debugEnabled
+        self.initialTorch = control.torchEnabled
+
+        super.init(target: nil, action: nil)
+
+        control.$meshEnabled.sink {
+            [weak self] (mesh) in self?.showMesh(mesh)
+        }
+        .store(in: &cancelBag)
+
+        control.$debugEnabled.sink {
+            [weak self] (dbg) in self?.showDebug(dbg)
+        }
+        .store(in: &cancelBag)
+
+        control.$torchEnabled.sink {
+            [weak self] (on) in self?.toggleTorch(on: on)
+        }
+        .store(in: &cancelBag)
+    }
 
     func onViewAppear(arView: ARView) {
         let surveyLines = DrawableContainer()
@@ -90,28 +79,26 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
         setupARView(arView: arView)
         setupDrawView(drawView: drawView, arView: arView)
-        sceneUpdateSubscription = arView.scene.subscribe(
+        arView.scene.subscribe(
             to: SceneEvents.Update.self
         ) {
             [weak self] in self?.updateScene(on: $0)
         }
+        .store(in: &cancelBag)
 
-        setupPassiveConfig()
         setupScanConfig()
 
-        self.showDebug = false
-        self.scanEnabled = false
+        self.startScan()
 
-        self.stopScan()
+        self.showMesh(self.initialMesh)
+        self.showDebug(self.initialDebug)
+        self.toggleTorch(on: self.initialTorch)
     }
 
     func onViewDisappear() {
         NSLayoutConstraint.deactivate(self.getConstraints())
 
         self.stopScan()
-
-        self.sceneUpdateSubscription?.cancel()
-        self.sceneUpdateSubscription = nil
 
         self.cleanupGestures()
 
@@ -125,9 +112,6 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         self.drawView = nil
 
         self.scanConfiguration = nil
-        self.passiveConfiguration = nil
-
-        self.scanEnabled = false
 
         self.startSnapshot = nil
         self.surveyStations = []
@@ -148,7 +132,15 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         ]
     }
 
-    /// stop the scan and export all data to a `ScanFile`
+
+    private func showDebug(_ show: Bool) {
+        if show {
+            arView?.debugOptions.insert(.showStatistics)
+        } else {
+            arView?.debugOptions.remove(.showStatistics)
+        }
+    }
+
     private func showMesh(_ show: Bool) {
         #if !targetEnvironment(simulator)
         if show {
@@ -165,34 +157,45 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         #endif
     }
 
-    func saveScan(scanStore: ScanStore) {
+    /// stop the scan and export all data to a `ScanFile`
+    func saveScan(
+        scanStore: ScanStore,
+        message: @escaping (_: String) -> Void,
+        done: @escaping (_: Bool) -> Void
+    ) {
         guard
             let arView = self.arView,
             let surveyLines = self.surveyLines
-        else { return }
+        else {
+            done(false)
+            return
+        }
 
-        self.message = "Starting save..."
+        message("Starting save...")
         pause()
 
+        let startSnapshot = self.startSnapshot
+        let stations = self.surveyStations
         let date = Date()
 
         #if !targetEnvironment(simulator)
-        arView.session.getCurrentWorldMap { [weak self] worldMap, error in
+        arView.session.getCurrentWorldMap { /* no self */ worldMap, error in
 
-            guard let self = self else { return }
-
-            self.message = "Saving..."
+            message("Saving...")
 
             guard let map = worldMap
             else {
-                    self.message
-                        = "WorldMap Error: \(error!.localizedDescription)";
-                    return
+                message("WorldMap Error: \(error!.localizedDescription)")
+                done(false)
+                return
             }
 
-            let endAnchor = SnapshotAnchor(capturing: arView, suffix: "end")
+            let endAnchor = SnapshotAnchor(
+                capturing: arView.session,
+                suffix: "end"
+            )
             if endAnchor == nil {
-                self.message = "Failed to take snapshot"
+                message("Failed to take snapshot")
             }
 
             let lines = surveyLines.drawables.compactMap {
@@ -201,23 +204,23 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
 
             let scanFile = ScanFile(
                 map: map,
-                startSnap: self.startSnapshot,
+                startSnap: startSnapshot,
                 endSnap: endAnchor,
                 date: date,
-                stations: self.surveyStations,
+                stations: stations,
                 lines: lines)
 
             do {
                 try scanStore.saveFile(file: scanFile)
-                self.message = "Save successful!"
+                message("Save successful!")
+                done(true)
             } catch {
-                self.message = "Error: \(error.localizedDescription)"
+                message("Error: \(error.localizedDescription)")
+                done(false)
             }
-
-            self.scanEnabled = false
         }
         #else
-        self.scanEnabled = false
+        done(false)
         #endif
     }
 
@@ -247,8 +250,6 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             let scanConfiguration = self.scanConfiguration
         else { return }
 
-        showMesh(self.meshEnabled)
-
         #if !targetEnvironment(simulator)
         arView.environment.sceneUnderstanding.options = [
             .occlusion
@@ -265,28 +266,19 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
     }
 
     /// transfer to passive-mode, clearing the current state
-    private func stopScan() {
+    func stopScan() {
         guard
             let arView = self.arView,
             let drawView = self.drawView,
-            let surveyLines = self.surveyLines,
-            let passiveConfiguration = self.passiveConfiguration
+            let surveyLines = self.surveyLines
         else { return }
 
         self.pause()
-
-        /// we must hide the mesh so it doesn't show between scans,
-        /// BUT we _should_ persist the user's `meshEnabled` choice and reset to it next time
-        self.showMesh(false)
 
         arView.scene.anchors.removeAll()
         surveyStations.removeAll()
         surveyLines.drawables.removeAll()
         drawView.setNeedsDisplay()
-
-        #if !targetEnvironment(simulator)
-        arView.session.run(passiveConfiguration, options: clearingOptions)
-        #endif
     }
 
     private func setupPassiveConfig() {
