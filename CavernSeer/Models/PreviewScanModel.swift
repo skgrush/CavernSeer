@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if DEBUG
+import UIKit
+#endif
 
 struct PreviewScanModel: Identifiable, Hashable, PreviewStoredFileProtocol {
 
@@ -34,4 +37,15 @@ struct PreviewScanModel: Identifiable, Hashable, PreviewStoredFileProtocol {
         self.name = scan.name
         self.imageData = scan.startSnapshot?.imageData
     }
+
+    #if DEBUG
+    // Debug Initializer
+    init(id: String, sysImage: String = "arkit") {
+        self.id = id
+        self.url = URL(string: "debug://\(id)")!
+        self.name = "NameFrom:\(id)"
+        self.fileSize = 0
+        self.imageData = UIImage(systemName: sysImage)?.pngData()
+    }
+    #endif
 }

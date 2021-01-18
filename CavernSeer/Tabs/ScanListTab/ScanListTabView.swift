@@ -38,8 +38,32 @@ struct ScanListTabView: View {
 
 #if DEBUG
 struct ScanListTabView_Previews: PreviewProvider {
+
+    private static let scanStore = setupScanStore()
+
     static var previews: some View {
         ScanListTabView()
+            .environmentObject(scanStore)
+
+        Group {
+            ScanListTabView()
+                .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
+                .environment(\.colorScheme, .dark)
+
+            ScanListTabView()
+                .previewDevice(PreviewDevice(rawValue: "iPad Pro (11-inch)"))
+                .environment(\.colorScheme, .light)
+
+        }.environmentObject(scanStore)
+    }
+
+    private static func setupScanStore() -> ScanStore {
+        let store = ScanStore()
+
+        store.cachedModelData = dummySavedScans
+        store.previews = dummyPreviewScans
+
+        return store
     }
 }
 #endif
