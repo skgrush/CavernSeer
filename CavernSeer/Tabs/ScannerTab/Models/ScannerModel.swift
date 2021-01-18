@@ -11,7 +11,7 @@ import RealityKit /// ARView, SceneEvents
 import ARKit /// other AR*, UIView, UIGestureRecognizer, NSLayoutConstraint
 import Combine /// Cancellable
 
-final class ScannerModel: UIGestureRecognizer, ObservableObject {
+final class ScannerModel: UIGestureRecognizer, ARSessionDelegate, ObservableObject {
 
     static let supportsScan =
         ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh)
@@ -258,9 +258,9 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
             scanConfiguration,
             options: self.clearingOptions
         )
-        #endif
 
-        startSnapshot = SnapshotAnchor(capturing: arView, suffix: "start")
+        arView.session.delegate = self
+        #endif
 
         setupGestures(arView: arView)
     }
@@ -281,8 +281,13 @@ final class ScannerModel: UIGestureRecognizer, ObservableObject {
         drawView.setNeedsDisplay()
     }
 
-    private func setupPassiveConfig() {
-        passiveConfiguration = ARPositionalTrackingConfiguration()
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        if self.startSnapshot == nil {
+            self.startSnapshot = SnapshotAnchor(
+                capturing: session,
+                suffix: "start"
+            )
+        }
     }
 
     private func setupScanConfig() {
