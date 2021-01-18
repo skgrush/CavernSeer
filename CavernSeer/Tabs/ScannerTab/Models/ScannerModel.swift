@@ -11,7 +11,9 @@ import RealityKit /// ARView, SceneEvents
 import ARKit /// other AR*, UIView, UIGestureRecognizer, NSLayoutConstraint
 import Combine /// Cancellable
 
-final class ScannerModel: UIGestureRecognizer, ARSessionDelegate, ObservableObject {
+final class ScannerModel:
+    UIGestureRecognizer, ARSessionDelegate, ObservableObject
+{
 
     static let supportsScan =
         ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh)
@@ -25,7 +27,7 @@ final class ScannerModel: UIGestureRecognizer, ARSessionDelegate, ObservableObje
         .stopTrackedRaycasts,
     ]
 
-    /// the layer containing the AR render of the scan; owned by the `ARViewScannerContainer`
+    /// the layer containing the AR render of the scan; owned by the `ScannerContainerView`
     weak var arView: ARView?
     /// the layer that can draw on top of the arView (e.g. for line drawing)
     weak var drawView: UIView?

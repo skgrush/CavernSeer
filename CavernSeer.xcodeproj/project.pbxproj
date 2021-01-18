@@ -62,7 +62,7 @@
 		7E6C0EEF24A8388C00129E8C /* ScanFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EEE24A8388C00129E8C /* ScanFile.swift */; };
 		7E6C0EF124A838A000129E8C /* ScanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF024A838A000129E8C /* ScanStore.swift */; };
 		7E6C0EF324A838E200129E8C /* SavedScanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF224A838E200129E8C /* SavedScanModel.swift */; };
-		7E6C0EF524A9323900129E8C /* ARViewScannerContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF424A9323900129E8C /* ARViewScannerContainer.swift */; };
+		7E6C0EF524A9323900129E8C /* ScannerContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF424A9323900129E8C /* ScannerContainerView.swift */; };
 		7E6C0EF724A938ED00129E8C /* ScannerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF624A938ED00129E8C /* ScannerModel.swift */; };
 		7E7DEEE525AA24CE00320150 /* Float+round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7DEEE425AA24CE00320150 /* Float+round.swift */; };
 		7E7DEEEA25AA28F000320150 /* Double+round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7DEEE925AA28F000320150 /* Double+round.swift */; };
@@ -177,7 +177,7 @@
 		7E6C0EEE24A8388C00129E8C /* ScanFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFile.swift; sourceTree = "<group>"; };
 		7E6C0EF024A838A000129E8C /* ScanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStore.swift; sourceTree = "<group>"; };
 		7E6C0EF224A838E200129E8C /* SavedScanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanModel.swift; sourceTree = "<group>"; };
-		7E6C0EF424A9323900129E8C /* ARViewScannerContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewScannerContainer.swift; sourceTree = "<group>"; };
+		7E6C0EF424A9323900129E8C /* ScannerContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerContainerView.swift; sourceTree = "<group>"; };
 		7E6C0EF624A938ED00129E8C /* ScannerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerModel.swift; sourceTree = "<group>"; };
 		7E7DEEE425AA24CE00320150 /* Float+round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Float+round.swift"; sourceTree = "<group>"; };
 		7E7DEEE925AA28F000320150 /* Double+round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+round.swift"; sourceTree = "<group>"; };
@@ -427,7 +427,7 @@
 			children = (
 				7E4003B124AD5E5300B709BD /* Models */,
 				7E6C0EE824A82CC700129E8C /* ScannerTabView.swift */,
-				7E6C0EF424A9323900129E8C /* ARViewScannerContainer.swift */,
+				7E6C0EF424A9323900129E8C /* ScannerContainerView.swift */,
 				7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */,
 				7E09140825B5EECB0023215F /* PassiveCameraViewContainer.swift */,
 			);
@@ -712,7 +712,7 @@
 				7E0C5EE124C8F60D001C0D0E /* ProjectListTabView.swift in Sources */,
 				7EAE9CD52561C6B700EA66D0 /* SettingsKeyEnum.swift in Sources */,
 				7E43C62D256B49AB00170C17 /* Interaction3dSettingsSection.swift in Sources */,
-				7E6C0EF524A9323900129E8C /* ARViewScannerContainer.swift in Sources */,
+				7E6C0EF524A9323900129E8C /* ScannerContainerView.swift in Sources */,
 				7E9C2CEA24B3FD5700B9FC44 /* SavedScanRow.swift in Sources */,
 				7E9C2CE824B3FD4B00B9FC44 /* SavedScanDetail.swift in Sources */,
 				7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */,

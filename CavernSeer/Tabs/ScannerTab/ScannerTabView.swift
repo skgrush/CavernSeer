@@ -38,7 +38,7 @@ struct ScannerTabView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             if isSelected {
-                ARViewScannerContainer(control: self.control)
+                ScannerContainerView(control: self.control)
                     .edgesIgnoringSafeArea(.all)
             }
 

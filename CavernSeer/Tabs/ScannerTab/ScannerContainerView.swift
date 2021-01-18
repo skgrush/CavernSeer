@@ -1,5 +1,5 @@
 //
-//  ARViewScannerContainer.swift
+//  ScannerContainerView.swift
 //  CavernSeer
 //
 //  Created by Samuel Grush on 6/28/20.
@@ -9,7 +9,7 @@
 import SwiftUI /// UIViewRepresentable, Context
 import RealityKit /// ARView
 
-struct ARViewScannerContainer : View {
+struct ScannerContainerView : View {
 
     @EnvironmentObject
     var scanStore: ScanStore
@@ -20,19 +20,19 @@ struct ARViewScannerContainer : View {
     private var usePassiveCam: Bool {
         control.cameraEnabled != true ||
         !control.renderingARView ||
-            control.model == nil
+        control.model == nil
     }
 
     var body: some View {
         if usePassiveCam {
             PassiveCameraViewContainer(control: control)
         } else {
-            ARViewScannerContainerInner(control: control)
+            ActiveARViewScannerContainer(control: control)
         }
     }
 }
 
-fileprivate struct ARViewScannerContainerInner: UIViewRepresentable {
+fileprivate struct ActiveARViewScannerContainer: UIViewRepresentable {
 //    weak var scanModel: ScannerModel?
     weak var control: ScannerControlModel?
 
@@ -64,7 +64,7 @@ fileprivate struct ARViewScannerContainerInner: UIViewRepresentable {
 }
 
 
-extension ARViewScannerContainerInner {
+extension ActiveARViewScannerContainer {
     class Coordinator {
         weak var control: ScannerControlModel?
 

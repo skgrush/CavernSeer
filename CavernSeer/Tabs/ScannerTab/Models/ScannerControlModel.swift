@@ -56,7 +56,7 @@ class ScannerControlModel : ObservableObject {
     }
 
     /**
-     * Simply stops rendering the ARView, triggering the `ARViewScannerContainerInner` to
+     * Simply stops rendering the ARView, triggering the `ActiveARViewScannerContainer` to
      * disappear, subsequently calling `scanDisappearing`
      */
     func cancelScan() {
