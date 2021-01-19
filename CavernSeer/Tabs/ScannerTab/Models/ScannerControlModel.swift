@@ -10,34 +10,44 @@ import Foundation
 
 class ScannerControlModel : ObservableObject {
 
-//    weak var scanStore: ScanStore?
-
+    /** The active scanner model. Only accessible while scanning is enabled. */
     @Published
     public private(set) var model: ScannerModel?
 
+    /** Controls if the `ActiveARViewScannerContainer` will render. */
     @Published
     public private(set) var renderingARView = false
 
+    /** Controls if the `PassiveCameraViewContainer` will render. */
+    @Published
+    public private(set) var renderingPassiveView = true
+
+    /** Indicates that the UI should show us as being in scan-mode */
     @Published
     public private(set) var scanEnabled = false
 
+    /** Indicates that the torch (onboard-light) is engaged. */
     @Published
     public private(set) var torchEnabled = false
 
+    /** Indicates that the ARView debug should render. */
     @Published
     public private(set) var debugEnabled = false
 
+    /** Indicates that the scene-understanding mesh should render. */
     @Published
     public private(set) var meshEnabled = false
 
+    /** The user-facing message string. */
     @Published
     public private(set) var message = ""
 
-    @Published
-    public private(set) var passiveCameraEnabled = false
-
+    /** If we even have access to the camera. `nil` if not yet checked. */
     public private(set) var cameraEnabled: Bool?
 
+    /**
+     * Stop the passive camera, construct a `ScannerModel` and start the active AR camera.
+     */
     func startScan() {
         precondition(cameraEnabled == true)
         precondition(model == nil)
@@ -45,7 +55,7 @@ class ScannerControlModel : ObservableObject {
 
         self.message = ""
 
-        self.passiveCameraEnabled = false
+        self.renderingPassiveView = false
 
         self.model = ScannerModel(control: self)
 
@@ -57,7 +67,9 @@ class ScannerControlModel : ObservableObject {
 
     /**
      * Simply stops rendering the ARView, triggering the `ActiveARViewScannerContainer` to
-     * disappear, subsequently calling `scanDisappearing`
+     * disappear, subsequently calling `scanDisappearing`.
+     *
+     * Does  not save the scan.
      */
     func cancelScan() {
         if self.renderingARView {
@@ -68,6 +80,12 @@ class ScannerControlModel : ObservableObject {
         }
     }
 
+    /**
+     * Handler for when the active scan view is being dismantled.
+     *
+     * Calls the model's `onViewDisappear`, stops rendering the scan,
+     * and enables the passive camera.
+     */
     func scanDisappearing() {
         self.model?.onViewDisappear()
 
@@ -78,14 +96,18 @@ class ScannerControlModel : ObservableObject {
         self.passiveCameraEnabled = true
     }
 
+    /**
+     * Call `saveScan` on the model, updating `message` as appropriate,
+     * and cancel scan (returning to passive) when done.
+     */
     func saveScan(scanStore: ScanStore) {
         guard let model = self.model
         else { fatalError("Call to saveScan() when no model is set") }
 
         model.saveScan(
             scanStore: scanStore,
-            message: { self.message = $0 },
-            done: self.saveScanDone
+            message: { msg in self.message = msg },
+            done: { _ in self.cancelScan() }
         )
     }
 
@@ -103,9 +125,5 @@ class ScannerControlModel : ObservableObject {
 
     func updateCameraAccess(hasAccess: Bool) {
         self.cameraEnabled = hasAccess
-    }
-
-    private func saveScanDone(_ success: Bool) {
-        self.cancelScan()
     }
 }
