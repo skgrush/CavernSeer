@@ -16,7 +16,7 @@ struct PassiveCameraViewContainer : UIViewRepresentable {
     var control: ScannerControlModel
 
     func makeUIView(context: Context) -> some UIView {
-        PassCameraView(control: self.control)
+        PassiveCameraView(control: self.control)
     }
 
     func updateUIView(_ uiView: UIViewType, context: Context) {
@@ -30,7 +30,7 @@ extension PassiveCameraViewContainer {
      * **Heaviliy** based on
      * [Asperi's example on Stack Overflow](https://stackoverflow.com/a/59064305)
      */
-    class PassCameraView : UIView {
+    class PassiveCameraView : UIView {
         var control: ScannerControlModel
 
         private var captureSession: AVCaptureSession?
