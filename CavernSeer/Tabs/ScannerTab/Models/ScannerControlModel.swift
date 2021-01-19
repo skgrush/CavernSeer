@@ -14,7 +14,7 @@ class ScannerControlModel : ObservableObject {
     @Published
     public private(set) var model: ScannerModel?
 
-    /** Controls if the `ActiveARViewScannerContainer` will render. */
+    /** Controls if the `ActiveARViewContainer` will render. */
     @Published
     public private(set) var renderingARView = false
 
@@ -66,7 +66,7 @@ class ScannerControlModel : ObservableObject {
     }
 
     /**
-     * Simply stops rendering the ARView, triggering the `ActiveARViewScannerContainer` to
+     * Simply stops rendering the ARView, triggering the `ActiveARViewContainer` to
      * disappear, subsequently calling `scanDisappearing`.
      *
      * Does  not save the scan.
