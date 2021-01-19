@@ -92,8 +92,9 @@ class ScannerControlModel : ObservableObject {
         self.cancelScan() /// should've been called already but just make sure
 
         self.model = nil
+        self.torchEnabled = false
 
-        self.passiveCameraEnabled = true
+        self.renderingPassiveView = true
     }
 
     /**

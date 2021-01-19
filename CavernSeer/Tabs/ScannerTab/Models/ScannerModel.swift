@@ -27,6 +27,17 @@ final class ScannerModel:
         .stopTrackedRaycasts,
     ]
 
+    #if !targetEnvironment(simulator)
+    let showMeshOptions: ARView.DebugOptions = [
+        .showSceneUnderstanding,
+        .showWorldOrigin,
+        .showAnchorGeometry,
+        .showAnchorOrigins,
+    ]
+    #else
+    let showMeshOptions: ARView.DebugOptions = []
+    #endif
+
     /// the layer containing the AR render of the scan; owned by the `ScannerContainerView`
     weak var arView: ARView?
     /// the layer that can draw on top of the arView (e.g. for line drawing)
@@ -44,14 +55,7 @@ final class ScannerModel:
     private var tapRecognizer: UITapGestureRecognizer?
     private var cancelBag = Set<AnyCancellable>()
 
-    private var initialMesh: Bool
-    private var initialDebug: Bool
-    private var initialTorch: Bool
-
     init(control: ScannerControlModel) {
-        self.initialMesh = control.meshEnabled
-        self.initialDebug = control.debugEnabled
-        self.initialTorch = control.torchEnabled
 
         super.init(target: nil, action: nil)
 
@@ -65,10 +69,10 @@ final class ScannerModel:
         }
         .store(in: &cancelBag)
 
-        control.$torchEnabled.sink {
-            [weak self] (on) in self?.toggleTorch(on: on)
-        }
-        .store(in: &cancelBag)
+        control.$torchEnabled
+            .dropFirst() /// ignore first so we don't default-on the torch
+            .sink { (on) in Self.toggleTorch(on: on) }
+            .store(in: &cancelBag)
     }
 
     func onViewAppear(arView: ARView) {
@@ -91,10 +95,6 @@ final class ScannerModel:
         setupScanConfig()
 
         self.startScan()
-
-        self.showMesh(self.initialMesh)
-        self.showDebug(self.initialDebug)
-        self.toggleTorch(on: self.initialTorch)
     }
 
     func onViewDisappear() {
@@ -144,19 +144,11 @@ final class ScannerModel:
     }
 
     private func showMesh(_ show: Bool) {
-        #if !targetEnvironment(simulator)
         if show {
-            arView?.debugOptions.insert(.showSceneUnderstanding)
-            arView?.debugOptions.insert(.showWorldOrigin)
-            arView?.debugOptions.insert(.showAnchorGeometry)
-            arView?.debugOptions.insert(.showAnchorOrigins)
+            arView?.debugOptions.formUnion(showMeshOptions)
         } else {
-            arView?.debugOptions.remove(.showSceneUnderstanding)
-            arView?.debugOptions.remove(.showWorldOrigin)
-            arView?.debugOptions.remove(.showAnchorGeometry)
-            arView?.debugOptions.remove(.showAnchorOrigins)
+            arView?.debugOptions.subtract(showMeshOptions)
         }
-        #endif
     }
 
     /// stop the scan and export all data to a `ScanFile`
@@ -338,21 +330,26 @@ final class ScannerModel:
         drawView.setNeedsDisplay()
     }
 
-    private func toggleTorch(on: Bool) {
+    private static func toggleTorch(on: Bool) {
         guard
-            Self.supportsTorch,
+            supportsTorch,
             let device = AVCaptureDevice.default(for: .video)
         else { return }
 
         do {
-            try device.lockForConfiguration()
+            let currentlyOn = device.isTorchActive
+            let max = AVCaptureDevice.maxAvailableTorchLevel
 
-            if on {
-                try device.setTorchModeOn(
-                    level: AVCaptureDevice.maxAvailableTorchLevel
-                )
+            if currentlyOn != on {
+                try device.lockForConfiguration()
+                if on {
+                    try device.setTorchModeOn(level: max)
+                } else {
+                    device.torchMode = .off
+                }
+                device.unlockForConfiguration()
             } else {
-                device.torchMode = .off
+
             }
 
         } catch {

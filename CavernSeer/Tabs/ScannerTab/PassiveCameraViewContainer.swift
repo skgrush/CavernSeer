@@ -51,7 +51,7 @@ extension PassiveCameraViewContainer {
             self.captureSession = session
 
             self.passiveCamEnabledSub =
-                self.control.$passiveCameraEnabled.sink {
+                self.control.$renderingPassiveView.sink {
                     [weak self] enabled in
                     if !enabled {
                         self?.captureSession?.stopRunning()

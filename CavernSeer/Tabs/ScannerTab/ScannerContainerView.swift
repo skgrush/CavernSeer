@@ -24,10 +24,12 @@ struct ScannerContainerView : View {
     }
 
     var body: some View {
-        if usePassiveCam {
-            PassiveCameraViewContainer(control: control)
-        } else {
-            ActiveARViewScannerContainer(control: control)
+        if control.cameraEnabled != false {
+            if control.renderingPassiveView {
+                PassiveCameraViewContainer(control: control)
+            } else if control.renderingARView {
+                ActiveARViewScannerContainer(control: control)
+            }
         }
     }
 }
