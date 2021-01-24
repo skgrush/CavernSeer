@@ -10,6 +10,7 @@
 		7E0913FE25B3DE350023215F /* ScannerControlModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0913FD25B3DE350023215F /* ScannerControlModel.swift */; };
 		7E09140925B5EECB0023215F /* PassiveCameraViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E09140825B5EECB0023215F /* PassiveCameraViewContainer.swift */; };
 		7E09141725B66ED60023215F /* ActiveARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E09141625B66ED60023215F /* ActiveARViewContainer.swift */; };
+		7E09141C25B67DF40023215F /* MTLTexture+Z.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E09141B25B67DF40023215F /* MTLTexture+Z.swift */; };
 		7E0C5ED524BACECE001C0D0E /* MergeTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0C5ED424BACECE001C0D0E /* MergeTool.swift */; };
 		7E0C5EDA24BBA2E0001C0D0E /* MergeToolModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0C5ED924BBA2E0001C0D0E /* MergeToolModel.swift */; };
 		7E0C5EDC24BBD118001C0D0E /* MergeAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0C5EDB24BBD118001C0D0E /* MergeAnalyzer.swift */; };
@@ -118,6 +119,7 @@
 		7E0913FD25B3DE350023215F /* ScannerControlModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerControlModel.swift; sourceTree = "<group>"; };
 		7E09140825B5EECB0023215F /* PassiveCameraViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveCameraViewContainer.swift; sourceTree = "<group>"; };
 		7E09141625B66ED60023215F /* ActiveARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveARViewContainer.swift; sourceTree = "<group>"; };
+		7E09141B25B67DF40023215F /* MTLTexture+Z.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MTLTexture+Z.swift"; sourceTree = "<group>"; };
 		7E0C5ED424BACECE001C0D0E /* MergeTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeTool.swift; sourceTree = "<group>"; };
 		7E0C5ED624BADBD2001C0D0E /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		7E0C5ED724BADC35001C0D0E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 			isa = PBXGroup;
 			children = (
 				7E6C0EEC24A834E200129E8C /* SnapshotAnchor.swift */,
+				7E09141B25B67DF40023215F /* MTLTexture+Z.swift */,
 			);
 			path = lib;
 			sourceTree = "<group>";
@@ -740,6 +743,7 @@
 				7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */,
 				7E9C2CE624B3FBFE00B9FC44 /* SavedScanListView.swift in Sources */,
 				7E9CF3D6259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift in Sources */,
+				7E09141C25B67DF40023215F /* MTLTexture+Z.swift in Sources */,
 				7E6C0EE924A82CC700129E8C /* ScannerTabView.swift in Sources */,
 				7E4888342557534900894D43 /* ElevationProjectedMiniWorldRender.swift in Sources */,
 				7E9CF3D1259D3DDA0036F6F7 /* StoredFileProtocol.swift in Sources */,
