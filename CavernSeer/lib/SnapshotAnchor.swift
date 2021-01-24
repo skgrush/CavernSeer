@@ -19,11 +19,14 @@ class SnapshotAnchor: ARAnchor {
 
     let imageData: Data
 
-    convenience init?(capturing view: ARView, suffix: String) {
+    convenience init?(capturing session: ARSession, suffix: String) {
 
         #if !targetEnvironment(simulator)
-        guard let frame = view.session.currentFrame
-            else { return nil }
+        guard let frame = session.currentFrame
+        else {
+            debugPrint("Cannot capture snapshot; no `session.currentFrame`")
+            return nil
+        }
 
         let image = CIImage(cvPixelBuffer: frame.capturedImage)
         let orientation = CGImagePropertyOrientation(
@@ -35,9 +38,16 @@ class SnapshotAnchor: ARAnchor {
             of: image.oriented(orientation),
             colorSpace: CGColorSpaceCreateDeviceRGB(),
             options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 0.7])
-        else { return nil }
+        else {
+            debugPrint("Cannot capture snapshot; jpeg conversion failed")
+            return nil
+        }
 
-        self.init(imageData: data, transform: frame.camera.transform, suffix: suffix)
+        self.init(
+            imageData: data,
+            transform: frame.camera.transform,
+            suffix: suffix
+        )
         #else
         return nil
         #endif

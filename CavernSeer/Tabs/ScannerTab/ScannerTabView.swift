@@ -33,12 +33,12 @@ struct ScannerTabView: View {
     private var fakeScan: Bool
 
     @ObservedObject
-    private var scanModel = ScannerModel()
+    private var control = ScannerControlModel()
 
     var body: some View {
         ZStack(alignment: .bottom) {
             if isSelected {
-                ARViewScannerContainer(scanModel: scanModel)
+                ScannerContainerView(control: self.control)
                     .edgesIgnoringSafeArea(.all)
             }
 
@@ -50,14 +50,14 @@ struct ScannerTabView: View {
     }
 
     private var scanEnabled: Bool {
-        return self.scanModel.scanEnabled || self.fakeScan
+        return self.control.scanEnabled || self.fakeScan
     }
 
     private var controls: some View {
         VStack {
-            if !self.scanModel.message.isEmpty {
+            if !self.control.message.isEmpty {
                 HStack {
-                    Text(scanModel.message)
+                    Text(self.control.message)
                 }
             }
 
@@ -91,7 +91,7 @@ struct ScannerTabView: View {
 
         /// the standard start-capture button
         return Button(
-            action: { self.scanModel.scanEnabled = true },
+            action: { self.control.startScan() },
             label: {
                 Circle()
                     .foregroundColor(color)
@@ -110,7 +110,7 @@ struct ScannerTabView: View {
         VStack(alignment: .center) {
             /// cancel button
             Button(
-                action: { self.scanModel.scanEnabled = false },
+                action: { self.control.cancelScan() },
                 label: {
                     Text("Cancel Scan")
                         .foregroundColor(.red)
@@ -120,7 +120,7 @@ struct ScannerTabView: View {
 
             /// save-capture button
             Button(
-                action: { self.scanModel.saveScan(scanStore: self.scanStore) },
+                action: { self.control.saveScan(scanStore: self.scanStore) },
                 label: {
                     Circle()
                         .foregroundColor(.secondary)
@@ -131,10 +131,10 @@ struct ScannerTabView: View {
     }
 
     private var flashButton: some View {
-        let enabled = self.scanModel.torchEnabled
+        let enabled = self.control.torchEnabled
 
         return Button(
-            action: { self.scanModel.torchEnabled = !enabled },
+            action: { self.control.toggleTorch(!enabled) },
             label: {
                 Image(systemName: enabled ? "bolt.fill" : "bolt.slash.fill")
                     .font(.system(size: 20, weight: .medium, design: .default))
@@ -145,17 +145,17 @@ struct ScannerTabView: View {
     }
 
     private var debugButtons: some View {
-        let debug = self.scanModel.showDebug
-        let mesh = self.scanModel.meshEnabled
+        let debug = self.control.debugEnabled
+        let mesh = self.control.meshEnabled
 
         return VStack {
             Button(
-                action: { self.scanModel.showDebug = !debug },
+                action: { self.control.toggleDebug(!debug) },
                 label: { Text("Debug").accentColor(debug ? .primary : .secondary) }
             )
             .padding(.bottom, 5)
             Button(
-                action: { self.scanModel.meshEnabled = !mesh },
+                action: { self.control.toggleMesh(!mesh) },
                 label: { Text("Mesh").accentColor(mesh ? .primary : .secondary) }
             )
         }
