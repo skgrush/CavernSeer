@@ -36,6 +36,8 @@ extension BaseProjectedMiniWorldRenderController {
 
     func makeUIView(context: Context) -> SCNView {
         let sceneView = SCNView(frame: .zero)
+        sceneView.backgroundColor = UIColor.systemBackground
+
         let (scene, cameraNode) = makeaScene()
         sceneView.scene = scene
         sceneView.pointOfView = cameraNode
