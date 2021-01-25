@@ -79,6 +79,8 @@ final class MiniWorldRenderController :
 
     func makeUIView(context: Context) -> SCNView {
         let sceneView = SCNView(frame: .zero)
+        sceneView.backgroundColor = UIColor.systemBackground
+
         sceneView.scene = makeaScene()
 
         sceneView.showsStatistics = true

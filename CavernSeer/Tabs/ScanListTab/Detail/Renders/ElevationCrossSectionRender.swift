@@ -143,7 +143,7 @@ fileprivate class CrossSectionPlanDrawOverlay :
             self.alpha = 0.8
 
             context.setLineWidth(2)
-            context.setStrokeColor(UIColor.black.cgColor)
+            context.setStrokeColor(UIColor.label.cgColor)
 
             if
                 let view = self.parentView,
