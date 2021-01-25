@@ -10,13 +10,10 @@ import Foundation
 import ARKit /// simd_float3, ARMeshAnchor, ARWorldMap
 
 final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
+    static let filePrefix = "scan"
     static let fileExtension = "arscanfile"
     static let supportsSecureCoding: Bool = true
-    static let dateFormatter: ISO8601DateFormatter = {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withFullDate, .withFullTime]
-        return f
-    }()
+    static let dateFormatter = getDefaultDateFormatter()
     static let currentEncodingVersion: Int32 = 1
 
     let encodingVersion: Int32
@@ -89,7 +86,11 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
                     forKey: PropertyKeys.name
                 ) as! String
             } else {
-                self.name = ScanFile.dateFormatter.string(from: self.timestamp)
+                self.name = ScanFile.makeDefaultBaseName(
+                    with: self.timestamp,
+                    as: ScanFile.dateFormatter
+                )
+                debugPrint("ScanFile \(self.name) missing name in archive")
             }
 
             if decoder.containsValue(forKey: PropertyKeys.startSnapshot) {
@@ -144,7 +145,10 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     ) {
         self.encodingVersion = ScanFile.currentEncodingVersion
         self.timestamp = timestamp
-        self.name = name ?? ScanFile.dateFormatter.string(from: timestamp)
+        self.name = name ?? Self.makeDefaultBaseName(
+            with: timestamp,
+            as: Self.dateFormatter
+        )
         self.center = center
         self.extent = extent
         self.meshAnchors = meshAnchors
@@ -168,9 +172,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         coder.encode(lines as NSArray, forKey: PropertyKeys.lines)
     }
 
-    func getTimestamp() -> Date { timestamp }
-
     #if DEBUG
+    /** DEBUG only constructor */
     init(debugInit: Any?) {
         self.encodingVersion = ScanFile.currentEncodingVersion
 

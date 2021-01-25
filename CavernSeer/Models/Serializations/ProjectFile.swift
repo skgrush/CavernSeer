@@ -10,7 +10,8 @@ import Foundation
 import ARKit /// simd_float4x4
 
 final class ProjectFile : NSObject, StoredFileProtocol {
-    static var fileExtension: String = "cavernseerproj"
+    static let filePrefix = "proj"
+    static let fileExtension: String = "cavernseerproj"
 
     static let supportsSecureCoding: Bool = true
     static let currentEncodingVersion: Int32 = 1
@@ -58,8 +59,6 @@ final class ProjectFile : NSObject, StoredFileProtocol {
         coder.encode(name, forKey: PropertyKeys.name)
         coder.encode(scans as NSArray, forKey: PropertyKeys.scans)
     }
-
-    func getTimestamp() -> Date { timestamp }
 
     private struct PropertyKeys {
         static let version = "version"
