@@ -39,13 +39,15 @@ final class ScaleBarModel: ObservableObject {
         if bar == nil {
             bar = SKShapeNode(path: path)
             bar!.name = "scalebar"
-            bar!.fillColor = .white
+            bar!.strokeColor = .clear
             bar!.position = CGPoint.zero
             scene.addChild(bar!)
         } else {
             bar!.path = path
             bar!.position = CGPoint.zero
         }
+
+        bar!.fillColor = .secondarySystemBackground
     }
 
     func update(renderer: SCNSceneRenderer) {
@@ -90,6 +92,8 @@ final class ScaleBarModel: ObservableObject {
      * - Parameter bar: the `SKNode` parent to attach elements to
      * - Parameter subBarPosY: the position of the sub-bar in the Y axis.
      * - Parameter ptsPerUnit: view-points per unit of measure, e.g. pts/meter
+     * - Parameter labelAbove: whether the labels are above or below the bar
+     * - Parameter xOffset: the x-axis offset in pts of the whole subbar
      */
     private func drawASubBar(
         bar: SKNode,
@@ -115,7 +119,7 @@ final class ScaleBarModel: ObservableObject {
             width: subBarWidth,
             height: height + 2 * borderSize
         ))
-        subBarBG.fillColor = .black
+        subBarBG.fillColor = .opaqueSeparator
         subBarBG.position = CGPoint(
             x: subBarWidth / 2 + xOffset - borderSize,
             y: subBarPosY
@@ -127,7 +131,7 @@ final class ScaleBarModel: ObservableObject {
             : subBarPosY - height * 1.5
 
         var lastX: Double = 0
-        var lastColor = SKColor.black
+        var lastColor: SKColor = .black
         for tick in ScaleBarModel.ticks where tick <= lastTick! {
             let tickX = Double(tick) * ptsPerUnit
 
@@ -137,8 +141,10 @@ final class ScaleBarModel: ObservableObject {
             )
             let newBlockX = lastX + Double(newSize.width) / 2
             let newBlock = SKShapeNode(rectOf: newSize)
-            lastColor = lastColor == SKColor.white ? .black : .white
+
+            lastColor = lastColor == .white ? .black : .white
             newBlock.fillColor = lastColor
+
             newBlock.position = CGPoint(
                 x: newBlockX + xOffset,
                 y: subBarPosY
@@ -151,7 +157,7 @@ final class ScaleBarModel: ObservableObject {
                 y: labelPosY
             )
             label.fontSize = CGFloat(height)
-            label.fontColor = .black
+            label.fontColor = .label
             bar.addChild(label)
 
             lastX = tickX
