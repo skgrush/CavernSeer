@@ -14,7 +14,7 @@ final class ProjectStore : StoreProtocol {
     typealias PreviewType = PreviewProjectModel
 
     let directoryName: String = "projects"
-    let filePrefix: String = "proj"
+    let filePrefix: String = FileType.filePrefix
     let fileExtension: String = FileType.fileExtension
     var directory: URL!
 

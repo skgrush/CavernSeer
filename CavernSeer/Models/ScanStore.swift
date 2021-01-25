@@ -14,7 +14,7 @@ final class ScanStore : StoreProtocol {
     typealias PreviewType = PreviewScanModel
 
     let directoryName: String = "scans"
-    let filePrefix: String = "scan"
+    let filePrefix: String = FileType.filePrefix
     let fileExtension: String = FileType.fileExtension
     var directory: URL!
 
