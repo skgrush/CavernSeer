@@ -11,29 +11,53 @@ import SceneKit /// SCNView
 import SpriteKit /// SKScene
 
 class SnapshotExportModel : ObservableObject {
-    var scan: ScanFile?
+    fileprivate static let multipliers = [1, 2, 4, 8]
+
+    private var scan: ScanFile?
 
     @Published
-    var showPrompt = false
+    fileprivate var promptShowing = false
 
     @Published
-    var multiplier: Int?
+    fileprivate var exportSheetShowing = false
 
     @Published
-    var exportUrl: URL?
+    private var multiplier: Int?
+
+    @Published
+    fileprivate var exportUrl: URL?
 
     init(scan: ScanFile? = nil) {
         self.scan = scan
     }
 
-    func renderASnapshot(view: SCNView, overlaySKScene: SKScene? = nil) {
+    /**
+     * Choose a `multiplier` value (or nil to cancel).
+     * Expects that `viewUpdaterHandler` will be called next by the parent view.
+     */
+    func chooseSize(_ mult: Int?) {
+        self.multiplier = mult
+        self.promptShowing = false
+    }
+
+    /**
+     * Should be called by the parent view on every update.
+     * Will check if a snapshot is ready to be rendered.
+     */
+    func viewUpdaterHandler(scnView: SCNView, overlay: SKScene? = nil) {
+        if self.multiplier != nil {
+            self.renderASnapshot(view: scnView, overlay: overlay)
+        }
+    }
+
+    private func renderASnapshot(view: SCNView, overlay: SKScene? = nil) {
 
         guard
             let multiplierInt = self.multiplier,
             let scan = self.scan,
             let device = MTLCreateSystemDefaultDevice()
         else {
-            self.showPrompt = false
+            self.promptShowing = false
             self.multiplier = nil
             return
         }
@@ -46,7 +70,7 @@ class SnapshotExportModel : ObservableObject {
         let renderer = SCNRenderer(device: device)
         renderer.scene = view.scene
         renderer.pointOfView = view.pointOfView
-        renderer.overlaySKScene = overlaySKScene
+        renderer.overlaySKScene = overlay
         renderer.autoenablesDefaultLighting = true
 
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
@@ -70,14 +94,15 @@ class SnapshotExportModel : ObservableObject {
         try! imgData.write(to: tempUrl)
 
         self.exportUrl = tempUrl
-        self.showPrompt = true
         self.multiplier = nil
+        self.exportSheetShowing = true
+        self.promptShowing = false
     }
 
     func promptButton(scan: ScanFile) -> some View {
         Button(action: {
             self.scan = scan
-            self.showPrompt = true
+            self.promptShowing = true
         }) {
             Image(systemName: "camera.on.rectangle")
                 .font(Font.system(.title))
@@ -86,35 +111,45 @@ class SnapshotExportModel : ObservableObject {
 }
 
 
-struct SnapshotExportView: View {
+extension View {
+    func snapshotMenus(
+        for observable: ObservedObject<SnapshotExportModel>
+    ) -> some View {
+        let binding = observable.projectedValue
+        let model = observable.wrappedValue
 
-    @ObservedObject
-    var model: SnapshotExportModel
-
-    var body: some View {
-        if model.exportUrl == nil {
-            buttonStack
-        } else {
-            ScanShareSheet(activityItems: [model.exportUrl!])
-                .onDisappear { model.exportUrl = nil }
-        }
+        return self
+            .actionSheet(isPresented: binding.promptShowing) {
+                ActionSheet(
+                    title: Text("Export a scaled image"),
+                    message: Text("Wait a few seconds for the render"),
+                    buttons: self.generateButtons(model)
+                )
+            }
+            .sheet(isPresented: binding.exportSheetShowing) {
+                ScanShareSheet(activityItems: [model.exportUrl!])
+                    .onDisappear { model.exportUrl = nil }
+            }
     }
 
-    private var buttonStack: some View {
-        let width = UIScreen.main.bounds.size.width
-        return VStack {
-            Button("@1x (~\(width)px)") {
-                self.model.multiplier = 1
+    fileprivate func generateButtons(
+        _ model: SnapshotExportModel
+    ) -> [ActionSheet.Button] {
+        let sz = UIScreen.main.bounds.size
+        let width = Int(sz.width)
+        let height = Int(sz.height)
+
+        var btns = SnapshotExportModel.multipliers
+            .map {
+                mult in
+                ActionSheet.Button.default(
+                    Text("@\(mult)x (~\(mult * width)x\(mult * height))"),
+                    action: { model.chooseSize(mult) }
+                )
             }
-            Button("@2x (~\(2*width)px)") {
-                self.model.multiplier = 2
-            }
-            Button("@4x (~\(4*width)px)") {
-                self.model.multiplier = 4
-            }
-            Button("@8x (~\(8*width)px)") {
-                self.model.multiplier = 8
-            }
-        }
+
+        btns.append(.cancel({ model.chooseSize(nil) }))
+
+        return btns
     }
 }

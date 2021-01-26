@@ -115,9 +115,7 @@ struct ElevationProjectedMiniWorldRender: View {
                 }
             }
         }
-        .sheet(isPresented: $snapshotModel.showPrompt) {
-            SnapshotExportView(model: snapshotModel)
-        }
+        .snapshotMenus(for: _snapshotModel)
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
 }
@@ -212,12 +210,10 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
             pov!.camera?.fieldOfView = uiView.frame.size.width
         }
 
-        if self.snapshotModel.multiplier != nil {
-            self.snapshotModel.renderASnapshot(
-                view: uiView,
-                overlaySKScene: self.scaleBarModel.scene
-            )
-        }
+        self.snapshotModel.viewUpdaterHandler(
+            scnView: uiView,
+            overlay: self.scaleBarModel.scene
+        )
     }
 
     func renderer(
