@@ -27,6 +27,12 @@ class SnapshotExportModel : ObservableObject {
     @Published
     fileprivate var exportUrl: URL?
 
+    /// Currently not in use due to some kind of issue with altert interactions
+    @Published
+    fileprivate var alertShowing = false
+    @Published
+    fileprivate var alertMessage = ""
+
     init(scan: ScanFile? = nil) {
         self.scan = scan
     }
@@ -38,6 +44,14 @@ class SnapshotExportModel : ObservableObject {
     func chooseSize(_ mult: Int?) {
         self.multiplier = mult
         self.promptShowing = false
+
+        if mult != nil {
+            self.alertMessage = "Size chosen"
+            self.alertShowing = true
+        } else {
+            self.alertMessage = ""
+            self.alertShowing = false
+        }
     }
 
     /**
@@ -52,15 +66,20 @@ class SnapshotExportModel : ObservableObject {
 
     private func renderASnapshot(view: SCNView, overlay: SKScene? = nil) {
 
+
+
         guard
             let multiplierInt = self.multiplier,
             let scan = self.scan,
             let device = MTLCreateSystemDefaultDevice()
         else {
-            self.promptShowing = false
-            self.multiplier = nil
+            debugPrint("renderASnapshot guard failed")
+            self.chooseSize(nil)
             return
         }
+
+        self.multiplier = nil
+        self.alertMessage = "Rendering snapshot..."
 
         let multiplier = CGFloat(multiplierInt)
         let newSize = view.frame.size.applying(
@@ -92,6 +111,12 @@ class SnapshotExportModel : ObservableObject {
         else { fatalError("Failed to get pngData from snapshot") }
 
         try! imgData.write(to: tempUrl)
+
+
+        debugPrint("Wrote img render to", tempUrl)
+
+        self.alertShowing  = false
+        self.alertMessage = ""
 
         self.exportUrl = tempUrl
         self.multiplier = nil
@@ -126,6 +151,9 @@ extension View {
                     buttons: self.generateButtons(model)
                 )
             }
+//            .alert(isPresented: binding.alertShowing) {
+//                Alert(title: Text(model.alertMessage))
+//            }
             .sheet(isPresented: binding.exportSheetShowing) {
                 ScanShareSheet(activityItems: [model.exportUrl!])
                     .onDisappear { model.exportUrl = nil }
