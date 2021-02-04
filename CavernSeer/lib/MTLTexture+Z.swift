@@ -28,15 +28,16 @@ extension MTLTexture {
 
     var cgImage: CGImage? {
         /// original code assumed `.bgra8Unorm`, but this is `.rgba16Float`
-        let fmt = self.pixelFormat
-        let width = self.width
-        let height = self.height
 
-        let depth = self.depth
-        let levels = self.mipmapLevelCount
-        let samples = self.sampleCount
-        let textureType = self.textureType
-        let usage = self.usage
+//        let fmt = self.pixelFormat
+//        let width = self.width
+//        let height = self.height
+//
+//        let depth = self.depth
+//        let levels = self.mipmapLevelCount
+//        let samples = self.sampleCount
+//        let textureType = self.textureType
+//        let usage = self.usage
 
         assert(self.pixelFormat == .rgba16Float)
 

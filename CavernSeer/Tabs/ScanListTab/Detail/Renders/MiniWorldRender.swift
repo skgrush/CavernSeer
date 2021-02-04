@@ -42,9 +42,7 @@ struct MiniWorldRender: View {
             interactionMode: interactionMode3d,
             ambientColor: ambientColor
         )
-        .sheet(isPresented: $snapshotModel.showPrompt) {
-            SnapshotExportView(model: snapshotModel)
-        }
+        .snapshotMenus(for: _snapshotModel)
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
     }
 }
@@ -97,11 +95,8 @@ final class MiniWorldRenderController :
     }
 
     func updateUIView(_ uiView: SCNView, context: Context) {
-        if self.snapshotModel.multiplier != nil {
-            self.snapshotModel.renderASnapshot(
-                view: uiView
-            )
-        }
+        self.snapshotModel.viewUpdaterHandler(scnView: uiView)
+
         uiView.defaultCameraController.interactionMode = self.interactionMode
     }
 

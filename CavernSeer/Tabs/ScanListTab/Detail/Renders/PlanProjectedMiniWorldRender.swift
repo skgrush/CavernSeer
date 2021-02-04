@@ -69,11 +69,9 @@ struct PlanProjectedMiniWorldRender: View {
                     Stepper(stepperLabel, value: $height)
                         .frame(maxWidth: 150)
                 }
-            }
+            } 
         }
-        .sheet(isPresented: $snapshotModel.showPrompt) {
-            SnapshotExportView(model: snapshotModel)
-        }
+        .snapshotMenus(for: _snapshotModel)
         .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
         .onAppear(perform: self.onAppear)
     }
@@ -168,12 +166,10 @@ final class PlanProjectedMiniWorldRenderController :
             pov!.camera?.fieldOfView = uiView.frame.size.width
         }
 
-        if self.snapshotModel.multiplier != nil {
-            self.snapshotModel.renderASnapshot(
-                view: uiView,
-                overlaySKScene: self.scaleBarModel.scene
-            )
-        }
+        self.snapshotModel.viewUpdaterHandler(
+            scnView: uiView,
+            overlay: self.scaleBarModel.scene
+        )
 
         self.overlays?.forEach { $0.parentUpdated(view: uiView) }
     }

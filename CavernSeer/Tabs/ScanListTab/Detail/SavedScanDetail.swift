@@ -69,7 +69,6 @@ struct SavedScanDetail: View {
                 self.showSnapshot(snapshot: self.model?.scan.endSnapshot)
                     .map { styleSnapshot(img: $0) }
             }
-            .frame(height: 300)
 
             Spacer()
 
@@ -80,8 +79,6 @@ struct SavedScanDetail: View {
             if let model = self.model {
                 SavedScanDetailLinks(model: model)
             }
-
-            Spacer()
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -133,8 +130,8 @@ struct SavedScanDetail: View {
     private func styleSnapshot(img: Image) -> some View {
         return img
             .resizable()
-            .scaledToFill()
-            .frame(height: 300)
+            .scaledToFit()
+            .frame(maxHeight: 300)
     }
 
     private func generateObj() {
@@ -179,10 +176,54 @@ struct SavedScanDetail: View {
     }
 }
 
-//#if DEBUG
-//struct SavedScanDetail_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SavedScanDetail(model: dummyData[1])
-//    }
-//}
-//#endif
+#if DEBUG
+struct SavedScanDetail_Previews: PreviewProvider {
+    private static let settings = SettingsStore()
+    private static let scanStore = setupScanStore()
+    private static let serializer = ObjSerializer()
+
+    private static let preview = dummyPreviewScans[1]
+
+    static var previews: some View {
+        Group {
+            view
+                .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
+                .environment(\.colorScheme, .dark)
+
+            view
+                //.previewDevice(PreviewDevice(rawValue: "iPhone 8"))
+                .previewDisplayName("iPhone 8 Landscape")
+                .previewLayout(PreviewLayout.fixed(width: 667, height: 375))
+
+//            view
+//                .previewLayout(.fixed(width: 1024, height: 768))
+        }
+        .environmentObject(scanStore)
+        .environmentObject(settings)
+        .environmentObject(serializer)
+    }
+
+    private static var view: some View {
+        TabView {
+            NavigationView {
+                List {
+                    NavigationLink(
+                        destination: SavedScanDetail(url: preview.url),
+                        isActive: Binding(get: { true }, set: {_,_ in }),
+                        label: { SavedScanRow(preview: preview) }
+                    )
+                }
+            }
+        }
+    }
+
+    private static func setupScanStore() -> ScanStore {
+        let store = ScanStore()
+
+        store.cachedModelData = dummySavedScans
+        store.previews = dummyPreviewScans
+
+        return store
+    }
+}
+#endif
