@@ -65,9 +65,6 @@ class SnapshotExportModel : ObservableObject {
     }
 
     private func renderASnapshot(view: SCNView, overlay: SKScene? = nil) {
-
-
-
         guard
             let multiplierInt = self.multiplier,
             let scan = self.scan,
@@ -108,20 +105,26 @@ class SnapshotExportModel : ObservableObject {
         )
 
         guard let imgData = img.pngData()
-        else { fatalError("Failed to get pngData from snapshot") }
+        else {
+            debugPrint("Failed to get pngData")
+            self.chooseSize(nil)
+            return
+        }
 
-        try! imgData.write(to: tempUrl)
-
+        do {
+            try imgData.write(to: tempUrl)
+        } catch {
+            debugPrint("Failed to write file \(error.localizedDescription)")
+            self.chooseSize(nil)
+            return
+        }
 
         debugPrint("Wrote img render to", tempUrl)
 
-        self.alertShowing  = false
-        self.alertMessage = ""
+        self.chooseSize(nil)
 
         self.exportUrl = tempUrl
-        self.multiplier = nil
         self.exportSheetShowing = true
-        self.promptShowing = false
     }
 
     func promptButton(scan: ScanFile) -> some View {
