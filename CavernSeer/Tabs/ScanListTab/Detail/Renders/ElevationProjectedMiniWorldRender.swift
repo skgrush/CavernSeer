@@ -112,7 +112,7 @@ struct ElevationProjectedMiniWorldRender: View {
                     barSubview
 
                     Spacer()
-                }
+                }.padding(.bottom, 8)
             }
         }
         .snapshotMenus(for: _snapshotModel)

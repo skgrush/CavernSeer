@@ -68,7 +68,7 @@ struct PlanProjectedMiniWorldRender: View {
                 HStack {
                     Stepper(stepperLabel, value: $height)
                         .frame(maxWidth: 150)
-                }
+                }.padding(.bottom, 8)
             } 
         }
         .snapshotMenus(for: _snapshotModel)
