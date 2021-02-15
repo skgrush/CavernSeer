@@ -68,6 +68,7 @@
 		7E6C0EF724A938ED00129E8C /* ScannerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF624A938ED00129E8C /* ScannerModel.swift */; };
 		7E7DEEE525AA24CE00320150 /* Float+round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7DEEE425AA24CE00320150 /* Float+round.swift */; };
 		7E7DEEEA25AA28F000320150 /* Double+round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7DEEE925AA28F000320150 /* Double+round.swift */; };
+		7E91C0A025DA0B73000130FD /* iconflat.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7E91C09F25DA0B73000130FD /* iconflat.svg */; };
 		7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F94E24B113290098D44B /* SurveyStation.swift */; };
 		7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */; };
 		7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95224B1161E0098D44B /* SurveyLine.swift */; };
@@ -185,6 +186,7 @@
 		7E6C0EF624A938ED00129E8C /* ScannerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerModel.swift; sourceTree = "<group>"; };
 		7E7DEEE425AA24CE00320150 /* Float+round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Float+round.swift"; sourceTree = "<group>"; };
 		7E7DEEE925AA28F000320150 /* Double+round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+round.swift"; sourceTree = "<group>"; };
+		7E91C09F25DA0B73000130FD /* iconflat.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = iconflat.svg; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
 		7E99F95224B1161E0098D44B /* SurveyLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLine.swift; sourceTree = "<group>"; };
@@ -532,6 +534,7 @@
 				7E9C2CFE24B810D900B9FC44 /* icon-167.png */,
 				7E23DAFB2544EFCD00BABB52 /* icon-180.png */,
 				7E9C2D0424B8116500B9FC44 /* icon-1024.png */,
+				7E91C09F25DA0B73000130FD /* iconflat.svg */,
 				7E9C2CFF24B810D900B9FC44 /* icon-inkscape.svg */,
 			);
 			path = icon;
@@ -668,6 +671,7 @@
 				7E6C0EB824A800C500129E8C /* LaunchScreen.storyboard in Resources */,
 				7E6C0EB524A800C500129E8C /* Preview Assets.xcassets in Resources */,
 				7E9C2D0924B8116500B9FC44 /* icon-58.png in Resources */,
+				7E91C0A025DA0B73000130FD /* iconflat.svg in Resources */,
 				7E23DAF52544EF5900BABB52 /* icon-60.png in Resources */,
 				7E23DAF62544EF5900BABB52 /* icon-152.png in Resources */,
 				7E9C2D0824B8116500B9FC44 /* icon-1024.png in Resources */,
