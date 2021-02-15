@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <device id="ipad12_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -13,11 +13,11 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-flat-svg" id="45z-3J-ydv">
-                                <rect key="frame" x="0.0" y="1" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="1" width="1024" height="1366"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.16078431372549018" green="0.14901960784313725" blue="0.13725490196078433" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" systemColor="systemBlueColor"/>
@@ -25,9 +25,26 @@
                                     <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                                 </accessibility>
                             </imageView>
+                            <tabBar userInteractionEnabled="NO" contentMode="bottom" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBr-aa-khQ">
+                                <rect key="frame" x="0.0" y="1295" width="1024" height="70"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <items>
+                                    <tabBarItem title="Scan List" image="list.dash" catalog="system" id="uTA-fo-05J"/>
+                                    <tabBarItem title="Scanner" image="camera.viewfinder" catalog="system" id="vr9-Df-CVC"/>
+                                    <tabBarItem title="Settings" image="gear" catalog="system" id="qQI-eM-fc4"/>
+                                </items>
+                            </tabBar>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <viewLayoutGuide key="safeArea" id="o5U-ZN-kQd"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="GBr-aa-khQ" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" constant="-1" id="3Of-YF-Q54">
+                                <variation key="widthClass=compact" constant="1"/>
+                                <variation key="widthClass=regular" constant="-1"/>
+                            </constraint>
+                            <constraint firstItem="GBr-aa-khQ" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="JBM-ei-dXT"/>
+                            <constraint firstItem="GBr-aa-khQ" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" id="hQ7-MK-7fM"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -36,7 +53,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="camera.viewfinder" catalog="system" width="128" height="115"/>
+        <image name="gear" catalog="system" width="128" height="119"/>
         <image name="icon-flat-svg" width="1365.300048828125" height="1365.300048828125"/>
+        <image name="list.dash" catalog="system" width="128" height="85"/>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
