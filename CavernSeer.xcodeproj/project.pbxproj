@@ -308,15 +308,16 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		7E4003B324AD7B5D00B709BD /* protocols */ = {
+		7E4003B324AD7B5D00B709BD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				7E0C5EEA24C93446001C0D0E /* StoreProtocol.swift */,
 				7E4003B424AD7B7500B709BD /* DrawableProtocol.swift */,
 				7E9CF3D0259D3DDA0036F6F7 /* StoredFileProtocol.swift */,
 				7E9CF3CB259D3D5F0036F6F7 /* PreviewStoredFileProtocol.swift */,
 				7E9CF3D5259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift */,
 			);
-			path = protocols;
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		7E4003B624AD8FD500B709BD /* Entities */ = {
@@ -373,7 +374,6 @@
 			isa = PBXGroup;
 			children = (
 				7E0C5EF724CE5EFC001C0D0E /* errors */,
-				7E4003B324AD7B5D00B709BD /* protocols */,
 				7E4003AC24AD5A5A00B709BD /* extensions */,
 				7E6C0EEB24A834B700129E8C /* lib */,
 				7E6C0EEA24A8346F00129E8C /* Models */,
@@ -459,6 +459,7 @@
 		7E6C0EEA24A8346F00129E8C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7E4003B324AD7B5D00B709BD /* Protocols */,
 				7E99F94D24B1130C0098D44B /* Serializations */,
 				7E4003B624AD8FD500B709BD /* Entities */,
 				7E6C0EF024A838A000129E8C /* ScanStore.swift */,
@@ -467,7 +468,6 @@
 				7E0C5EE424C90746001C0D0E /* ProjectStore.swift */,
 				7E0C5EE624C90D86001C0D0E /* SavedProjectModel.swift */,
 				7E9CF3ED259D6C6F0036F6F7 /* PreviewProjectModel.swift */,
-				7E0C5EEA24C93446001C0D0E /* StoreProtocol.swift */,
 				7E0C5EF524CE580B001C0D0E /* FileOpener.swift */,
 				7E23DB112544FDA800BABB52 /* ObjSerializer.swift */,
 				7E23DB29254E457000BABB52 /* ScaleBarModel.swift */,
@@ -492,10 +492,10 @@
 			children = (
 				7E6C0EEE24A8388C00129E8C /* ScanFile.swift */,
 				7E9C2CF224B56C2400B9FC44 /* ScanFile+Nodes.swift */,
+				7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */,
 				7E99F94E24B113290098D44B /* SurveyStation.swift */,
 				7E99F95224B1161E0098D44B /* SurveyLine.swift */,
 				7E0C5EDD24BD5D4E001C0D0E /* ProjectFile.swift */,
-				7E23DB1B2545F02400BABB52 /* ScanFile+MDL.swift */,
 			);
 			path = Serializations;
 			sourceTree = "<group>";
