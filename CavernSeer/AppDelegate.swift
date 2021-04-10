@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         open url: URL,
         options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 
-        return url.pathExtension == "arscanfile"
+        return url.pathExtension == ScanFile.fileExtension
     }
 }
 

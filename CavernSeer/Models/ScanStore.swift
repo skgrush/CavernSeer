@@ -62,15 +62,15 @@ final class ScanStore : StoreProtocol {
 #if DEBUG
 
 let dummySavedScans: [SavedScanModel] = [
-    .init(id: "hat.arscanfile"),
-    .init(id: "bat.arscanfile"),
-    .init(id: "tat.arscanfile"),
+    .init(id: "hat.cavernseerscan"),
+    .init(id: "bat.cavernseerscan"),
+    .init(id: "tat.cavernseerscan"),
 ]
 
 let dummyPreviewScans: [PreviewScanModel] = [
-    .init(id: "hat.arscanfile"),
-    .init(id: "bat.arscanfile"),
-    .init(id: "tat.arscanfile"),
+    .init(id: "hat.cavernseerscan"),
+    .init(id: "bat.cavernseerscan"),
+    .init(id: "tat.cavernseerscan"),
 ]
 
 #endif
