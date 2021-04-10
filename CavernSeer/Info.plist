@@ -8,12 +8,12 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>ARScanFile</string>
+			<string>CavernSeerScan</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>org.grush.arscanfile</string>
+				<string>org.grush.cavernseer.scan</string>
 			</array>
 		</dict>
 	</array>
@@ -100,16 +100,16 @@
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>org.grush.arscanfile</string>
+			<string>org.grush.cavernseer.scan</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>arscanfile</string>
+					<string>cavernseerscan</string>
 				</array>
 				<key>public.mime-type</key>
 				<array>
-					<string>application/vnd.org.grush.arscanfile</string>
+					<string>application/vnd.org.grush.cavernseer.scan</string>
 				</array>
 			</dict>
 		</dict>

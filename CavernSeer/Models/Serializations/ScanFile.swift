@@ -11,7 +11,7 @@ import ARKit /// simd_float3, ARMeshAnchor, ARWorldMap
 
 final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     static let filePrefix = "scan"
-    static let fileExtension = "arscanfile"
+    static let fileExtension = "cavernseerscan"
     static let supportsSecureCoding: Bool = true
     static let dateFormatter = getDefaultDateFormatter()
     static let currentEncodingVersion: Int32 = 1
