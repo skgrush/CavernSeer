@@ -80,7 +80,8 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
 //                viewModel: MergeToolModel(store: scanStore)
 //            )
 //        }
-        .onAppear(perform: self.refresh)
+        // TODO: uncomment to auto-load, see Issue #26
+        //.onAppear(perform: self.refresh)
     }
 
     private var editButton: some View {
