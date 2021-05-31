@@ -9,7 +9,7 @@
 import SwiftUI /// View
 
 struct SavedScanRow: View {
-    var preview: PreviewScanModel
+    var cache: ScanCacheFile
 
     var image: Image?
 
@@ -22,21 +22,21 @@ struct SavedScanRow: View {
                         .frame(width: 50, height: 50)
                 }
 
-            Text(preview.id)
+            Text(cache.id)
 
             Spacer()
         }
     }
 
-    init(preview: PreviewScanModel, image: Image? = nil) {
-        self.preview = preview
-        self.image = image ?? makeSnapshot(preview: preview)
+    init(cache: ScanCacheFile, image: Image? = nil) {
+        self.cache = cache
+        self.image = image ?? makeSnapshot(data: cache.jpegImageData)
     }
 
-    private func makeSnapshot(preview: PreviewScanModel) -> Image? {
+    private func makeSnapshot(data: Data?) -> Image? {
 
         guard
-            let imageData = preview.imageData,
+            let imageData = data,
             let uiImg = UIImage(data: imageData)
         else { return nil }
 

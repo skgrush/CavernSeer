@@ -26,15 +26,15 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
 
     var body: some View {
         List(selection: $scanStore.selection) {
-            ForEach(scanStore.previews) {
-                preview
+            ForEach(scanStore.caches) {
+                cache
                 in
                 NavigationLink(
-                    destination: SavedScanDetail(url: preview.url),
-                    tag: preview.id,
+                    destination: SavedScanDetail(cache: cache),
+                    tag: cache.id,
                     selection: $scanStore.visibleScan
                 ) {
-                    SavedScanRow(preview: preview)
+                    SavedScanRow(cache: cache)
                 }
             }
             .onDelete(perform: delete)
@@ -100,21 +100,21 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
 
     private func deleteSelected() {
         let ids = self.scanStore.selection
-        let previews = self.scanStore.previews
+        let caches = self.scanStore.caches
         let offsets = IndexSet(
-            previews
+            caches
             .indices
-            .filter { idx in ids.contains(previews[idx].id) }
+            .filter { idx in ids.contains(caches[idx].id) }
         )
 
         self.delete(at: offsets)
     }
 
     private func delete(at offset: IndexSet) {
-        let previews = self.scanStore.previews
+        let caches = self.scanStore.caches
 
         offset
-            .map { previews[$0] }
+            .map { caches[$0] }
             .forEach { self.scanStore.deleteFile(id: $0.id) }
     }
 
