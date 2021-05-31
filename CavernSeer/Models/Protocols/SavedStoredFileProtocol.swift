@@ -8,10 +8,13 @@
 
 import Foundation
 
+/**
+ * Wrapper around the serialized class, used for loading.
+ */
 protocol SavedStoredFileProtocol {
     associatedtype FileType: StoredFileProtocol
-    associatedtype PreviewType: PreviewStoredFileProtocol
 
+    /** base name with no extension */
     var id: String { get }
     var url: URL { get }
     init(url: URL) throws

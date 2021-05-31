@@ -13,7 +13,6 @@ import Foundation
  */
 struct SavedProjectModel: Identifiable, Hashable, SavedStoredFileProtocol {
     typealias FileType = ProjectFile
-    typealias PreviewType = PreviewProjectModel
 
     /// the file basename, e.g. `proj_\(ISO8601-timestamp)`
     let id: String
