@@ -194,11 +194,18 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     #endif
 
     func createCacheFile(thisFileURL: URL) -> ScanCacheFile {
+        // compress the image if we can
+        var img = startSnapshot?.imageData
+        if img != nil {
+            let uiImg = UIImage(data: img!)
+            // in case UIImage processing or compression fails, fall back to img
+            img = uiImg?.jpegData(compressionQuality: 0.2) ?? img
+        }
         return ScanCacheFile(
             realFileURL: thisFileURL,
             timestamp: timestamp,
             displayName: name,
-            img: startSnapshot?.imageData
+            img: img
         )
     }
 }
