@@ -37,6 +37,14 @@ struct FileSettingsSection: View {
     }
 
     private func buildCaches() {
-        self.scanStore.update()
+        self.scanStore.update() {
+            err in
+            if err != nil {
+                fatalError(
+                    "Failed to rebuild caches: " +
+                    err!.localizedDescription
+                )
+            }
+        }
     }
 }

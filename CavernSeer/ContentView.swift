@@ -90,7 +90,15 @@ struct ContentView: View {
                 self.selection = .ScanListTab
 
                 self.scanStore.update() {
-                    self.scanStore.setVisible(visible: url)
+                    err in
+                    if err == nil {
+                        self.scanStore.setVisible(visible: url)
+                    } else {
+                        fatalError(
+                            "Failed to update after openFile: " +
+                            err!.localizedDescription
+                        )
+                    }
                 }
         }
     }

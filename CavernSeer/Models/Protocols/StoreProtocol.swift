@@ -92,7 +92,7 @@ extension StoreProtocol {
      * Work is done async as utility, then data is updated back on main thread.
      * If `completion` is provided, it is called in that main thread.
      */
-    func update(completion: (()->())? = nil) {
+    func update(completion: ((Error?)->())? = nil) {
         var newCaches = caches
         DispatchQueue.global(qos: .utility).async {
             let newURLs = self.getStoreDirectoryURLs()
@@ -124,10 +124,8 @@ extension StoreProtocol {
                             )
                             newCaches.insert(newDatum, at: offset)
                         } catch {
-                            fatalError(
-                                "Failed to construct in update: " +
-                                "\(error.localizedDescription)"
-                            )
+                            completion?(error)
+                            return
                         }
                 }
             }
@@ -138,7 +136,7 @@ extension StoreProtocol {
                 self.caches.removeAll()
                 self.caches.append(contentsOf: newCaches)
 
-                completion?()
+                completion?(nil)
             }
         }
     }
