@@ -8,46 +8,54 @@
 
 import Foundation
 
+/**
+ * Abstracts the storage and handling of files and their caches.
+ *
+ * The definitive file list is defined by the `dataDirectory`, but the cache files in the `cacheDirectory`
+ * are the ones kept in memory.
+ */
 protocol StoreProtocol : ObservableObject {
     associatedtype ModelType: SavedStoredFileProtocol
     associatedtype FileType: StoredFileProtocol = ModelType.FileType
-    associatedtype PreviewType: PreviewStoredFileProtocol
-        = ModelType.PreviewType
+    associatedtype CacheType: StoredCacheFileProtocol
+        = FileType.CacheType
 
+    /** basename of directories used for stored files and previews */
     var directoryName: String { get }
     var filePrefix: String { get }
     var fileExtension: String { get }
-    var directory: URL! { get }
+    var dataDirectory: URL! { get }
+    var cacheDirectory: URL! { get }
 
     var fileManager: FileManager { get }
     var dateFormatter: ISO8601DateFormatter { get }
 
-    var cachedModelData: [ModelType] { get set }
+    var modelDataInMemory: [ModelType] { get set }
 
-    var previews: [PreviewType] { get set }
+    var caches: [CacheType] { get set }
 }
 
 
 extension StoreProtocol {
 
-    static var MaxCachedModels: Int { 2 }
+    static var MaxInMemoryModels: Int { 2 }
 
     /**
      * Try to get a model from a baseName; first try the cache, then try the file
      *  otherwise throws from the `ModelType` constructor.
      */
     func getModel(url: URL) throws -> ModelType {
-        if let model = cachedModelData.first(where: { $0.url == url }) {
+        if let model = modelDataInMemory.first(where: { $0.url == url }) {
             return model
         }
 
         let model = try ModelType(url: url)
 
-        let cacheToRemove = cachedModelData.count - Self.MaxCachedModels + 1
+        let cacheToRemove = modelDataInMemory.count - Self.MaxInMemoryModels + 1
         if cacheToRemove > 0 {
-            cachedModelData.removeFirst(cacheToRemove)
+            modelDataInMemory.removeFirst(cacheToRemove)
         }
-        cachedModelData.append(model)
+        modelDataInMemory.append(model)
 
         return model
     }
@@ -59,75 +67,118 @@ extension StoreProtocol {
      * - Parameter baseName: an optional base name to use for the saved file. Otherwise `url.lastPathComponent`.
      */
     func saveFile(file: FileType, baseName: String? = nil) throws -> URL {
-        let newSaveUrl = getSaveURL(file: file, baseName: baseName)
+        let cache = file.createCacheFile(thisFileURL: self.dataDirectory)
 
-        let data = try NSKeyedArchiver.archivedData(
+        let newSaveUrl = getSaveURL(file: file, baseName: baseName)
+        let dataData = try NSKeyedArchiver.archivedData(
             withRootObject: file,
             requiringSecureCoding: true
         )
-        try data.write(to: newSaveUrl, options: [.atomic])
+        try dataData.write(to: newSaveUrl, options: [.atomic])
+
+        let cacheUrl = cache.getCacheURL(cacheDir: cacheDirectory)
+        let cacheData = try NSKeyedArchiver.archivedData(
+            withRootObject: cache,
+            requiringSecureCoding: true
+        )
+        try cacheData.write(to: cacheUrl)
 
         return newSaveUrl
     }
 
     /**
-     * Update the `previews` and `cachedModelData` based on the files in `directory`.
+     * Update the `caches` and `modelDataInMemory` based on the files in `dataDirectory`.
+     *
+     * Work is done async as utility, then data is updated back on main thread.
+     * If `completion` is provided, it is called in that main thread.
      */
-    func update() throws {
-        let newURLs = getDirectoryURLs()
+    func update(completion: ((Error?)->())? = nil) {
+        var newCaches = caches
+        DispatchQueue.global(qos: .utility).async {
+            let newURLs = self.getStoreDirectoryURLs()
 
-        let alreadyPreviewedURLs = previews.map { preview in preview.url }
-        let alreadyCachedURLs = cachedModelData.map { model in model.url }
-
-        let indicesToRemove = IndexSet(
-            alreadyCachedURLs.indices.filter {
-                (index: Int) -> Bool in
-                let url = alreadyCachedURLs[index]
-                return  !newURLs.contains(url)
+            let alreadyLoadedCacheURLs = self.caches.map {
+                cache -> URL in self.getNormalizedRealUrl(cache: cache)
             }
-        )
-        cachedModelData.remove(atOffsets: indicesToRemove)
+            let alreadyInMemoryURLs = self.modelDataInMemory.map {
+                model in model.url
+            }
 
-        // add or remove previews
-        for change in newURLs.difference(from: alreadyPreviewedURLs) {
-            switch change {
-                case let .remove(offset, _, _):
-                    previews.remove(at: offset)
-                case let .insert(offset, url, _):
-                    let newDatum = try PreviewType(url: url)
-                    previews.insert(newDatum, at: offset)
+            let indicesToRemove = IndexSet(
+                alreadyInMemoryURLs.indices.filter {
+                    (index: Int) -> Bool in
+                    let url = alreadyLoadedCacheURLs[index]
+                    return  !newURLs.contains(url)
+                }
+            )
+
+            // add or remove caches based on new URLs
+            for change in newURLs.difference(from: alreadyLoadedCacheURLs) {
+                switch change {
+                    case let .remove(offset, _, _):
+                        newCaches.remove(at: offset)
+                    case let .insert(offset, url, _):
+                        do {
+                            let newDatum = try self.getCacheFile(
+                                realFileURL: url
+                            )
+                            newCaches.insert(newDatum, at: offset)
+                        } catch {
+                            completion?(error)
+                            return
+                        }
+                }
+            }
+
+            DispatchQueue.main.async {
+                self.modelDataInMemory.remove(atOffsets: indicesToRemove)
+
+                self.caches.removeAll()
+                self.caches.append(contentsOf: newCaches)
+
+                completion?(nil)
             }
         }
     }
 
     func deleteFile(id: String) {
-        let previewIndex = previews.firstIndex { $0.id == id }
-        let modelIndex = cachedModelData.firstIndex { $0.id == id }
+        let cacheIndex = caches.firstIndex { $0.id == id }
+        let modelIndex = modelDataInMemory.firstIndex { $0.id == id }
 
-        if previewIndex != nil {
-            let url = previews[previewIndex!].url
+        if cacheIndex != nil {
+            let cache = caches[cacheIndex!]
+            let dataUrl = self.getNormalizedRealUrl(cache: cache)
+            let cacheUrl = cache.getCacheURL(cacheDir: cacheDirectory)
             do {
-                try fileManager.removeItem(at: url)
+                try fileManager.removeItem(at: cacheUrl)
+                try fileManager.removeItem(at: dataUrl)
             } catch {
                 fatalError("Deletion failed: \(error.localizedDescription)")
             }
-            previews.remove(at: previewIndex!)
+            caches.remove(at: cacheIndex!)
         } else {
             fatalError("Model not found in modelData")
         }
 
         if modelIndex != nil {
-            cachedModelData.remove(at: modelIndex!)
+            modelDataInMemory.remove(at: modelIndex!)
         }
     }
 
     func importFile(model: ModelType) throws -> URL {
-        if previews.contains(where: { $0.id == model.id }) {
+        if caches.contains(where: { $0.id == model.id }) {
             throw FileSaveError.AlreadyExists
         }
 
         let file = model.getFile() as! Self.FileType
         return try saveFile(file: file, baseName: model.id)
+    }
+
+    func clearCaches() throws {
+        try fileManager.removeItem(at: cacheDirectory)
+        caches.removeAll()
+        modelDataInMemory.removeAll()
+        _ = getOrCreateDirectories()
     }
 
     internal func getSaveURL(file: FileType, baseName: String? = nil) -> URL {
@@ -137,39 +188,103 @@ extension StoreProtocol {
     }
 
     internal func baseNameToURL(base: String) -> URL {
-        return directory
+        return dataDirectory
             .appendingPathComponent(base)
             .appendingPathExtension(fileExtension)
     }
 
-    internal func getOrCreateDirectory() -> URL {
+    internal func getNormalizedRealUrl(cache: CacheType) -> URL {
+        if cache.realFileURL == nil {
+            cache.realFileURL
+                = dataDirectory
+                    .appendingPathComponent(cache.id)
+                    .appendingPathExtension(fileExtension)
+        }
+        return cache.realFileURL!
+    }
+
+    /**
+     * Tries to get the cache file associated with a real file.
+     * If the cache file doesn't exist but the real file does, generate the cache file and save it too.
+     */
+    internal func getCacheFile(realFileURL: URL) throws -> CacheType {
+        let id = realFileURL.deletingPathExtension().lastPathComponent
+
+        let cacheFileURL =
+            cacheDirectory
+                .appendingPathComponent(id)
+                .appendingPathExtension(CacheType.fileExtension)
+
+        if fileManager.fileExists(atPath: cacheFileURL.path) {
+            // if the cache file exists just get it
+            let data = try Data(contentsOf: cacheFileURL)
+            return try NSKeyedUnarchiver.unarchivedObject(
+                ofClass: CacheType.self,
+                from: data
+            )!
+        } else if fileManager.fileExists(atPath: realFileURL.path) {
+            debugPrint(
+                "Cache file doesn't exist but real file does",
+                realFileURL
+            )
+            // if we haven't cached the file yet, read it then write the cache
+            let model = try ModelType(url: realFileURL)
+            let modelFile = model.getFile()
+            let cacheFile = modelFile.createCacheFile(
+                thisFileURL: realFileURL
+            ) as! Self.CacheType
+            let cacheFileData = try NSKeyedArchiver.archivedData(
+                withRootObject: cacheFile,
+                requiringSecureCoding: true
+            )
+            try cacheFileData.write(to: cacheFileURL, options: [.atomic])
+            _ = self.getNormalizedRealUrl(cache: cacheFile)
+            return cacheFile
+        } else {
+            throw FileOpenError.noFileInArchive(url: realFileURL)
+        }
+    }
+
+    /**
+     * Create the file and cache directories, and return them as a tuple.
+     * Returns `(fileDirectory, cacheDirectory)`
+     */
+    internal func getOrCreateDirectories() -> (URL, URL) {
         do {
-            let directory = try
+            let fileDirectory = try
                 fileManager
                     .url(for: .documentDirectory,
                          in: .userDomainMask,
                          appropriateFor: nil,
                          create: true)
                 .appendingPathComponent(directoryName, isDirectory: true)
+            let cacheDirectory = try
+                fileManager
+                .url(for: .cachesDirectory,
+                     in: .userDomainMask,
+                     appropriateFor: nil,
+                     create: true)
+                .appendingPathComponent(directoryName, isDirectory: true)
 
-            //if (!(try directory.checkResourceIsReachable())) {
             try fileManager
-                .createDirectory(at: directory,
+                .createDirectory(at: fileDirectory,
                                  withIntermediateDirectories: true)
-            //}
+            try fileManager
+                .createDirectory(at: cacheDirectory,
+                                 withIntermediateDirectories: true)
 
-            return directory
+            return (fileDirectory, cacheDirectory)
         } catch {
-            fatalError("Could not resolve file directory URL; " +
+            fatalError("Could not resolve file dataDirectory URL; " +
                        "\(error.localizedDescription)")
         }
     }
 
-    internal func getDirectoryURLs() -> [URL] {
+    internal func getStoreDirectoryURLs() -> [URL] {
         do {
             let contents = try fileManager
                 .contentsOfDirectory(
-                    at: directory,
+                    at: dataDirectory,
                     includingPropertiesForKeys: nil
                 )
 
@@ -181,9 +296,7 @@ extension StoreProtocol {
                         .lexicographicallyPrecedes(url2.absoluteString)
                 })
         } catch {
-            fatalError("Could not resolve directory contents")
+            fatalError("Could not resolve dataDirectory contents")
         }
     }
-
-
 }

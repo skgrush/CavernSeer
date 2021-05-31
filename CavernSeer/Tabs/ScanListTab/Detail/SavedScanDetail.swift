@@ -9,7 +9,7 @@
 import SwiftUI /// View
 
 struct SavedScanDetail: View {
-    var url: URL
+    var cache: ScanCacheFile
 
     @EnvironmentObject
     var objSerializer: ObjSerializer
@@ -38,7 +38,8 @@ struct SavedScanDetail: View {
     private var fileExt = "obj"
 
     private func loadModel() {
-        if self.model?.url != self.url {
+        let url = scanStore.getNormalizedRealUrl(cache: self.cache)
+        if self.model?.url != url {
             do {
                 self.model = try scanStore.getModel(url: url)
             } catch {
@@ -182,7 +183,7 @@ struct SavedScanDetail_Previews: PreviewProvider {
     private static let scanStore = setupScanStore()
     private static let serializer = ObjSerializer()
 
-    private static let preview = dummyPreviewScans[1]
+    private static let cacheItem = dummyScanCaches[1]
 
     static var previews: some View {
         Group {
@@ -208,9 +209,9 @@ struct SavedScanDetail_Previews: PreviewProvider {
             NavigationView {
                 List {
                     NavigationLink(
-                        destination: SavedScanDetail(url: preview.url),
+                        destination: SavedScanDetail(cache: cacheItem),
                         isActive: Binding(get: { true }, set: {_,_ in }),
-                        label: { SavedScanRow(preview: preview) }
+                        label: { SavedScanRow(cache: cacheItem) }
                     )
                 }
             }
@@ -220,8 +221,8 @@ struct SavedScanDetail_Previews: PreviewProvider {
     private static func setupScanStore() -> ScanStore {
         let store = ScanStore()
 
-        store.cachedModelData = dummySavedScans
-        store.previews = dummyPreviewScans
+        store.modelDataInMemory = dummySavedScans
+        store.caches = dummyScanCaches
 
         return store
     }

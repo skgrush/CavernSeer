@@ -10,6 +10,7 @@ import Foundation
 import ARKit /// simd_float4x4
 
 final class ProjectFile : NSObject, StoredFileProtocol {
+    typealias CacheType = ProjectCacheFile
     static let filePrefix = "proj"
     static let fileExtension: String = "cavernseerproj"
 
@@ -65,6 +66,15 @@ final class ProjectFile : NSObject, StoredFileProtocol {
         static let timestamp = "timestamp"
         static let name = "name"
         static let scans = "scans"
+    }
+
+    func createCacheFile(thisFileURL: URL) -> ProjectCacheFile {
+        return ProjectCacheFile(
+            realFileURL: thisFileURL,
+            timestamp: timestamp,
+            displayName: name,
+            img: nil
+        )
     }
 }
 

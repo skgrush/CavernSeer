@@ -10,6 +10,7 @@ import Foundation
 import ARKit /// simd_float3, ARMeshAnchor, ARWorldMap
 
 final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
+    typealias CacheType = ScanCacheFile
     static let filePrefix = "scan"
     static let fileExtension = "cavernseerscan"
     static let supportsSecureCoding: Bool = true
@@ -191,6 +192,22 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         super.init()
     }
     #endif
+
+    func createCacheFile(thisFileURL: URL) -> ScanCacheFile {
+        // compress the image if we can
+        var img = startSnapshot?.imageData
+        if img != nil {
+            let uiImg = UIImage(data: img!)
+            // in case UIImage processing or compression fails, fall back to img
+            img = uiImg?.jpegData(compressionQuality: 0.2) ?? img
+        }
+        return ScanCacheFile(
+            realFileURL: thisFileURL,
+            timestamp: timestamp,
+            displayName: name,
+            img: img
+        )
+    }
 }
 
 

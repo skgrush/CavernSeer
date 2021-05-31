@@ -88,12 +88,18 @@ struct ContentView: View {
                 self.selection = .ProjectListTab
             case .scan:
                 self.selection = .ScanListTab
-                do {
-                    try self.scanStore.update()
-                } catch {
-                    fatalError("Error updating: \(error.localizedDescription)")
+
+                self.scanStore.update() {
+                    err in
+                    if err == nil {
+                        self.scanStore.setVisible(visible: url)
+                    } else {
+                        fatalError(
+                            "Failed to update after openFile: " +
+                            err!.localizedDescription
+                        )
+                    }
                 }
-                self.scanStore.setVisible(visible: url)
         }
     }
 }

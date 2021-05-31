@@ -205,9 +205,11 @@ final class ScannerModel:
                 lines: lines)
 
             do {
-                try scanStore.saveFile(file: scanFile)
+                _ = try scanStore.saveFile(file: scanFile)
                 message("Save successful!")
-                done(true)
+                scanStore.update() {
+                    _ in done(true)
+                }
             } catch {
                 message("Error: \(error.localizedDescription)")
                 done(false)

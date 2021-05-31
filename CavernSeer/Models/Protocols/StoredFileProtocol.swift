@@ -9,10 +9,14 @@
 import Foundation
 
 protocol StoredFileProtocol : NSObject, NSSecureCoding {
+    associatedtype CacheType: StoredCacheFileProtocol
+
     static var filePrefix: String { get }
     static var fileExtension: String { get }
     var timestamp: Date { get }
     var name: String { get }
+
+    func createCacheFile(thisFileURL: URL) -> CacheType
 }
 
 extension StoredFileProtocol {

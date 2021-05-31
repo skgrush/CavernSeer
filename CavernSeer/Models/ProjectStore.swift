@@ -11,17 +11,18 @@ import Foundation
 final class ProjectStore : StoreProtocol {
     typealias FileType = ProjectFile
     typealias ModelType = SavedProjectModel
-    typealias PreviewType = PreviewProjectModel
+    typealias CacheType = ProjectCacheFile
 
     let directoryName: String = "projects"
     let filePrefix: String = FileType.filePrefix
     let fileExtension: String = FileType.fileExtension
-    var directory: URL!
+    var dataDirectory: URL!
+    var cacheDirectory: URL!
 
-    var cachedModelData: [ModelType] = []
+    var modelDataInMemory: [SavedProjectModel] = []
 
     @Published
-    var previews: [PreviewType] = []
+    var caches = [ProjectCacheFile]()
 
     @Published
     /// selected `ProjectFile.id`s
@@ -31,6 +32,6 @@ final class ProjectStore : StoreProtocol {
     internal var dateFormatter = ISO8601DateFormatter()
 
     init() {
-        directory = getOrCreateDirectory()
+        (self.dataDirectory, self.cacheDirectory) = self.getOrCreateDirectories()
     }
 }

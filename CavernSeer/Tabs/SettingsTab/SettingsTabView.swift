@@ -45,6 +45,10 @@ struct SettingsTabView: View {
                 Section {
                     Interaction3dSettingsSection()
                 }
+
+                Section(header: Text("Files")) {
+                    FileSettingsSection()
+                }
             }
         }
     }

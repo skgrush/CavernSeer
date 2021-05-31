@@ -11,17 +11,18 @@ import Foundation
 final class ScanStore : StoreProtocol {
     typealias FileType = ScanFile
     typealias ModelType = SavedScanModel
-    typealias PreviewType = PreviewScanModel
+    typealias CacheType = ScanCacheFile
 
     let directoryName: String = "scans"
     let filePrefix: String = FileType.filePrefix
     let fileExtension: String = FileType.fileExtension
-    var directory: URL!
+    var dataDirectory: URL!
+    var cacheDirectory: URL!
 
-    var cachedModelData: [SavedScanModel] = []
+    var modelDataInMemory: [SavedScanModel] = []
 
     @Published
-    var previews: [PreviewType] = []
+    var caches = [ScanCacheFile]()
 
     @Published
     var selection = Set<String>()
@@ -33,7 +34,7 @@ final class ScanStore : StoreProtocol {
     internal var dateFormatter = ISO8601DateFormatter()
 
     init() {
-        directory = getOrCreateDirectory()
+        (self.dataDirectory, self.cacheDirectory) = getOrCreateDirectories()
     }
 
     func setVisible(visible: URL) {
@@ -45,7 +46,7 @@ final class ScanStore : StoreProtocol {
             return try self.selection
                 .compactMap {
                     id in
-                    self.previews.first { $0.id == id }?.url
+                    self.caches.first { $0.id == id }?.realFileURL
                 }
                 .map {
                     try self.getModel(url: $0)
@@ -62,15 +63,15 @@ final class ScanStore : StoreProtocol {
 #if DEBUG
 
 let dummySavedScans: [SavedScanModel] = [
-    .init(id: "hat.cavernseerscan"),
-    .init(id: "bat.cavernseerscan"),
-    .init(id: "tat.cavernseerscan"),
+    .init(id: "hat"),
+    .init(id: "bat"),
+    .init(id: "tat"),
 ]
 
-let dummyPreviewScans: [PreviewScanModel] = [
-    .init(id: "hat.cavernseerscan"),
-    .init(id: "bat.cavernseerscan"),
-    .init(id: "tat.cavernseerscan"),
+let dummyScanCaches: [ScanCacheFile] = [
+    .init(id: "hat"),
+    .init(id: "bat"),
+    .init(id: "tat"),
 ]
 
 #endif
