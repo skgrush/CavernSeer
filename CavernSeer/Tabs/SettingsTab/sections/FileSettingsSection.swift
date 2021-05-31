@@ -37,10 +37,6 @@ struct FileSettingsSection: View {
     }
 
     private func buildCaches() {
-        do {
-            try self.scanStore.update()
-        } catch {
-            fatalError("Building cache failed: \(error.localizedDescription)")
-        }
+        self.scanStore.update()
     }
 }

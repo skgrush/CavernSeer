@@ -88,32 +88,57 @@ extension StoreProtocol {
 
     /**
      * Update the `caches` and `modelDataInMemory` based on the files in `dataDirectory`.
+     *
+     * Work is done async as utility, then data is updated back on main thread.
+     * If `completion` is provided, it is called in that main thread.
      */
-    func update() throws {
-        let newURLs = getStoreDirectoryURLs()
+    func update(completion: (()->())? = nil) {
+        var newCaches = caches
+        DispatchQueue.global(qos: .utility).async {
+            let newURLs = self.getStoreDirectoryURLs()
 
-        let alreadyLoadedCacheURLs = caches.map {
-            cache -> URL in self.getNormalizedRealUrl(cache: cache)
-        }
-        let alreadyInMemoryURLs = modelDataInMemory.map { model in model.url }
-
-        let indicesToRemove = IndexSet(
-            alreadyInMemoryURLs.indices.filter {
-                (index: Int) -> Bool in
-                let url = alreadyLoadedCacheURLs[index]
-                return  !newURLs.contains(url)
+            let alreadyLoadedCacheURLs = self.caches.map {
+                cache -> URL in self.getNormalizedRealUrl(cache: cache)
             }
-        )
-        modelDataInMemory.remove(atOffsets: indicesToRemove)
+            let alreadyInMemoryURLs = self.modelDataInMemory.map {
+                model in model.url
+            }
 
-        // add or remove previews
-        for change in newURLs.difference(from: alreadyLoadedCacheURLs) {
-            switch change {
-                case let .remove(offset, _, _):
-                    caches.remove(at: offset)
-                case let .insert(offset, url, _):
-                    let newDatum = try self.getCacheFile(realFileURL: url)
-                    caches.insert(newDatum, at: offset)
+            let indicesToRemove = IndexSet(
+                alreadyInMemoryURLs.indices.filter {
+                    (index: Int) -> Bool in
+                    let url = alreadyLoadedCacheURLs[index]
+                    return  !newURLs.contains(url)
+                }
+            )
+
+            // add or remove caches based on new URLs
+            for change in newURLs.difference(from: alreadyLoadedCacheURLs) {
+                switch change {
+                    case let .remove(offset, _, _):
+                        newCaches.remove(at: offset)
+                    case let .insert(offset, url, _):
+                        do {
+                            let newDatum = try self.getCacheFile(
+                                realFileURL: url
+                            )
+                            newCaches.insert(newDatum, at: offset)
+                        } catch {
+                            fatalError(
+                                "Failed to construct in update: " +
+                                "\(error.localizedDescription)"
+                            )
+                        }
+                }
+            }
+
+            DispatchQueue.main.async {
+                self.modelDataInMemory.remove(atOffsets: indicesToRemove)
+
+                self.caches.removeAll()
+                self.caches.append(contentsOf: newCaches)
+
+                completion?()
             }
         }
     }

@@ -21,6 +21,9 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
     @State
     private var showShare = false
 
+    @State
+    private var initialLoad = true
+
 //    @State
 //    private var showMergeTool = false
 
@@ -44,7 +47,7 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
         .navigationBarItems(
             trailing: HStack {
                 Button(
-                    action: { self.refresh() },
+                    action: { self.scanStore.update() },
                     label: { Image(systemName: "arrow.clockwise") }
                 )
                 editButton
@@ -80,8 +83,13 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
 //                viewModel: MergeToolModel(store: scanStore)
 //            )
 //        }
-        // TODO: uncomment to auto-load, see Issue #26
-        //.onAppear(perform: self.refresh)
+        .onAppear(perform: {
+            // try not to update multiple times, especially at startup
+            if self.initialLoad {
+                self.initialLoad = false
+                self.scanStore.update()
+            }
+        })
     }
 
     private var editButton: some View {
@@ -116,14 +124,6 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
         offset
             .map { caches[$0] }
             .forEach { self.scanStore.deleteFile(id: $0.id) }
-    }
-
-    private func refresh() {
-        do {
-            try self.scanStore.update()
-        } catch {
-            fatalError("Update failed: \(error.localizedDescription)")
-        }
     }
 }
 
