@@ -189,6 +189,8 @@
 		7E7DEEE925AA28F000320150 /* Double+round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+round.swift"; sourceTree = "<group>"; };
 		7E7FD2A42664810D00F87D08 /* ProjectCacheFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCacheFile.swift; sourceTree = "<group>"; };
 		7E7FD2A6266498DE00F87D08 /* FileSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSettingsSection.swift; sourceTree = "<group>"; };
+		7E7FD2BD2665E37B00F87D08 /* Description.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Description.txt; sourceTree = "<group>"; };
+		7E7FD2BE2665E3F800F87D08 /* PrivacyPolicy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PrivacyPolicy.md; sourceTree = "<group>"; };
 		7E91C09F25DA0B73000130FD /* iconflat.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = iconflat.svg; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
@@ -519,6 +521,8 @@
 			children = (
 				7E9C2CFD24B8105600B9FC44 /* icon */,
 				7E4003AA24AD579000B709BD /* Proposal.md */,
+				7E7FD2BD2665E37B00F87D08 /* Description.txt */,
+				7E7FD2BE2665E3F800F87D08 /* PrivacyPolicy.md */,
 			);
 			path = docs;
 			sourceTree = "<group>";
@@ -960,7 +964,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = "0.3.2-dev";
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -984,7 +988,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = "0.3.2-dev";
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
