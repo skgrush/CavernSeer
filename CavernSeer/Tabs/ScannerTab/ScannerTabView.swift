@@ -179,7 +179,7 @@ struct ScannerTabView_Previews: PreviewProvider {
                 .environment(\.fakeScan, true)
 
             view
-                .previewDevice(PreviewDevice(rawValue: "iPad Pro (11-inch)"))
+                .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
                 .environment(\.colorScheme, .light)
 
         }.environmentObject(store)

@@ -42,16 +42,17 @@ struct ScanListTabView_Previews: PreviewProvider {
     private static let scanStore = setupScanStore()
 
     static var previews: some View {
-        ScanListTabView()
-            .environmentObject(scanStore)
-
         Group {
             ScanListTabView()
                 .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
                 .environment(\.colorScheme, .dark)
 
             ScanListTabView()
-                .previewDevice(PreviewDevice(rawValue: "iPad Pro (11-inch)"))
+                .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
+                .environment(\.colorScheme, .light)
+
+            ScanListTabView()
+                .previewDevice(PreviewDevice(rawValue: "iPhone 8 Plus"))
                 .environment(\.colorScheme, .light)
 
         }.environmentObject(scanStore)

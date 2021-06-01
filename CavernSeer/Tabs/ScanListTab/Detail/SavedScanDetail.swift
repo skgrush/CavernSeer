@@ -192,7 +192,10 @@ struct SavedScanDetail_Previews: PreviewProvider {
                 .environment(\.colorScheme, .dark)
 
             view
-                //.previewDevice(PreviewDevice(rawValue: "iPhone 8"))
+                .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
+                .environment(\.colorScheme, .dark)
+
+            view
                 .previewDisplayName("iPhone 8 Landscape")
                 .previewLayout(PreviewLayout.fixed(width: 667, height: 375))
 
