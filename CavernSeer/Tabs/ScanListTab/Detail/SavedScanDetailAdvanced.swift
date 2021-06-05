@@ -19,13 +19,13 @@ struct SavedScanDetailAdvanced: View {
 
     private var totalVertices: Int {
         model.scan.meshAnchors.map {
-            anchor in anchor.geometry.vertices.count
+            anchor in anchor.vertices.count
         }.reduce(0, { acc, next in acc + next })
     }
 
     private var totalFaces: Int {
         model.scan.meshAnchors.map {
-            anchor in anchor.geometry.faces.count
+            anchor in anchor.faces.count
         }.reduce(0, { acc, next in acc + next })
     }
 
@@ -131,7 +131,7 @@ struct SavedScanDetailAdvanced: View {
 
 
 struct MeshAnchorDetail: View {
-    var anchor: ARMeshAnchor
+    var anchor: CSMeshSlice
 
     var body: some View {
         VStack {
@@ -139,9 +139,9 @@ struct MeshAnchorDetail: View {
                 .font(.title)
             VStack {
                 Text("transform: \(anchor.transform.debugDescription)")
-                Text("Vertex count: \(anchor.geometry.vertices.count)")
-                Text("Normal count: \(anchor.geometry.normals.count)")
-                Text("Face count: \(anchor.geometry.faces.count)")
+                Text("Vertex count: \(anchor.vertices.count)")
+//                Text("Normal count: \(anchor.normals.count)")
+                Text("Face count: \(anchor.faces.count)")
             }
         }
     }

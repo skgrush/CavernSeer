@@ -15,7 +15,12 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     static let fileExtension = "cavernseerscan"
     static let supportsSecureCoding: Bool = true
     static let dateFormatter = getDefaultDateFormatter()
-    static let currentEncodingVersion: Int32 = 1
+    /**
+     * # V2 IS STILL EXPERIMENTAL
+     *
+     * v2 changed `meshAnchors` from `ARMeshAnchor` to `CSMeshSlice`
+     */
+    static let currentEncodingVersion: Int32 = 2
 
     let encodingVersion: Int32
 
@@ -23,7 +28,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     let name: String
     let center: simd_float3
     let extent: simd_float3
-    let meshAnchors: [ARMeshAnchor]
+    let meshAnchors: [CSMeshSlice]
     let startSnapshot: SnapshotAnchor?
     let endSnapshot: SnapshotAnchor?
 
@@ -63,16 +68,12 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
                 : 1
         self.encodingVersion = version
 
-        if (version == 1) {
+        if (version == 1 || version == 2) {
             guard
                 let timestamp = decoder.decodeObject(
                     of: NSDate.self,
                     forKey: PropertyKeys.timestamp
-                ) as Date?,
-                let meshAnchors = decoder.decodeObject(
-                    of: [NSArray.self, ARMeshAnchor.self],
-                    forKey: PropertyKeys.meshAnchors
-                ) as? [ARMeshAnchor]
+                ) as Date?
             else { return nil }
 
             self.timestamp = timestamp as Date
@@ -80,7 +81,24 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
                 decoder.decode_simd_float3(prefix: PropertyKeys.center)
             self.extent =
                 decoder.decode_simd_float3(prefix: PropertyKeys.extent)
-            self.meshAnchors = meshAnchors
+
+            if version == 1 {
+                guard
+                    let meshAnchors = decoder.decodeObject(
+                        of: [NSArray.self, ARMeshAnchor.self],
+                        forKey: PropertyKeys.meshAnchors
+                    ) as? [ARMeshAnchor]
+                else { return nil }
+                self.meshAnchors = meshAnchors.map { CSMeshSlice(anchor: $0) }
+            } else {
+                guard
+                    let meshAnchors = decoder.decodeObject(
+                        of: [NSArray.self, CSMeshSlice.self],
+                        forKey: PropertyKeys.meshAnchors
+                    ) as? [CSMeshSlice]
+                else { return nil }
+                self.meshAnchors = meshAnchors
+            }
 
             if decoder.containsValue(forKey: PropertyKeys.name) {
                 self.name = decoder.decodeObject(
@@ -152,7 +170,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         )
         self.center = center
         self.extent = extent
-        self.meshAnchors = meshAnchors
+        self.meshAnchors = meshAnchors.map { CSMeshSlice(anchor: $0) }
         self.startSnapshot = startSnapshot
         self.endSnapshot = endSnapshot
         self.stations = stations

@@ -22,8 +22,7 @@ extension ScanFile {
         self.meshAnchors.forEach {
             anchor in
                 mdlAsset.add(
-                    anchor.geometry.toMDLMesh(
-                        transform: anchor.transform,
+                    anchor.toMDLMesh(
                         allocator: allocator
                     )
                 )
@@ -33,7 +32,7 @@ extension ScanFile {
     }
 }
 
-extension ARMeshGeometry {
+extension CSMeshSlice {
     /**
      * Generate an `MDLMesh` from the `ARMeshGeometry` by simple buffer transforms.
      *
@@ -42,11 +41,10 @@ extension ARMeshGeometry {
      *  [`Alexander Gaidukov`](https://stackoverflow.com/a/61327580)
      */
     fileprivate func toMDLMesh(
-        transform: simd_float4x4,
         allocator: MTKMeshBufferAllocator
     ) -> MDLMesh {
         let vertexData = Data.init(
-            bytes: self.vertices.transformVertices(transform),
+            bytes: self.vertices.transformVertices(self.transform),
             count: self.vertices.stride * self.vertices.count
         )
 
@@ -56,12 +54,8 @@ extension ARMeshGeometry {
         )
 
         let indexCount = self.faces.count * self.faces.indexCountPerPrimitive
-        let indexData = Data(
-            bytes: self.faces.buffer.contents(),
-            count: self.faces.bytesPerIndex * indexCount
-        )
         let indexBuffer = allocator.newBuffer(
-            with: indexData,
+            with: self.faces.data,
             type: .index
         )
 
@@ -98,10 +92,9 @@ extension ARMeshGeometry {
     }
 }
 
-
-extension ARGeometrySource {
+extension CSMeshGeometrySource {
     /**
-     * Generate a sequence of coordinate-elements from the `ARGeometrySource`'s
+     * Generate a sequence of coordinate-elements from the source's
      * buffer of coordinates based on a `simd_float4x4` transformation matrix.
      */
     fileprivate func transformVertices(
@@ -110,15 +103,21 @@ extension ARGeometrySource {
         var result = [Float]()
 
         for idx in 0..<self.count {
-            let vertexPointer = self.buffer.contents().advanced(
+
+            let vertexPointer = self.data.advanced(
                 by: self.offset + self.stride * idx
             )
-            let vtx = vertexPointer.assumingMemoryBound(
-                to: (Float, Float, Float).self
-            ).pointee
 
-            var vertexTransform = matrix_identity_float4x4
-            vertexTransform.columns.3 = simd_float4(vtx.0, vtx.1, vtx.2, 1)
+            let vertexTransform = vertexPointer.withUnsafeBytes {
+                (pointer: UnsafePointer<Float>) -> simd_float4x4 in
+                let buffer = UnsafeBufferPointer(
+                    start: pointer,
+                    count: 3
+                )
+                var tmpTransform = matrix_identity_float4x4
+                tmpTransform.columns.3 = simd_float4(buffer[0], buffer[1], buffer[2], 1)
+                return tmpTransform
+            }
 
             let newPosition = (transform * vertexTransform).columns.3
             result.append(newPosition.x)

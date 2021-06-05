@@ -15,10 +15,9 @@ extension ScanFile {
         lengthPref: LengthPreference
     ) -> [SCNNode] {
         let meshAnchorNodes = self.meshAnchors.map {
-            anchor in
+            mesh in
             meshGeometryToNode(
-                mesh: anchor.geometry,
-                transform: anchor.transform,
+                mesh: mesh,
                 color: color,
                 quilt: quilt
             )
@@ -46,25 +45,21 @@ extension ScanFile {
 }
 
 fileprivate func meshGeometryToSCNGeometry(
-    mesh: ARMeshGeometry
+    mesh: CSMeshSlice
 ) -> SCNGeometry {
     let vertices = SCNGeometrySource(
-        buffer: mesh.vertices.buffer,
-        vertexFormat: mesh.vertices.format,
+        data: mesh.vertices.data,
         semantic: .vertex,
-        vertexCount: mesh.vertices.count,
+        vectorCount: mesh.vertices.count,
+        usesFloatComponents: true,
+        componentsPerVector: mesh.vertices.componentsPerVector,
+        bytesPerComponent: mesh.vertices.bytesPerComponent,
         dataOffset: mesh.vertices.offset,
         dataStride: mesh.vertices.stride
     )
 
-    let faceData = Data(
-        bytesNoCopy: mesh.faces.buffer.contents(),
-        count: mesh.faces.buffer.length,
-        deallocator: .none
-    )
-
     let faces = SCNGeometryElement(
-        data: faceData,
+        data: mesh.faces.data,
         primitiveType: .triangles,
         primitiveCount: mesh.faces.count,
         bytesPerIndex: mesh.faces.bytesPerIndex
@@ -74,13 +69,12 @@ fileprivate func meshGeometryToSCNGeometry(
 }
 
 fileprivate func meshGeometryToNode(
-    mesh: ARMeshGeometry,
-    transform:  simd_float4x4,
+    mesh: CSMeshSlice,
     color: UIColor?,
     quilt: Bool
 ) -> SCNNode {
     let node = SCNNode(geometry: meshGeometryToSCNGeometry(mesh: mesh))
-    node.simdTransform = transform
+    node.simdTransform = mesh.transform
 
     let defaultMaterial = SCNMaterial()
     defaultMaterial.isDoubleSided = false
