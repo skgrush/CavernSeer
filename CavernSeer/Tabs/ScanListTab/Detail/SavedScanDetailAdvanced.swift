@@ -37,6 +37,8 @@ struct SavedScanDetailAdvanced: View {
     var body: some View {
         ScrollView(.vertical) {
 
+            metaGroup
+
             worldMapAttributeGroup
 
             GroupBox(label: Text("Anchors")) {
@@ -78,6 +80,32 @@ struct SavedScanDetailAdvanced: View {
         }
     }
 
+    private var metaGroup: some View {
+        VStack {
+            GroupBox(label: Text("Metadata")) {
+                ForEach(metaGroupPairs, id: \.0) {
+                    (label, value) in
+                    HStack {
+                        Text(label).frame(width: 100)
+                        Text(value).frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+            }
+
+            RenameAndUpgradeView(scan: model.scan)
+        }
+    }
+
+    private var metaGroupPairs: [(String, String)] {
+        [
+            ("id", model.id),
+            ("name", model.scan.name),
+            ("file version", String(model.scan.encodingVersion)),
+            ("url", model.url.absoluteString),
+            ("file size", showMegabytes(amount: model.fileSize)),
+        ]
+    }
+
     private var worldMapAttributeGroup: some View {
         GroupBox(label: Text("WorldMap Attributes")) {
             ForEach(worldMapAttributesPairs, id: \.0) {
@@ -97,8 +125,6 @@ struct SavedScanDetailAdvanced: View {
             ("anchor count", AnyView(Text(format(model.scan.meshAnchors.count)))),
             ("vertex count", AnyView(Text(format(totalVertices)))),
             ("triangle count", AnyView(Text(format(totalFaces)))),
-            ("URL", AnyView(Text(model.url.absoluteString))),
-            ("file size", AnyView(Text(showMegabytes(amount: model.fileSize))))
         ]
     }
 
