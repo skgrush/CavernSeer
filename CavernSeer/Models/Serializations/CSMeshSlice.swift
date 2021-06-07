@@ -59,6 +59,9 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
     static let supportsSecureCoding = true
 
     func encode(with coder: NSCoder) {
+        coder.encode(self.bytesPerComponent, forKey: "bytesPerComponent")
+        coder.encode(self.componentsPerVector, forKey: "componentsPerVector")
+
         coder.encode(self.data, forKey: "data")
         coder.encode(self.count, forKey: "count")
         coder.encode(Int64(self.format.rawValue), forKey: "format")
