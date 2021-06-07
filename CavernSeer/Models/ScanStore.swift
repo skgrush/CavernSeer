@@ -92,6 +92,24 @@ final class ScanStore : StoreProtocol {
             )
         }
     }
+
+    func copySaveFile(scanFile: ScanFile, name: String) throws -> URL {
+        let newScan = ScanFile(
+            name: name,
+            timestamp: scanFile.timestamp,
+            center: scanFile.center,
+            extent: scanFile.extent,
+            meshAnchors: scanFile.meshAnchors,
+            startSnapshot: scanFile.startSnapshot,
+            endSnapshot: scanFile.endSnapshot,
+            stations: scanFile.stations,
+            lines: scanFile.lines
+        )
+
+        let newUrl = try self.saveFile(file: newScan)
+
+        return newUrl
+    }
 }
 
 

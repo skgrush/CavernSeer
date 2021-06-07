@@ -44,15 +44,19 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         stations: [SurveyStationEntity],
         lines: [SurveyLineEntity]
     ) {
+        let timestamp = date ?? Date()
         self.init(
-            name: name,
-            timestamp: date ?? Date(),
+            name: name ?? Self.makeDefaultBaseName(
+                with: timestamp,
+                as: Self.dateFormatter
+            ),
+            timestamp: timestamp,
             center: map.center,
             extent: map.extent,
             /// pull out only the *true* ARMeshAnchors
-            meshAnchors: map.anchors.compactMap {
-                $0 is ARMeshAnchor ? $0 as? ARMeshAnchor : nil
-            },
+            meshAnchors: map.anchors
+                .compactMap { $0 as? ARMeshAnchor }
+                .map { CSMeshSlice(anchor: $0) },
             startSnapshot: startSnap,
             endSnapshot: endSnap,
             stations: stations.map { SurveyStation(entity: $0) },
@@ -152,11 +156,11 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
 
 
     internal init(
-        name: String? = nil,
-        timestamp: Date = Date(),
+        name: String,
+        timestamp: Date,
         center: simd_float3,
         extent: simd_float3,
-        meshAnchors: [ARMeshAnchor],
+        meshAnchors: [CSMeshSlice],
         startSnapshot: SnapshotAnchor?,
         endSnapshot: SnapshotAnchor?,
         stations: [SurveyStation],
@@ -164,13 +168,10 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     ) {
         self.encodingVersion = ScanFile.currentEncodingVersion
         self.timestamp = timestamp
-        self.name = name ?? Self.makeDefaultBaseName(
-            with: timestamp,
-            as: Self.dateFormatter
-        )
+        self.name = name
         self.center = center
         self.extent = extent
-        self.meshAnchors = meshAnchors.map { CSMeshSlice(anchor: $0) }
+        self.meshAnchors = meshAnchors
         self.startSnapshot = startSnapshot
         self.endSnapshot = endSnapshot
         self.stations = stations
@@ -178,7 +179,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     }
 
     func encode(with coder: NSCoder) {
-        coder.encode(encodingVersion, forKey: PropertyKeys.version)
+        coder.encode(Self.currentEncodingVersion, forKey: PropertyKeys.version)
         coder.encode(name, forKey: PropertyKeys.name)
         coder.encode(timestamp, forKey: PropertyKeys.timestamp)
         coder.encode(center, forPrefix: PropertyKeys.center)
