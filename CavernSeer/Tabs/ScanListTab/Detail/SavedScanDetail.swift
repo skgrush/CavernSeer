@@ -63,7 +63,7 @@ struct SavedScanDetail: View {
                 .cornerRadius(8)
             }
 
-            snapshots
+            SavedScanSnapshot(scan: model?.scan)
 
             Spacer()
 
@@ -111,32 +111,6 @@ struct SavedScanDetail: View {
             )
         }
         .onAppear(perform: { self.loadModel() })
-    }
-
-    private var snapshots: some View {
-        /// side-by-side start and end snapshots
-        HStack {
-            self.showSnapshot(snapshot: self.model?.scan.startSnapshot)
-                .map { styleSnapshot(img: $0) }
-            self.showSnapshot(snapshot: self.model?.scan.endSnapshot)
-                .map { styleSnapshot(img: $0) }
-        }
-    }
-
-    private func showSnapshot(snapshot: CSMeshSnapshot?) -> Image? {
-        guard
-            let imageData = snapshot?.imageData,
-            let uiImg = UIImage(data: imageData)
-        else { return nil }
-
-        return Image(uiImage: uiImg)
-    }
-
-    private func styleSnapshot(img: Image) -> some View {
-        return img
-            .resizable()
-            .scaledToFit()
-            .frame(maxHeight: 300)
     }
 
     private func generateObj() {

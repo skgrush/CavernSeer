@@ -74,6 +74,7 @@
 		7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967112266B14D7002B70B6 /* CSMeshSlice.swift */; };
 		7E967116266D7793002B70B6 /* RenameAndUpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */; };
 		7E96711826704395002B70B6 /* CSMeshSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96711726704395002B70B6 /* CSMeshSnapshot.swift */; };
+		7E96711A26705FD7002B70B6 /* SavedScanSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */; };
 		7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F94E24B113290098D44B /* SurveyStation.swift */; };
 		7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */; };
 		7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95224B1161E0098D44B /* SurveyLine.swift */; };
@@ -198,6 +199,7 @@
 		7E967112266B14D7002B70B6 /* CSMeshSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSlice.swift; sourceTree = "<group>"; };
 		7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAndUpgradeView.swift; sourceTree = "<group>"; };
 		7E96711726704395002B70B6 /* CSMeshSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSnapshot.swift; sourceTree = "<group>"; };
+		7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanSnapshot.swift; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
 		7E99F95224B1161E0098D44B /* SurveyLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLine.swift; sourceTree = "<group>"; };
@@ -521,6 +523,7 @@
 				7E5214002579DD610015FA54 /* SavedScanDetailLinks.swift */,
 				7E9C2D0C24BA2B7F00B9FC44 /* Renders */,
 				7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */,
+				7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -793,6 +796,7 @@
 				7E23DB17254570BC00BABB52 /* ObjSerializationError.swift in Sources */,
 				7E6C0EB024A800C200129E8C /* ContentView.swift in Sources */,
 				7E5213F42579D1420015FA54 /* RotationControls.swift in Sources */,
+				7E96711A26705FD7002B70B6 /* SavedScanSnapshot.swift in Sources */,
 				7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */,
 				7E7FD2A7266498DE00F87D08 /* FileSettingsSection.swift in Sources */,
 				7E43C632256B599600170C17 /* SCNInteractionMode+name.swift in Sources */,

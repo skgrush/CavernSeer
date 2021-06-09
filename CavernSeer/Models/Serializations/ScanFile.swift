@@ -20,7 +20,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
      *
      * v2 changed:
      *  - `meshAnchors` from `ARMeshAnchor` to `CSMeshSlice`
-     *  - `*Snapshot`s from `SnapshotAnchor` to `CSMeshSliceSnapshot`
+     *  - `*Snapshot`s from `SnapshotAnchor` to `CSMeshSnapshot`
      */
     static let currentEncodingVersion: Int32 = 2
 
