@@ -195,7 +195,6 @@
 		7E7FD2BE2665E3F800F87D08 /* PrivacyPolicy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PrivacyPolicy.md; sourceTree = "<group>"; };
 		7E91C09F25DA0B73000130FD /* iconflat.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = iconflat.svg; sourceTree = "<group>"; };
 		7E967112266B14D7002B70B6 /* CSMeshSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSlice.swift; sourceTree = "<group>"; };
-		7E967114266B1AC1002B70B6 /* CavernSeer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CavernSeer.entitlements; sourceTree = "<group>"; };
 		7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAndUpgradeView.swift; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
@@ -383,7 +382,6 @@
 		7E6C0EAA24A800C200129E8C /* CavernSeer */ = {
 			isa = PBXGroup;
 			children = (
-				7E967114266B1AC1002B70B6 /* CavernSeer.entitlements */,
 				7E0C5EF724CE5EFC001C0D0E /* errors */,
 				7E4003AC24AD5A5A00B709BD /* extensions */,
 				7E6C0EEB24A834B700129E8C /* lib */,
@@ -962,7 +960,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = CavernSeer/CavernSeer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3.1;
 				DEVELOPMENT_ASSET_PATHS = "\"CavernSeer/Preview Content\"";
@@ -977,7 +975,7 @@
 				MARKETING_VERSION = "0.3.2-dev";
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -987,7 +985,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = CavernSeer/CavernSeer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3.1;
 				DEVELOPMENT_ASSET_PATHS = "\"CavernSeer/Preview Content\"";
@@ -1002,7 +1000,7 @@
 				MARKETING_VERSION = "0.3.2-dev";
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -8,7 +8,6 @@
 
 import Foundation
 import ARKit /// MDLAsset, MTLCreateSystemDefaultDevice
-import ModelIO /// MDLAsset on macOS
 
 class ObjSerializer : ObservableObject {
     let fileExtension: String = "obj"
