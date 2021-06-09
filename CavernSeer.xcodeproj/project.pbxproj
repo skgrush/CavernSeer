@@ -73,6 +73,7 @@
 		7E91C0A025DA0B73000130FD /* iconflat.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7E91C09F25DA0B73000130FD /* iconflat.svg */; };
 		7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967112266B14D7002B70B6 /* CSMeshSlice.swift */; };
 		7E967116266D7793002B70B6 /* RenameAndUpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */; };
+		7E96711826704395002B70B6 /* CSMeshSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96711726704395002B70B6 /* CSMeshSnapshot.swift */; };
 		7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F94E24B113290098D44B /* SurveyStation.swift */; };
 		7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */; };
 		7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95224B1161E0098D44B /* SurveyLine.swift */; };
@@ -196,6 +197,7 @@
 		7E91C09F25DA0B73000130FD /* iconflat.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = iconflat.svg; sourceTree = "<group>"; };
 		7E967112266B14D7002B70B6 /* CSMeshSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSlice.swift; sourceTree = "<group>"; };
 		7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAndUpgradeView.swift; sourceTree = "<group>"; };
+		7E96711726704395002B70B6 /* CSMeshSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSnapshot.swift; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
 		7E99F95224B1161E0098D44B /* SurveyLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLine.swift; sourceTree = "<group>"; };
@@ -506,6 +508,7 @@
 				7E0C5EDD24BD5D4E001C0D0E /* ProjectFile.swift */,
 				7E7FD2A42664810D00F87D08 /* ProjectCacheFile.swift */,
 				7E967112266B14D7002B70B6 /* CSMeshSlice.swift */,
+				7E96711726704395002B70B6 /* CSMeshSnapshot.swift */,
 			);
 			path = Serializations;
 			sourceTree = "<group>";
@@ -737,6 +740,7 @@
 				7E0C5EDC24BBD118001C0D0E /* MergeAnalyzer.swift in Sources */,
 				7E0C5EE124C8F60D001C0D0E /* ProjectListTabView.swift in Sources */,
 				7EAE9CD52561C6B700EA66D0 /* SettingsKeyEnum.swift in Sources */,
+				7E96711826704395002B70B6 /* CSMeshSnapshot.swift in Sources */,
 				7E43C62D256B49AB00170C17 /* Interaction3dSettingsSection.swift in Sources */,
 				7E6C0EF524A9323900129E8C /* ScannerContainerView.swift in Sources */,
 				7E9C2CEA24B3FD5700B9FC44 /* SavedScanRow.swift in Sources */,

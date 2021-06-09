@@ -18,7 +18,9 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     /**
      * # V2 IS STILL EXPERIMENTAL
      *
-     * v2 changed `meshAnchors` from `ARMeshAnchor` to `CSMeshSlice`
+     * v2 changed:
+     *  - `meshAnchors` from `ARMeshAnchor` to `CSMeshSlice`
+     *  - `*Snapshot`s from `SnapshotAnchor` to `CSMeshSliceSnapshot`
      */
     static let currentEncodingVersion: Int32 = 2
 
@@ -29,8 +31,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     let center: simd_float3
     let extent: simd_float3
     let meshAnchors: [CSMeshSlice]
-    let startSnapshot: SnapshotAnchor?
-    let endSnapshot: SnapshotAnchor?
+    let startSnapshot: CSMeshSnapshot?
+    let endSnapshot: CSMeshSnapshot?
 
     let stations: [SurveyStation]
     let lines: [SurveyLine]
@@ -57,8 +59,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
             meshAnchors: map.anchors
                 .compactMap { $0 as? ARMeshAnchor }
                 .map { CSMeshSlice(anchor: $0) },
-            startSnapshot: startSnap,
-            endSnapshot: endSnap,
+            startSnapshot: CSMeshSnapshot.failableInit(snapshot: startSnap),
+            endSnapshot: CSMeshSnapshot.failableInit(snapshot: endSnap),
             stations: stations.map { SurveyStation(entity: $0) },
             lines: lines.map { SurveyLine(entity: $0) }
         )
@@ -94,6 +96,27 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
                     ) as? [ARMeshAnchor]
                 else { return nil }
                 self.meshAnchors = meshAnchors.map { CSMeshSlice(anchor: $0) }
+
+                if decoder.containsValue(forKey: PropertyKeys.startSnapshot) {
+                    self.startSnapshot = CSMeshSnapshot.failableInit(
+                        snapshot: decoder.decodeObject(
+                            of: SnapshotAnchor.self,
+                            forKey: PropertyKeys.startSnapshot
+                        )
+                    )
+                } else {
+                    self.startSnapshot = nil
+                }
+                if decoder.containsValue(forKey: PropertyKeys.endSnapshot) {
+                    self.endSnapshot = CSMeshSnapshot.failableInit(
+                        snapshot: decoder.decodeObject(
+                            of: SnapshotAnchor.self,
+                            forKey: PropertyKeys.endSnapshot
+                        )
+                    )
+                } else {
+                    self.endSnapshot = nil
+                }
             } else {
                 guard
                     let meshAnchors = decoder.decodeObject(
@@ -102,6 +125,23 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
                     ) as? [CSMeshSlice]
                 else { return nil }
                 self.meshAnchors = meshAnchors
+
+                if decoder.containsValue(forKey: PropertyKeys.startSnapshot) {
+                    self.startSnapshot = decoder.decodeObject(
+                        of: CSMeshSnapshot.self,
+                        forKey: PropertyKeys.startSnapshot
+                    )
+                } else {
+                    self.startSnapshot = nil
+                }
+                if decoder.containsValue(forKey: PropertyKeys.endSnapshot) {
+                    self.endSnapshot = decoder.decodeObject(
+                        of: CSMeshSnapshot.self,
+                        forKey: PropertyKeys.endSnapshot
+                    )
+                } else {
+                    self.endSnapshot = nil
+                }
             }
 
             if decoder.containsValue(forKey: PropertyKeys.name) {
@@ -114,23 +154,6 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
                     as: ScanFile.dateFormatter
                 )
                 debugPrint("ScanFile \(self.name) missing name in archive")
-            }
-
-            if decoder.containsValue(forKey: PropertyKeys.startSnapshot) {
-                self.startSnapshot = decoder.decodeObject(
-                    of: SnapshotAnchor.self,
-                    forKey: PropertyKeys.startSnapshot
-                )
-            } else {
-                self.startSnapshot = nil
-            }
-            if decoder.containsValue(forKey: PropertyKeys.endSnapshot) {
-                self.endSnapshot = decoder.decodeObject(
-                    of: SnapshotAnchor.self,
-                    forKey: PropertyKeys.endSnapshot
-                )
-            } else {
-                self.endSnapshot = nil
             }
 
             if decoder.containsValue(forKey: PropertyKeys.stations) {
@@ -161,8 +184,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         center: simd_float3,
         extent: simd_float3,
         meshAnchors: [CSMeshSlice],
-        startSnapshot: SnapshotAnchor?,
-        endSnapshot: SnapshotAnchor?,
+        startSnapshot: CSMeshSnapshot?,
+        endSnapshot: CSMeshSnapshot?,
         stations: [SurveyStation],
         lines: [SurveyLine]
     ) {
