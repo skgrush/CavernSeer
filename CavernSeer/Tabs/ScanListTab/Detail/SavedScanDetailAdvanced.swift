@@ -17,6 +17,8 @@ struct SavedScanDetailAdvanced: View {
     var formatter: NumberFormatter
     var measureFormatter: MeasurementFormatter
 
+    var dateFormatter: DateFormatter
+
     private var totalVertices: Int {
         model.scan.meshAnchors.map {
             anchor in anchor.vertices.count
@@ -106,6 +108,7 @@ struct SavedScanDetailAdvanced: View {
         [
             ("id", model.id),
             ("name", model.scan.name),
+            ("date", dateFormatter.string(from: model.scan.timestamp)),
             ("file version", String(model.scan.encodingVersion)),
             ("url", model.url.absoluteString),
             ("file size", showMegabytes(amount: model.fileSize)),
@@ -187,7 +190,8 @@ struct SavedScanDetailAdvanced_Previews: PreviewProvider {
             model: dummySavedScans[1],
             unitLength: .MetricMeter,
             formatter: NumberFormatter(),
-            measureFormatter: MeasurementFormatter()
+            measureFormatter: MeasurementFormatter(),
+            dateFormatter: DateFormatter()
         )
     }
 }

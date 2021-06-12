@@ -30,7 +30,8 @@ struct SavedScanDetailLinks: View {
                     model: self.model,
                     unitLength: settings.UnitsLength,
                     formatter: settings.formatter,
-                    measureFormatter: settings.measureFormatter
+                    measureFormatter: settings.measureFormatter,
+                    dateFormatter: settings.dateFormatter
                 )
             ) {
                 HStack {

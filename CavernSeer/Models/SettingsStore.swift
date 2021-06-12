@@ -64,6 +64,8 @@ final class SettingsStore : NSObject, ObservableObject {
     @Published
     var measureFormatter: MeasurementFormatter
 
+    let dateFormatter: DateFormatter
+
     private func setValue<ValT:Equatable>(
         _ key: SettingsKey,
         from oldValue: ValT,
@@ -90,7 +92,8 @@ final class SettingsStore : NSObject, ObservableObject {
         /// register default values for our defaults
         def.register(defaults: getSettingsDefaultDictionary())
 
-        (self.formatter, self.measureFormatter) = Self.setupFormatters()
+        (self.formatter, self.measureFormatter, self.dateFormatter) =
+            Self.setupFormatters()
 
         super.init()
 
@@ -180,7 +183,7 @@ final class SettingsStore : NSObject, ObservableObject {
     }
 
     private static func setupFormatters()
-        -> (NumberFormatter, MeasurementFormatter)
+        -> (NumberFormatter, MeasurementFormatter, DateFormatter)
     {
         let locale = NSLocale.current
 
@@ -195,6 +198,11 @@ final class SettingsStore : NSObject, ObservableObject {
         measurementFormatter.numberFormatter = formatter
         measurementFormatter.unitOptions = .providedUnit
 
-        return (formatter, measurementFormatter)
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = locale
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .long
+
+        return (formatter, measurementFormatter, dateFormatter)
     }
 }
