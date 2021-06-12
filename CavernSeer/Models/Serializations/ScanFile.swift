@@ -24,9 +24,12 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
      */
     static let currentEncodingVersion: Int32 = 2
 
+    /// the version this ScanFile was encoded for. Note that it must still have the current structure.
     let encodingVersion: Int32
 
+    /// Timestamp, including timezone, of the original scan.
     let timestamp: Date
+    /// Name for the scan, encoded into the file and distinct from the filename. Initially `scan_\(timestamp)`
     let name: String
     let center: simd_float3
     let extent: simd_float3

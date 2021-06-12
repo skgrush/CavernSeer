@@ -9,6 +9,9 @@
 import Foundation
 import ARKit
 
+/**
+ * Serializable and portable version of `ARMeshAnchor`.
+ */
 final class CSMeshSlice : NSObject, NSSecureCoding {
     static let supportsSecureCoding = true
 
@@ -55,6 +58,10 @@ final class CSMeshSlice : NSObject, NSSecureCoding {
     }
 }
 
+/**
+ * Serializable and portable version of `ARGeometrySource`.
+ * Pulls out the data necessary for rendering to scenes.
+ */
 final class CSMeshGeometrySource : NSObject, NSSecureCoding {
     static let supportsSecureCoding = true
 
@@ -118,6 +125,10 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
     }
 }
 
+/**
+ * Serializable and portable version of `ARGeometryElement`.
+ * Pulls out the data necessary for rendering to scenes.
+ */
 final class CSMeshGeometryElement : NSObject, NSSecureCoding {
     static let supportsSecureCoding = true
 
