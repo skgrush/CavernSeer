@@ -75,6 +75,8 @@
 		7E967116266D7793002B70B6 /* RenameAndUpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */; };
 		7E96711826704395002B70B6 /* CSMeshSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96711726704395002B70B6 /* CSMeshSnapshot.swift */; };
 		7E96711A26705FD7002B70B6 /* SavedScanSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */; };
+		7E96712126745939002B70B6 /* ScanFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96712026745939002B70B6 /* ScanFileTests.swift */; };
+		7E96712426745A39002B70B6 /* beige_v1.cavernseerscan in Resources */ = {isa = PBXBuildFile; fileRef = 7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */; };
 		7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F94E24B113290098D44B /* SurveyStation.swift */; };
 		7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */; };
 		7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95224B1161E0098D44B /* SurveyLine.swift */; };
@@ -200,6 +202,8 @@
 		7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAndUpgradeView.swift; sourceTree = "<group>"; };
 		7E96711726704395002B70B6 /* CSMeshSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSnapshot.swift; sourceTree = "<group>"; };
 		7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanSnapshot.swift; sourceTree = "<group>"; };
+		7E96712026745939002B70B6 /* ScanFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFileTests.swift; sourceTree = "<group>"; };
+		7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = beige_v1.cavernseerscan; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
 		7E99F95224B1161E0098D44B /* SurveyLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLine.swift; sourceTree = "<group>"; };
@@ -413,6 +417,8 @@
 		7E6C0EC124A800C600129E8C /* CavernSeerTests */ = {
 			isa = PBXGroup;
 			children = (
+				7E96712226745A28002B70B6 /* TestData */,
+				7E96711F26745916002B70B6 /* ModelsTests */,
 				7E6C0EC224A800C600129E8C /* CavernSeerTests.swift */,
 				7E6C0EC424A800C600129E8C /* Info.plist */,
 			);
@@ -496,6 +502,22 @@
 				7E09141B25B67DF40023215F /* MTLTexture+Z.swift */,
 			);
 			path = lib;
+			sourceTree = "<group>";
+		};
+		7E96711F26745916002B70B6 /* ModelsTests */ = {
+			isa = PBXGroup;
+			children = (
+				7E96712026745939002B70B6 /* ScanFileTests.swift */,
+			);
+			path = ModelsTests;
+			sourceTree = "<group>";
+		};
+		7E96712226745A28002B70B6 /* TestData */ = {
+			isa = PBXGroup;
+			children = (
+				7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */,
+			);
+			path = TestData;
 			sourceTree = "<group>";
 		};
 		7E99F94D24B1130C0098D44B /* Serializations */ = {
@@ -709,6 +731,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E96712426745A39002B70B6 /* beige_v1.cavernseerscan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -809,6 +832,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E96712126745939002B70B6 /* ScanFileTests.swift in Sources */,
 				7E6C0EC324A800C600129E8C /* CavernSeerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1022,7 +1046,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7S6Y8WFB9W;
 				INFOPLIST_FILE = CavernSeerTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1044,7 +1068,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7S6Y8WFB9W;
 				INFOPLIST_FILE = CavernSeerTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
