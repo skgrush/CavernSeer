@@ -15,141 +15,109 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     static let fileExtension = "cavernseerscan"
     static let supportsSecureCoding: Bool = true
     static let dateFormatter = getDefaultDateFormatter()
-    static let currentEncodingVersion: Int32 = 1
+    /**
+     * # V2 IS STILL EXPERIMENTAL
+     *
+     * v2 changed:
+     *  - `meshAnchors` from `ARMeshAnchor` to `CSMeshSlice`
+     *  - `*Snapshot`s from `SnapshotAnchor` to `CSMeshSnapshot`
+     */
+    static let currentEncodingVersion: Int32 = 2
 
+    /// the version this ScanFile was encoded for. Note that it must still have the current structure.
     let encodingVersion: Int32
 
+    /// Timestamp, including timezone, of the original scan.
     let timestamp: Date
+    /// Name for the scan, encoded into the file and distinct from the filename. Initially `scan_\(timestamp)`
     let name: String
     let center: simd_float3
     let extent: simd_float3
-    let meshAnchors: [ARMeshAnchor]
-    let startSnapshot: SnapshotAnchor?
-    let endSnapshot: SnapshotAnchor?
+    let meshAnchors: [CSMeshSlice]
+    let startSnapshot: CSMeshSnapshot?
+    let endSnapshot: CSMeshSnapshot?
 
     let stations: [SurveyStation]
     let lines: [SurveyLine]
 
+    /**
+     * Initializer from an `ARWorldMap` state and `AR` structures during scanning.
+     */
     convenience init(
         map: ARWorldMap,
         name: String? = nil,
         startSnap: SnapshotAnchor?,
         endSnap: SnapshotAnchor?,
-        date: Date?,
+        date: Date = Date(),
         stations: [SurveyStationEntity],
         lines: [SurveyLineEntity]
     ) {
         self.init(
-            name: name,
-            timestamp: date ?? Date(),
+            name: name ?? Self.makeDefaultBaseName(
+                with: date,
+                as: Self.dateFormatter
+            ),
+            timestamp: date,
             center: map.center,
             extent: map.extent,
             /// pull out only the *true* ARMeshAnchors
-            meshAnchors: map.anchors.compactMap {
-                $0 is ARMeshAnchor ? $0 as? ARMeshAnchor : nil
-            },
-            startSnapshot: startSnap,
-            endSnapshot: endSnap,
+            meshAnchors: map.anchors
+                .compactMap { $0 as? ARMeshAnchor }
+                .map { CSMeshSlice(anchor: $0) },
+            startSnapshot: startSnap.map { CSMeshSnapshot(snapshot: $0) },
+            endSnapshot: endSnap.map { CSMeshSnapshot(snapshot: $0) },
             stations: stations.map { SurveyStation(entity: $0) },
             lines: lines.map { SurveyLine(entity: $0) }
         )
     }
 
-    required init?(coder decoder: NSCoder) {
+    required init?(coder: NSCoder) {
 
-        let version =
-            decoder.containsValue(forKey: PropertyKeys.version)
-                ? decoder.decodeInt32(forKey: PropertyKeys.version)
-                : 1
-        self.encodingVersion = version
+        let decoder = Decode(coder: coder)
+        self.encodingVersion = decoder.version
 
-        if (version == 1) {
-            guard
-                let timestamp = decoder.decodeObject(
-                    of: NSDate.self,
-                    forKey: PropertyKeys.timestamp
-                ) as Date?,
-                let meshAnchors = decoder.decodeObject(
-                    of: [NSArray.self, ARMeshAnchor.self],
-                    forKey: PropertyKeys.meshAnchors
-                ) as? [ARMeshAnchor]
-            else { return nil }
-
-            self.timestamp = timestamp as Date
-            self.center =
-                decoder.decode_simd_float3(prefix: PropertyKeys.center)
-            self.extent =
-                decoder.decode_simd_float3(prefix: PropertyKeys.extent)
-            self.meshAnchors = meshAnchors
-
-            if decoder.containsValue(forKey: PropertyKeys.name) {
-                self.name = decoder.decodeObject(
-                    forKey: PropertyKeys.name
-                ) as! String
-            } else {
-                self.name = ScanFile.makeDefaultBaseName(
-                    with: self.timestamp,
-                    as: ScanFile.dateFormatter
-                )
-                debugPrint("ScanFile \(self.name) missing name in archive")
-            }
-
-            if decoder.containsValue(forKey: PropertyKeys.startSnapshot) {
-                self.startSnapshot = decoder.decodeObject(
-                    of: SnapshotAnchor.self,
-                    forKey: PropertyKeys.startSnapshot
-                )
-            } else {
-                self.startSnapshot = nil
-            }
-            if decoder.containsValue(forKey: PropertyKeys.endSnapshot) {
-                self.endSnapshot = decoder.decodeObject(
-                    of: SnapshotAnchor.self,
-                    forKey: PropertyKeys.endSnapshot
-                )
-            } else {
-                self.endSnapshot = nil
-            }
-
-            if decoder.containsValue(forKey: PropertyKeys.stations) {
-                self.stations = decoder.decodeObject(
-                    of: [NSArray.self, SurveyStation.self],
-                    forKey: PropertyKeys.stations
-                ) as! [SurveyStation]
-            } else {
-                self.stations = []
-            }
-            if decoder.containsValue(forKey: PropertyKeys.lines) {
-                self.lines = decoder.decodeObject(
-                    of: [NSArray.self, SurveyLine.self],
-                    forKey: PropertyKeys.lines
-                ) as! [SurveyLine]
-            } else {
-                self.lines = []
-            }
-        } else {
-            fatalError("Unexpected encoding version \(version)")
+        do {
+            self.timestamp = try decoder.timestamp()
+            self.name = try decoder.name(timestamp: self.timestamp)
+            self.center = decoder.center()
+            self.extent = decoder.extent()
+            self.meshAnchors = try decoder.meshAnchors()
+            self.startSnapshot =
+                try decoder.snapshot(key: PropertyKeys.startSnapshot)
+            self.endSnapshot =
+                try decoder.snapshot(key: PropertyKeys.endSnapshot)
+            self.stations = try decoder.stations()
+            self.lines = try decoder.lines()
+        } catch DecodeError.badVersion {
+            debugPrint("Bad version \(decoder.version)")
+            return nil
+        } catch DecodeError.castFailure(let property) {
+            debugPrint("Failed to cast \(property)")
+            return nil
+        } catch DecodeError.missingMandatory(let property) {
+            debugPrint("Missing mandatory key \(property)")
+            return nil
+        } catch {
+            debugPrint("Unknown failure encoding; \(error)")
+            return nil
         }
     }
 
 
     internal init(
-        name: String? = nil,
-        timestamp: Date = Date(),
+        name: String,
+        timestamp: Date,
         center: simd_float3,
         extent: simd_float3,
-        meshAnchors: [ARMeshAnchor],
-        startSnapshot: SnapshotAnchor?,
-        endSnapshot: SnapshotAnchor?,
+        meshAnchors: [CSMeshSlice],
+        startSnapshot: CSMeshSnapshot?,
+        endSnapshot: CSMeshSnapshot?,
         stations: [SurveyStation],
         lines: [SurveyLine]
     ) {
         self.encodingVersion = ScanFile.currentEncodingVersion
         self.timestamp = timestamp
-        self.name = name ?? Self.makeDefaultBaseName(
-            with: timestamp,
-            as: Self.dateFormatter
-        )
+        self.name = name
         self.center = center
         self.extent = extent
         self.meshAnchors = meshAnchors
@@ -160,7 +128,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     }
 
     func encode(with coder: NSCoder) {
-        coder.encode(encodingVersion, forKey: PropertyKeys.version)
+        coder.encode(Self.currentEncodingVersion, forKey: PropertyKeys.version)
         coder.encode(name, forKey: PropertyKeys.name)
         coder.encode(timestamp, forKey: PropertyKeys.timestamp)
         coder.encode(center, forPrefix: PropertyKeys.center)
@@ -193,6 +161,10 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     }
     #endif
 
+    /**
+     * Create a `ScanCacheFile` describing this `ScanFile`.
+     * Image is compressed before storing.
+     */
     func createCacheFile(thisFileURL: URL) -> ScanCacheFile {
         // compress the image if we can
         var img = startSnapshot?.imageData
@@ -210,17 +182,180 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     }
 }
 
+extension ScanFile {
+    struct PropertyKeys {
+        static let version = "version"
+        static let name = "name"
+        static let timestamp = "timestamp"
+        static let center = "center"
+        static let extent = "extent"
+        static let meshAnchors = "meshAnchors"
+        static let startSnapshot = "startSnapshot"
+        static let endSnapshot = "endSnapshot"
+        static let stations = "stations"
+        static let lines = "lines"
+    }
 
-fileprivate struct PropertyKeys {
-    static let version = "version"
-    static let name = "name"
-    static let timestamp = "timestamp"
-    static let center = "center"
-    static let extent = "extent"
-    static let meshAnchors = "meshAnchors"
-    static let startSnapshot = "startSnapshot"
-    static let endSnapshot = "endSnapshot"
-    static let stations = "stations"
-    static let lines = "lines"
 
+    /**
+     * Property decoders for `ScanFile`.
+     *
+     * Initializer stores the coder and decodes/stores the version for use in other decoders.
+     * Decoder methods can throw `DecodeError`s.
+     */
+    struct Decode {
+        let version: Int32
+        let decoder: NSCoder
+
+        init(coder: NSCoder) {
+            decoder = coder
+            version =
+                decoder.containsValue(forKey: PropertyKeys.version)
+                    ? decoder.decodeInt32(forKey: PropertyKeys.version)
+                    : 1
+        }
+
+        func name(timestamp: Date) throws -> String {
+            if decoder.containsValue(forKey: PropertyKeys.name) {
+                if
+                    let name = decoder.decodeObject(
+                        forKey: PropertyKeys.name
+                    ) as? String
+                {
+                    return name
+                } else {
+                    throw DecodeError.castFailure(property: "name")
+                }
+            } else {
+                let name = ScanFile.makeDefaultBaseName(
+                    with: timestamp,
+                    as: ScanFile.dateFormatter
+                )
+                debugPrint("ScanFile \(name) missing name in archive")
+                return name
+            }
+        }
+
+        func timestamp() throws -> Date {
+            try throwIfMissing(key: PropertyKeys.timestamp)
+            if
+                let date = decoder.decodeObject(
+                    of: NSDate.self,
+                    forKey: PropertyKeys.timestamp
+                ) as Date?
+            {
+                return date
+            } else {
+                throw DecodeError.castFailure(property: "date")
+            }
+        }
+
+        func center() -> simd_float3 {
+            return decoder.decode_simd_float3(prefix: PropertyKeys.center)
+        }
+
+        func extent() -> simd_float3 {
+            decoder.decode_simd_float3(prefix: PropertyKeys.extent)
+        }
+
+        func meshAnchors() throws -> [CSMeshSlice] {
+            try throwIfMissing(key: PropertyKeys.meshAnchors)
+            switch version {
+                case 1:
+                    if let meshes = decoder.decodeObject(
+                        of: [NSArray.self, ARMeshAnchor.self],
+                        forKey: PropertyKeys.meshAnchors
+                    ) as? [ARMeshAnchor] {
+                        return meshes.map { CSMeshSlice(anchor: $0) }
+                    } else {
+                        throw DecodeError.castFailure(property: "meshes")
+                    }
+
+                case 2:
+                    if let meshes = decoder.decodeObject(
+                        of: [NSArray.self, CSMeshSlice.self],
+                        forKey: PropertyKeys.meshAnchors
+                    ) as? [CSMeshSlice] {
+                        return meshes
+                    } else {
+                        throw DecodeError.castFailure(property: "meshes")
+                    }
+                default:
+                    fatalError("Unexpected encoding version \(version)")
+            }
+        }
+
+        func snapshot(key: String) throws -> CSMeshSnapshot? {
+            if decoder.containsValue(forKey: key) {
+                let snapshot: CSMeshSnapshot?
+                switch version {
+                    case 1:
+                        snapshot = decoder.decodeObject(
+                            of: SnapshotAnchor.self,
+                            forKey: key
+                        ).map { CSMeshSnapshot(snapshot: $0) }
+                    case 2:
+                        snapshot = decoder.decodeObject(
+                            of: CSMeshSnapshot.self,
+                            forKey: key
+                        )
+                    default:
+                        throw DecodeError.badVersion
+                }
+                if snapshot != nil {
+                    return snapshot!
+                } else {
+                    throw DecodeError.castFailure(property: key)
+                }
+            } else {
+                return nil
+            }
+        }
+
+        func stations() throws -> [SurveyStation] {
+            if decoder.containsValue(forKey: PropertyKeys.stations) {
+                if
+                    let stations = decoder.decodeObject(
+                        of: [NSArray.self, SurveyStation.self],
+                        forKey: PropertyKeys.stations
+                    ) as? [SurveyStation]
+                {
+                    return stations
+                } else {
+                    throw DecodeError.castFailure(property: "stations")
+                }
+            } else {
+                return []
+            }
+        }
+
+        func lines() throws -> [SurveyLine] {
+            if decoder.containsValue(forKey: PropertyKeys.lines) {
+                if
+                    let lines = decoder.decodeObject(
+                        of: [NSArray.self, SurveyLine.self],
+                        forKey: PropertyKeys.lines
+                    ) as? [SurveyLine]
+                {
+                    return lines
+                } else {
+                    throw DecodeError.castFailure(property: "lines")
+                }
+            } else {
+                return []
+            }
+        }
+
+        private func throwIfMissing(key: String) throws {
+            if !decoder.containsValue(forKey: key) {
+                throw DecodeError.missingMandatory(property: key)
+            }
+        }
+    }
+
+    enum DecodeError : Error {
+        case castFailure(property: String)
+        case missingMandatory(property: String)
+        case badVersion
+    }
 }

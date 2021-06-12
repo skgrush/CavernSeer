@@ -17,15 +17,23 @@ struct SavedScanDetailAdvanced: View {
     var formatter: NumberFormatter
     var measureFormatter: MeasurementFormatter
 
+    var dateFormatter: DateFormatter
+
     private var totalVertices: Int {
         model.scan.meshAnchors.map {
-            anchor in anchor.geometry.vertices.count
+            anchor in anchor.vertices.count
         }.reduce(0, { acc, next in acc + next })
     }
 
     private var totalFaces: Int {
         model.scan.meshAnchors.map {
-            anchor in anchor.geometry.faces.count
+            anchor in anchor.faces.count
+        }.reduce(0, { acc, next in acc + next })
+    }
+
+    private var totalNormals: Int {
+        model.scan.meshAnchors.map {
+            anchor in anchor.normals.count
         }.reduce(0, { acc, next in acc + next })
     }
 
@@ -36,6 +44,8 @@ struct SavedScanDetailAdvanced: View {
 
     var body: some View {
         ScrollView(.vertical) {
+
+            metaGroup
 
             worldMapAttributeGroup
 
@@ -78,6 +88,33 @@ struct SavedScanDetailAdvanced: View {
         }
     }
 
+    private var metaGroup: some View {
+        VStack {
+            GroupBox(label: Text("Metadata")) {
+                ForEach(metaGroupPairs, id: \.0) {
+                    (label, value) in
+                    HStack {
+                        Text(label).frame(width: 100)
+                        Text(value).frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+            }
+
+            RenameAndUpgradeView(scan: model.scan)
+        }
+    }
+
+    private var metaGroupPairs: [(String, String)] {
+        [
+            ("id", model.id),
+            ("name", model.scan.name),
+            ("date", dateFormatter.string(from: model.scan.timestamp)),
+            ("file version", String(model.scan.encodingVersion)),
+            ("url", model.url.absoluteString),
+            ("file size", showMegabytes(amount: model.fileSize)),
+        ]
+    }
+
     private var worldMapAttributeGroup: some View {
         GroupBox(label: Text("WorldMap Attributes")) {
             ForEach(worldMapAttributesPairs, id: \.0) {
@@ -96,9 +133,8 @@ struct SavedScanDetailAdvanced: View {
             ("Extent", xyzView(model.scan.extent)),
             ("anchor count", AnyView(Text(format(model.scan.meshAnchors.count)))),
             ("vertex count", AnyView(Text(format(totalVertices)))),
+            ("normal count", AnyView(Text(format(totalNormals)))),
             ("triangle count", AnyView(Text(format(totalFaces)))),
-            ("URL", AnyView(Text(model.url.absoluteString))),
-            ("file size", AnyView(Text(showMegabytes(amount: model.fileSize))))
         ]
     }
 
@@ -131,7 +167,7 @@ struct SavedScanDetailAdvanced: View {
 
 
 struct MeshAnchorDetail: View {
-    var anchor: ARMeshAnchor
+    var anchor: CSMeshSlice
 
     var body: some View {
         VStack {
@@ -139,9 +175,9 @@ struct MeshAnchorDetail: View {
                 .font(.title)
             VStack {
                 Text("transform: \(anchor.transform.debugDescription)")
-                Text("Vertex count: \(anchor.geometry.vertices.count)")
-                Text("Normal count: \(anchor.geometry.normals.count)")
-                Text("Face count: \(anchor.geometry.faces.count)")
+                Text("Vertex count: \(anchor.vertices.count)")
+                Text("Normal count: \(anchor.normals.count)")
+                Text("Face count: \(anchor.faces.count)")
             }
         }
     }
@@ -154,7 +190,8 @@ struct SavedScanDetailAdvanced_Previews: PreviewProvider {
             model: dummySavedScans[1],
             unitLength: .MetricMeter,
             formatter: NumberFormatter(),
-            measureFormatter: MeasurementFormatter()
+            measureFormatter: MeasurementFormatter(),
+            dateFormatter: DateFormatter()
         )
     }
 }

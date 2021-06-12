@@ -37,8 +37,43 @@ final class ScanStore : StoreProtocol {
         (self.dataDirectory, self.cacheDirectory) = getOrCreateDirectories()
     }
 
-    func setVisible(visible: URL) {
-        self.visibleScan = visible.lastPathComponent
+    /**
+     * Try to set the visible scan in the list.
+     *
+     * - Parameters:
+     *   - visible: the URL of the scan to set as the visible option.
+     *   - updateFirst: if we should update the store before setting visible, e.g. if `visible` is
+     *      not currently loaded.
+     *   - onError: only necessary if `updateFirst` is true. Callback in case `update` fails.
+     */
+    func setVisible(
+        visible: URL,
+        updateFirst: Bool = false,
+        onError: ((Error)->())? = nil
+    ) {
+        let nextVisibleScanId =
+            visible.deletingPathExtension().lastPathComponent
+
+        /// try clearing the current selection and wait for the view to handle that
+        self.visibleScan = nil
+        DispatchQueue.main.async {
+            /// if we're updating, wait for the callback, otherwise just set the `visibleScan`
+            if updateFirst {
+                self.update() {
+                    err in
+                    if err == nil {
+                        /// if the update was successful, again asynchronously set the `visibleScan`
+                        DispatchQueue.main.async {
+                            self.visibleScan = nextVisibleScanId
+                        }
+                    } else {
+                        onError?(err!)
+                    }
+                }
+            } else {
+                self.visibleScan = nextVisibleScanId
+            }
+        }
     }
 
     func getSelectionModels() -> [SavedScanModel] {
@@ -56,6 +91,24 @@ final class ScanStore : StoreProtocol {
                 "Failed to get selected models: \(error.localizedDescription)"
             )
         }
+    }
+
+    func copySaveFile(scanFile: ScanFile, name: String) throws -> URL {
+        let newScan = ScanFile(
+            name: name,
+            timestamp: scanFile.timestamp,
+            center: scanFile.center,
+            extent: scanFile.extent,
+            meshAnchors: scanFile.meshAnchors,
+            startSnapshot: scanFile.startSnapshot,
+            endSnapshot: scanFile.endSnapshot,
+            stations: scanFile.stations,
+            lines: scanFile.lines
+        )
+
+        let newUrl = try self.saveFile(file: newScan)
+
+        return newUrl
     }
 }
 

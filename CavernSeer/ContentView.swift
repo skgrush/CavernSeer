@@ -89,16 +89,11 @@ struct ContentView: View {
             case .scan:
                 self.selection = .ScanListTab
 
-                self.scanStore.update() {
-                    err in
-                    if err == nil {
-                        self.scanStore.setVisible(visible: url)
-                    } else {
-                        fatalError(
-                            "Failed to update after openFile: " +
-                            err!.localizedDescription
-                        )
-                    }
+                self.scanStore.setVisible(visible: url, updateFirst: true) {
+                    fatalError(
+                        "Failed to update after openFile: " +
+                        $0.localizedDescription
+                    )
                 }
         }
     }

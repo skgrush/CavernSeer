@@ -181,6 +181,11 @@ extension StoreProtocol {
         _ = getOrCreateDirectories()
     }
 
+    internal func DANGEROUSLY_deleteAllFiles() throws {
+        try fileManager.removeItem(at: dataDirectory)
+        try clearCaches()
+    }
+
     internal func getSaveURL(file: FileType, baseName: String? = nil) -> URL {
         let base = baseName ?? file.name
 

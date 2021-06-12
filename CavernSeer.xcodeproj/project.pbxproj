@@ -71,6 +71,13 @@
 		7E7FD2A52664810D00F87D08 /* ProjectCacheFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7FD2A42664810D00F87D08 /* ProjectCacheFile.swift */; };
 		7E7FD2A7266498DE00F87D08 /* FileSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7FD2A6266498DE00F87D08 /* FileSettingsSection.swift */; };
 		7E91C0A025DA0B73000130FD /* iconflat.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7E91C09F25DA0B73000130FD /* iconflat.svg */; };
+		7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967112266B14D7002B70B6 /* CSMeshSlice.swift */; };
+		7E967116266D7793002B70B6 /* RenameAndUpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */; };
+		7E96711826704395002B70B6 /* CSMeshSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96711726704395002B70B6 /* CSMeshSnapshot.swift */; };
+		7E96711A26705FD7002B70B6 /* SavedScanSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */; };
+		7E96712126745939002B70B6 /* ScanFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96712026745939002B70B6 /* ScanFileTests.swift */; };
+		7E96712426745A39002B70B6 /* beige_v1.cavernseerscan in Resources */ = {isa = PBXBuildFile; fileRef = 7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */; };
+		7E96712A26755119002B70B6 /* green_v2.cavernseerscan in Resources */ = {isa = PBXBuildFile; fileRef = 7E96712926755119002B70B6 /* green_v2.cavernseerscan */; };
 		7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F94E24B113290098D44B /* SurveyStation.swift */; };
 		7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */; };
 		7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95224B1161E0098D44B /* SurveyLine.swift */; };
@@ -192,6 +199,13 @@
 		7E7FD2BD2665E37B00F87D08 /* Description.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Description.txt; sourceTree = "<group>"; };
 		7E7FD2BE2665E3F800F87D08 /* PrivacyPolicy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PrivacyPolicy.md; sourceTree = "<group>"; };
 		7E91C09F25DA0B73000130FD /* iconflat.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = iconflat.svg; sourceTree = "<group>"; };
+		7E967112266B14D7002B70B6 /* CSMeshSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSlice.swift; sourceTree = "<group>"; };
+		7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAndUpgradeView.swift; sourceTree = "<group>"; };
+		7E96711726704395002B70B6 /* CSMeshSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSnapshot.swift; sourceTree = "<group>"; };
+		7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanSnapshot.swift; sourceTree = "<group>"; };
+		7E96712026745939002B70B6 /* ScanFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFileTests.swift; sourceTree = "<group>"; };
+		7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = beige_v1.cavernseerscan; sourceTree = "<group>"; };
+		7E96712926755119002B70B6 /* green_v2.cavernseerscan */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = green_v2.cavernseerscan; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
 		7E99F95224B1161E0098D44B /* SurveyLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLine.swift; sourceTree = "<group>"; };
@@ -405,6 +419,8 @@
 		7E6C0EC124A800C600129E8C /* CavernSeerTests */ = {
 			isa = PBXGroup;
 			children = (
+				7E96712226745A28002B70B6 /* TestData */,
+				7E96711F26745916002B70B6 /* ModelsTests */,
 				7E6C0EC224A800C600129E8C /* CavernSeerTests.swift */,
 				7E6C0EC424A800C600129E8C /* Info.plist */,
 			);
@@ -490,6 +506,23 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		7E96711F26745916002B70B6 /* ModelsTests */ = {
+			isa = PBXGroup;
+			children = (
+				7E96712026745939002B70B6 /* ScanFileTests.swift */,
+			);
+			path = ModelsTests;
+			sourceTree = "<group>";
+		};
+		7E96712226745A28002B70B6 /* TestData */ = {
+			isa = PBXGroup;
+			children = (
+				7E96712926755119002B70B6 /* green_v2.cavernseerscan */,
+				7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */,
+			);
+			path = TestData;
+			sourceTree = "<group>";
+		};
 		7E99F94D24B1130C0098D44B /* Serializations */ = {
 			isa = PBXGroup;
 			children = (
@@ -501,6 +534,8 @@
 				7E99F95224B1161E0098D44B /* SurveyLine.swift */,
 				7E0C5EDD24BD5D4E001C0D0E /* ProjectFile.swift */,
 				7E7FD2A42664810D00F87D08 /* ProjectCacheFile.swift */,
+				7E967112266B14D7002B70B6 /* CSMeshSlice.swift */,
+				7E96711726704395002B70B6 /* CSMeshSnapshot.swift */,
 			);
 			path = Serializations;
 			sourceTree = "<group>";
@@ -512,6 +547,8 @@
 				7E9C2CF024B55FE800B9FC44 /* SavedScanDetailAdvanced.swift */,
 				7E5214002579DD610015FA54 /* SavedScanDetailLinks.swift */,
 				7E9C2D0C24BA2B7F00B9FC44 /* Renders */,
+				7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */,
+				7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -697,6 +734,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E96712A26755119002B70B6 /* green_v2.cavernseerscan in Resources */,
+				7E96712426745A39002B70B6 /* beige_v1.cavernseerscan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -731,6 +770,7 @@
 				7E0C5EDC24BBD118001C0D0E /* MergeAnalyzer.swift in Sources */,
 				7E0C5EE124C8F60D001C0D0E /* ProjectListTabView.swift in Sources */,
 				7EAE9CD52561C6B700EA66D0 /* SettingsKeyEnum.swift in Sources */,
+				7E96711826704395002B70B6 /* CSMeshSnapshot.swift in Sources */,
 				7E43C62D256B49AB00170C17 /* Interaction3dSettingsSection.swift in Sources */,
 				7E6C0EF524A9323900129E8C /* ScannerContainerView.swift in Sources */,
 				7E9C2CEA24B3FD5700B9FC44 /* SavedScanRow.swift in Sources */,
@@ -766,6 +806,7 @@
 				7E7DEEE525AA24CE00320150 /* Float+round.swift in Sources */,
 				7E0C5EE524C90746001C0D0E /* ProjectStore.swift in Sources */,
 				7EAE9CCD2561B88600EA66D0 /* SettingsTabView.swift in Sources */,
+				7E967116266D7793002B70B6 /* RenameAndUpgradeView.swift in Sources */,
 				7E5213FC2579D6F90015FA54 /* ElevationCrossSectionRender.swift in Sources */,
 				7E0C5ED524BACECE001C0D0E /* MergeTool.swift in Sources */,
 				7E9CF42E259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift in Sources */,
@@ -782,6 +823,8 @@
 				7E23DB17254570BC00BABB52 /* ObjSerializationError.swift in Sources */,
 				7E6C0EB024A800C200129E8C /* ContentView.swift in Sources */,
 				7E5213F42579D1420015FA54 /* RotationControls.swift in Sources */,
+				7E96711A26705FD7002B70B6 /* SavedScanSnapshot.swift in Sources */,
+				7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */,
 				7E7FD2A7266498DE00F87D08 /* FileSettingsSection.swift in Sources */,
 				7E43C632256B599600170C17 /* SCNInteractionMode+name.swift in Sources */,
 				7E43C628256B48A800170C17 /* UnitsSettingsSection.swift in Sources */,
@@ -793,6 +836,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E96712126745939002B70B6 /* ScanFileTests.swift in Sources */,
 				7E6C0EC324A800C600129E8C /* CavernSeerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -967,6 +1011,7 @@
 				MARKETING_VERSION = "0.3.2-dev";
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -991,6 +1036,7 @@
 				MARKETING_VERSION = "0.3.2-dev";
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1004,7 +1050,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7S6Y8WFB9W;
 				INFOPLIST_FILE = CavernSeerTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1026,7 +1072,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7S6Y8WFB9W;
 				INFOPLIST_FILE = CavernSeerTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
