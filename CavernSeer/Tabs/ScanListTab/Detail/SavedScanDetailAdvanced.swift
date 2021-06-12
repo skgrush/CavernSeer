@@ -29,6 +29,12 @@ struct SavedScanDetailAdvanced: View {
         }.reduce(0, { acc, next in acc + next })
     }
 
+    private var totalNormals: Int {
+        model.scan.meshAnchors.map {
+            anchor in anchor.normals.count
+        }.reduce(0, { acc, next in acc + next })
+    }
+
     private let columns2: [GridItem] = [
         .init(.flexible()),
         .init(.flexible())
@@ -124,6 +130,7 @@ struct SavedScanDetailAdvanced: View {
             ("Extent", xyzView(model.scan.extent)),
             ("anchor count", AnyView(Text(format(model.scan.meshAnchors.count)))),
             ("vertex count", AnyView(Text(format(totalVertices)))),
+            ("normal count", AnyView(Text(format(totalNormals)))),
             ("triangle count", AnyView(Text(format(totalFaces)))),
         ]
     }
@@ -166,7 +173,7 @@ struct MeshAnchorDetail: View {
             VStack {
                 Text("transform: \(anchor.transform.debugDescription)")
                 Text("Vertex count: \(anchor.vertices.count)")
-//                Text("Normal count: \(anchor.normals.count)")
+                Text("Normal count: \(anchor.normals.count)")
                 Text("Face count: \(anchor.faces.count)")
             }
         }

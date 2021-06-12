@@ -20,6 +20,7 @@ final class CSMeshSlice : NSObject, NSSecureCoding {
         coder.encode(self.transform, forPrefix: "transform")
         coder.encode(self.vertices, forKey: "vertices")
         coder.encode(self.faces, forKey: "faces")
+        coder.encode(self.normals, forKey: "normals")
     }
 
     init?(coder decoder: NSCoder) {
@@ -36,6 +37,10 @@ final class CSMeshSlice : NSObject, NSSecureCoding {
             of: CSMeshGeometryElement.self,
             forKey: "faces"
         )
+        let normals = decoder.decodeObject(
+            of: CSMeshGeometrySource.self,
+            forKey: "normals"
+        )
 
         if vert == nil || fac == nil {
             return nil
@@ -43,18 +48,21 @@ final class CSMeshSlice : NSObject, NSSecureCoding {
 
         self.vertices = vert!
         self.faces = fac!
+        self.normals = normals!
     }
 
     let identifier: UUID
     let transform: simd_float4x4
     let vertices: CSMeshGeometrySource
     let faces: CSMeshGeometryElement
+    let normals: CSMeshGeometrySource
 
     init(anchor: ARMeshAnchor) {
         self.identifier = anchor.identifier
         self.transform = anchor.transform
         self.vertices = CSMeshGeometrySource(source: anchor.geometry.vertices)
         self.faces = CSMeshGeometryElement(source: anchor.geometry.faces)
+        self.normals = CSMeshGeometrySource(source: anchor.geometry.normals)
     }
 }
 

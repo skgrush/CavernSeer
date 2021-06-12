@@ -58,6 +58,17 @@ fileprivate func meshGeometryToSCNGeometry(
         dataStride: mesh.vertices.stride
     )
 
+    let normals = SCNGeometrySource(
+        data: mesh.normals.data,
+        semantic: .normal,
+        vectorCount: mesh.normals.count,
+        usesFloatComponents: true,
+        componentsPerVector: mesh.normals.componentsPerVector,
+        bytesPerComponent: mesh.normals.bytesPerComponent,
+        dataOffset: mesh.normals.offset,
+        dataStride: mesh.normals.stride
+    )
+
     let faces = SCNGeometryElement(
         data: mesh.faces.data,
         primitiveType: .triangles,
@@ -65,7 +76,7 @@ fileprivate func meshGeometryToSCNGeometry(
         bytesPerIndex: mesh.faces.bytesPerIndex
     )
 
-    return SCNGeometry(sources: [vertices], elements: [faces])
+    return SCNGeometry(sources: [vertices, normals], elements: [faces])
 }
 
 fileprivate func meshGeometryToNode(

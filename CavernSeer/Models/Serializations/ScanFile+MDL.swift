@@ -34,7 +34,7 @@ extension ScanFile {
 
 extension CSMeshSlice {
     /**
-     * Generate an `MDLMesh` from the `ARMeshGeometry` by simple buffer transforms.
+     * Generate an `MDLMesh` from the `CSMeshSlice` by simple buffer transforms.
      *
      * Essentially directly from StackOverflow users
      *  [`swiftcoder`](https://stackoverflow.com/a/61104855) and
