@@ -67,14 +67,6 @@ final class CSMeshSnapshot : NSObject, NSSecureCoding {
         self.identifier = snapshot.identifier
         self.name = snapshot.name
     }
-
-    static func failableInit(snapshot: SnapshotAnchor?) -> CSMeshSnapshot? {
-        if snapshot == nil {
-            return nil
-        } else {
-            return CSMeshSnapshot(snapshot: snapshot!)
-        }
-    }
 }
 
 

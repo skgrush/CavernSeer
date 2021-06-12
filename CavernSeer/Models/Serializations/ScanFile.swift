@@ -64,8 +64,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
             meshAnchors: map.anchors
                 .compactMap { $0 as? ARMeshAnchor }
                 .map { CSMeshSlice(anchor: $0) },
-            startSnapshot: CSMeshSnapshot.failableInit(snapshot: startSnap),
-            endSnapshot: CSMeshSnapshot.failableInit(snapshot: endSnap),
+            startSnapshot: startSnap.map { CSMeshSnapshot(snapshot: $0) },
+            endSnapshot: endSnap.map { CSMeshSnapshot(snapshot: $0) },
             stations: stations.map { SurveyStation(entity: $0) },
             lines: lines.map { SurveyLine(entity: $0) }
         )
@@ -290,12 +290,10 @@ extension ScanFile {
                 let snapshot: CSMeshSnapshot?
                 switch version {
                     case 1:
-                        snapshot = CSMeshSnapshot.failableInit(
-                            snapshot: decoder.decodeObject(
-                                of: SnapshotAnchor.self,
-                                forKey: key
-                            )
-                        )
+                        snapshot = decoder.decodeObject(
+                            of: SnapshotAnchor.self,
+                            forKey: key
+                        ).map { CSMeshSnapshot(snapshot: $0) }
                     case 2:
                         snapshot = decoder.decodeObject(
                             of: CSMeshSnapshot.self,

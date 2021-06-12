@@ -42,7 +42,7 @@ final class CSMeshSlice : NSObject, NSSecureCoding {
             forKey: "normals"
         )
 
-        if vert == nil || fac == nil {
+        if vert == nil || fac == nil || normals == nil {
             return nil
         }
 
