@@ -15,13 +15,11 @@ import ARKit
 final class CSMeshSlice : NSObject, NSSecureCoding {
     static let supportsSecureCoding = true
 
-    func encode(with coder: NSCoder) {
-        coder.encode(self.identifier as NSUUID, forKey: "identifier")
-        coder.encode(self.transform, forPrefix: "transform")
-        coder.encode(self.vertices, forKey: "vertices")
-        coder.encode(self.faces, forKey: "faces")
-        coder.encode(self.normals, forKey: "normals")
-    }
+    let identifier: UUID
+    let transform: simd_float4x4
+    let vertices: CSMeshGeometrySource
+    let faces: CSMeshGeometryElement
+    let normals: CSMeshGeometrySource
 
     init?(coder decoder: NSCoder) {
         self.identifier = decoder.decodeObject(
@@ -51,18 +49,20 @@ final class CSMeshSlice : NSObject, NSSecureCoding {
         self.normals = normals!
     }
 
-    let identifier: UUID
-    let transform: simd_float4x4
-    let vertices: CSMeshGeometrySource
-    let faces: CSMeshGeometryElement
-    let normals: CSMeshGeometrySource
-
     init(anchor: ARMeshAnchor) {
         self.identifier = anchor.identifier
         self.transform = anchor.transform
         self.vertices = CSMeshGeometrySource(source: anchor.geometry.vertices)
         self.faces = CSMeshGeometryElement(source: anchor.geometry.faces)
         self.normals = CSMeshGeometrySource(source: anchor.geometry.normals)
+    }
+
+    func encode(with coder: NSCoder) {
+        coder.encode(self.identifier as NSUUID, forKey: "identifier")
+        coder.encode(self.transform, forPrefix: "transform")
+        coder.encode(self.vertices, forKey: "vertices")
+        coder.encode(self.faces, forKey: "faces")
+        coder.encode(self.normals, forKey: "normals")
     }
 }
 
@@ -72,17 +72,18 @@ final class CSMeshSlice : NSObject, NSSecureCoding {
  */
 final class CSMeshGeometrySource : NSObject, NSSecureCoding {
     static let supportsSecureCoding = true
+    private static let supportedMTLVertexFormat: [MTLVertexFormat] = [
+        .float, .float2, .float3, .float4,
+    ]
 
-    func encode(with coder: NSCoder) {
-        coder.encode(self.bytesPerComponent, forKey: "bytesPerComponent")
-        coder.encode(self.componentsPerVector, forKey: "componentsPerVector")
+    let bytesPerComponent: Int
+    let componentsPerVector: Int
 
-        coder.encode(self.data, forKey: "data")
-        coder.encode(self.count, forKey: "count")
-        coder.encode(Int64(self.format.rawValue), forKey: "format")
-        coder.encode(self.offset, forKey: "offset")
-        coder.encode(self.stride, forKey: "stride")
-    }
+    let data: Data
+    let count: Int
+    let format: MTLVertexFormat
+    let offset: Int
+    let stride: Int
 
     init?(coder decoder: NSCoder) {
         bytesPerComponent = decoder.decodeInteger(forKey: "bytesPerComponent")
@@ -103,15 +104,6 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
         data = dat
     }
 
-    let bytesPerComponent: Int
-    let componentsPerVector: Int
-
-    let data: Data
-    let count: Int
-    let format: MTLVertexFormat
-    let offset: Int
-    let stride: Int
-
     init(source: ARGeometrySource) {
         data = Data(
             bytes: source.buffer.contents(),
@@ -123,13 +115,19 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
         stride = source.stride
 
         componentsPerVector = source.componentsPerVector
-//        bytesPerComponent = stride / componentsPerVector
-        switch source.format {
-            case .float, .float2, .float3, .float4:
-                bytesPerComponent = MemoryLayout<Float>.size
-            default:
-                fatalError("Unsupported MTLVertexFormat \(source.format)")
-        }
+        precondition(Self.supportedMTLVertexFormat.contains(source.format))
+        bytesPerComponent = MemoryLayout<Float>.size
+    }
+
+    func encode(with coder: NSCoder) {
+        coder.encode(self.bytesPerComponent, forKey: "bytesPerComponent")
+        coder.encode(self.componentsPerVector, forKey: "componentsPerVector")
+
+        coder.encode(self.data, forKey: "data")
+        coder.encode(self.count, forKey: "count")
+        coder.encode(Int64(self.format.rawValue), forKey: "format")
+        coder.encode(self.offset, forKey: "offset")
+        coder.encode(self.stride, forKey: "stride")
     }
 }
 
@@ -140,12 +138,10 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
 final class CSMeshGeometryElement : NSObject, NSSecureCoding {
     static let supportsSecureCoding = true
 
-    func encode(with coder: NSCoder) {
-        coder.encode(self.data, forKey: "data")
-        coder.encode(self.bytesPerIndex, forKey: "bytesPerIndex")
-        coder.encode(self.count, forKey: "count")
-        coder.encode(self.indexCountPerPrimitive, forKey: "indexCountPerPrimitive")
-    }
+    let data: Data
+    let bytesPerIndex: Int
+    let count: Int
+    let indexCountPerPrimitive: Int
 
     init?(coder decoder: NSCoder) {
         guard
@@ -161,12 +157,6 @@ final class CSMeshGeometryElement : NSObject, NSSecureCoding {
         indexCountPerPrimitive = decoder.decodeInteger(forKey: "indexCountPerPrimitive")
     }
 
-
-    let data: Data
-    let bytesPerIndex: Int
-    let count: Int
-    let indexCountPerPrimitive: Int
-
     init(source: ARGeometryElement) {
         data = Data(
             bytes: source.buffer.contents(),
@@ -175,5 +165,12 @@ final class CSMeshGeometryElement : NSObject, NSSecureCoding {
         bytesPerIndex = source.bytesPerIndex
         count = source.count
         indexCountPerPrimitive = source.indexCountPerPrimitive
+    }
+
+    func encode(with coder: NSCoder) {
+        coder.encode(self.data, forKey: "data")
+        coder.encode(self.bytesPerIndex, forKey: "bytesPerIndex")
+        coder.encode(self.count, forKey: "count")
+        coder.encode(self.indexCountPerPrimitive, forKey: "indexCountPerPrimitive")
     }
 }

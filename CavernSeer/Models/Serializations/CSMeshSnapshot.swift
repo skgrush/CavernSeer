@@ -20,9 +20,7 @@ final class CSMeshSnapshot : NSObject, NSSecureCoding {
      */
     let imageData: Data
 
-    /**
-     * Positioning information of where the snapshot was taken from.
-     */
+    ///Positioning information of where the snapshot was taken from.
     let transform: simd_float4x4
     let identifier: UUID
     let name: String?
