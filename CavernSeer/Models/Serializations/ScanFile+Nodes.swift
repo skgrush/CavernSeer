@@ -47,34 +47,11 @@ extension ScanFile {
 fileprivate func meshGeometryToSCNGeometry(
     mesh: CSMeshSlice
 ) -> SCNGeometry {
-    let vertices = SCNGeometrySource(
-        data: mesh.vertices.data,
-        semantic: .vertex,
-        vectorCount: mesh.vertices.count,
-        usesFloatComponents: true,
-        componentsPerVector: mesh.vertices.componentsPerVector,
-        bytesPerComponent: mesh.vertices.bytesPerComponent,
-        dataOffset: mesh.vertices.offset,
-        dataStride: mesh.vertices.stride
-    )
+    let vertices = sourceCsToScn(source: mesh.vertices)
 
-    let normals = SCNGeometrySource(
-        data: mesh.normals.data,
-        semantic: .normal,
-        vectorCount: mesh.normals.count,
-        usesFloatComponents: true,
-        componentsPerVector: mesh.normals.componentsPerVector,
-        bytesPerComponent: mesh.normals.bytesPerComponent,
-        dataOffset: mesh.normals.offset,
-        dataStride: mesh.normals.stride
-    )
+    let normals = sourceCsToScn(source: mesh.normals)
 
-    let faces = SCNGeometryElement(
-        data: mesh.faces.data,
-        primitiveType: .triangles,
-        primitiveCount: mesh.faces.count,
-        bytesPerIndex: mesh.faces.bytesPerIndex
-    )
+    let faces = elementCsToScn(element: mesh.faces)
 
     return SCNGeometry(sources: [vertices, normals], elements: [faces])
 }

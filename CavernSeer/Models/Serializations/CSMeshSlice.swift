@@ -52,9 +52,9 @@ final class CSMeshSlice : NSObject, NSSecureCoding {
     init(anchor: ARMeshAnchor) {
         self.identifier = anchor.identifier
         self.transform = anchor.transform
-        self.vertices = CSMeshGeometrySource(source: anchor.geometry.vertices)
+        self.vertices = CSMeshGeometrySource(source: anchor.geometry.vertices, semantic: .vertex)
         self.faces = CSMeshGeometryElement(source: anchor.geometry.faces)
-        self.normals = CSMeshGeometrySource(source: anchor.geometry.normals)
+        self.normals = CSMeshGeometrySource(source: anchor.geometry.normals, semantic: .normal)
     }
 
     func encode(with coder: NSCoder) {
@@ -75,6 +75,8 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
     private static let supportedMTLVertexFormat: [MTLVertexFormat] = [
         .float, .float2, .float3, .float4,
     ]
+
+    let semantic: Semantic
 
     let bytesPerComponent: Int
     let componentsPerVector: Int
@@ -98,13 +100,38 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
             let dat = decoder.decodeObject(
                 of: NSData.self,
                 forKey: "data"
-            ) as Data?
+            ) as Data?,
+            let rawSem = decoder.decodeObject(
+                of: NSString.self,
+                forKey: "semantic"
+            ) as String?
         else { return nil }
         format = fmt
         data = dat
+        semantic = semanticFromRaw(raw: rawSem)
     }
 
-    init(source: ARGeometrySource) {
+    init(scn: SCNGeometrySource) {
+        data = scn.data
+        count = scn.data.count
+        precondition(scn.usesFloatComponents)
+        switch scn.componentsPerVector {
+            case 3:
+                format = .float3
+            case 2:
+                format = .float2
+            default:
+                fatalError("Unexpected componentsPerVector \(scn.componentsPerVector)")
+        }
+        offset = scn.dataOffset
+        stride = scn.dataStride
+        componentsPerVector = scn.componentsPerVector
+        bytesPerComponent = scn.bytesPerComponent
+
+        semantic = scn.semantic
+    }
+
+    init(source: ARGeometrySource, semantic: Semantic) {
         data = Data(
             bytes: source.buffer.contents(),
             count: source.buffer.length
@@ -117,6 +144,8 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
         componentsPerVector = source.componentsPerVector
         precondition(Self.supportedMTLVertexFormat.contains(source.format))
         bytesPerComponent = MemoryLayout<Float>.size
+
+        self.semantic = semantic
     }
 
     func encode(with coder: NSCoder) {
@@ -128,7 +157,11 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
         coder.encode(Int64(self.format.rawValue), forKey: "format")
         coder.encode(self.offset, forKey: "offset")
         coder.encode(self.stride, forKey: "stride")
+
+        coder.encode(self.semantic.rawValue as NSString, forKey: "semantic")
     }
+
+    typealias Semantic = SCNGeometrySource.Semantic
 }
 
 /**
@@ -136,25 +169,40 @@ final class CSMeshGeometrySource : NSObject, NSSecureCoding {
  * Pulls out the data necessary for rendering to scenes.
  */
 final class CSMeshGeometryElement : NSObject, NSSecureCoding {
+    typealias PrimitiveType = SCNGeometryPrimitiveType
     static let supportsSecureCoding = true
 
     let data: Data
     let bytesPerIndex: Int
     let count: Int
     let indexCountPerPrimitive: Int
+    let primitiveType: PrimitiveType
 
     init?(coder decoder: NSCoder) {
         guard
             let dat = decoder.decodeObject(
                 of: NSData.self,
                 forKey: "data"
-            ) as Data?
+            ) as Data?,
+            let primitive = PrimitiveType(
+                rawValue: decoder.decodeInteger(forKey: "primitiveType")
+            )
         else { return nil }
         data = dat
+        primitiveType = primitive
 
         bytesPerIndex = decoder.decodeInteger(forKey: "bytesPerIndex")
         count = decoder.decodeInteger(forKey: "count")
         indexCountPerPrimitive = decoder.decodeInteger(forKey: "indexCountPerPrimitive")
+    }
+
+    init(scn: SCNGeometryElement) {
+        data = scn.data
+        bytesPerIndex = scn.bytesPerIndex
+        count = scn.data.count
+        let bytesPerPrimitive = count / scn.primitiveCount
+        indexCountPerPrimitive = bytesPerPrimitive / bytesPerIndex
+        primitiveType = scn.primitiveType
     }
 
     init(source: ARGeometryElement) {
@@ -165,6 +213,7 @@ final class CSMeshGeometryElement : NSObject, NSSecureCoding {
         bytesPerIndex = source.bytesPerIndex
         count = source.count
         indexCountPerPrimitive = source.indexCountPerPrimitive
+        primitiveType = source.primitiveType.toSCN()
     }
 
     func encode(with coder: NSCoder) {
@@ -172,5 +221,34 @@ final class CSMeshGeometryElement : NSObject, NSSecureCoding {
         coder.encode(self.bytesPerIndex, forKey: "bytesPerIndex")
         coder.encode(self.count, forKey: "count")
         coder.encode(self.indexCountPerPrimitive, forKey: "indexCountPerPrimitive")
+        coder.encode(self.primitiveType.rawValue, forKey: "primitiveType")
+    }
+}
+
+
+
+fileprivate extension ARGeometryPrimitiveType {
+    func toSCN() -> SCNGeometryPrimitiveType {
+        switch self {
+            case .line:
+                return .line
+            case .triangle:
+                return .triangles
+            default:
+                fatalError("Unexpected primitiveType \(self)")
+        }
+    }
+}
+
+fileprivate func semanticFromRaw(raw: String) -> CSMeshGeometrySource.Semantic {
+    switch raw {
+        case CSMeshGeometrySource.Semantic.normal.rawValue:
+            return .normal
+        case CSMeshGeometrySource.Semantic.vertex.rawValue:
+            return .vertex
+        case CSMeshGeometrySource.Semantic.texcoord.rawValue:
+            return .texcoord
+        default:
+            fatalError("Unexpected Semantic \(raw)")
     }
 }
