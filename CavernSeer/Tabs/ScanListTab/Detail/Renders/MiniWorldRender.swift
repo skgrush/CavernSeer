@@ -12,20 +12,7 @@ import SceneKit /// SCN*
 struct MiniWorldRender: View {
 
     var scan: ScanFile
-
-    var color: UIColor?
-    var ambientColor: Color?
-    var quiltMesh: Bool
-    var unitsLength: LengthPreference
-    var interactionMode3d: SCNInteractionMode
-
-    private var sceneNodes: [SCNNode] {
-        return scan.toSCNNodes(
-            color: color,
-            quilt: quiltMesh,
-            lengthPref: unitsLength
-        )
-    }
+    var settings: SettingsStore
 
     var offset: SCNVector3 {
         let center = scan.center
@@ -35,39 +22,41 @@ struct MiniWorldRender: View {
     @ObservedObject
     private var snapshotModel = SnapshotExportModel()
 
+    @ObservedObject
+    private var renderModel = GeneralRenderModel()
+
     var body: some View {
         MiniWorldRenderController(
-            sceneNodes: sceneNodes,
-            snapshotModel: _snapshotModel,
-            interactionMode: interactionMode3d,
-            ambientColor: ambientColor
+            renderModel: _renderModel,
+            snapshotModel: _snapshotModel
         )
         .snapshotMenus(for: _snapshotModel)
-        .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
+        .navigationBarItems(trailing: HStack {
+            snapshotModel.promptButton(scan: scan)
+            Button("doubleSided", action: { renderModel.toggleDoubleSided() })
+        })
+        .onAppear { appeared() }
+    }
+
+    private func appeared() {
+        self.renderModel.updateScanAndSettings(scan: scan, settings: settings)
     }
 }
 
 final class MiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
-    let sceneNodes: [SCNNode]
-    let ambientColor: Color?
-
     @ObservedObject
     var snapshotModel: SnapshotExportModel
-
-    var interactionMode: SCNInteractionMode
+    @ObservedObject
+    var renderModel: GeneralRenderModel
 
     init(
-        sceneNodes: [SCNNode],
-        snapshotModel: ObservedObject<SnapshotExportModel>,
-        interactionMode: SCNInteractionMode,
-        ambientColor: Color?
+        renderModel: ObservedObject<GeneralRenderModel>,
+        snapshotModel: ObservedObject<SnapshotExportModel>
     ) {
-        self.sceneNodes = sceneNodes
+        self._renderModel = renderModel
         self._snapshotModel = snapshotModel
-        self.interactionMode = interactionMode
-        self.ambientColor = ambientColor
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -87,7 +76,7 @@ final class MiniWorldRenderController :
 
         sceneView.allowsCameraControl = true
         sceneView.defaultCameraController.interactionMode =
-            self.interactionMode
+            self.renderModel.interactionMode3d
         sceneView.autoenablesDefaultLighting = true
         sceneView.isPlaying = true
 
@@ -97,28 +86,74 @@ final class MiniWorldRenderController :
     func updateUIView(_ uiView: SCNView, context: Context) {
         self.snapshotModel.viewUpdaterHandler(scnView: uiView)
 
-        uiView.defaultCameraController.interactionMode = self.interactionMode
+        uiView.defaultCameraController.interactionMode =
+            self.renderModel.interactionMode3d
+
+        if self.renderModel.shouldUpdateView {
+
+            if let ambientColor = self.renderModel.ambientColor {
+                uiView.scene?.rootNode
+                    .childNode(
+                        withName: "ambient-light", recursively: false
+                    )?.light?.color = ambientColor
+            }
+
+            if self.renderModel.shouldUpdateNodes {
+                if let scene = uiView.scene {
+                    scene.rootNode
+                        .childNodes {
+                            (node, _) in
+                            node.name != "the-camera" && node.name != "ambient-light"
+                        }
+                        .forEach { $0.removeFromParentNode() }
+
+                    let sceneNodes = self.renderModel.sceneNodes
+                    if self.renderModel.quiltMesh {
+                        sceneNodes.forEach {
+                            $0.geometry?.firstMaterial?.diffuse.contents = UIColor(
+                                hue: CGFloat(drand48()), saturation: 1, brightness: 1, alpha: 1
+                            )
+                        }
+                    } else if let color = self.renderModel.color {
+                        sceneNodes.forEach {
+                            $0.geometry?.firstMaterial?.diffuse.contents = color
+                        }
+                    }
+
+                    self.renderModel.sceneNodes.forEach {
+                        scene.rootNode.addChildNode($0)
+                    }
+
+                    self.renderModel.doneUpdating()
+                }
+            } else {
+                self.renderModel.doneUpdating()
+            }
+        }
     }
 
     private func makeaScene() -> SCNScene {
         let scene = SCNScene()
 
         let cameraNode = SCNNode()
+        cameraNode.name = "the-camera"
         cameraNode.camera = SCNCamera()
         cameraNode.position = SCNVector3(x: 0, y: 10, z: 35)
 
         scene.rootNode.addChildNode(cameraNode)
 
-        sceneNodes.forEach {
+
+        renderModel.sceneNodes.forEach {
             node in
                 scene.rootNode.addChildNode(node)
         }
 
         let ambientLightNode = SCNNode()
+        ambientLightNode.name = "ambient-light"
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = .ambient
-        if ambientColor != nil {
-            ambientLightNode.light!.color = UIColor(ambientColor!)
+        if let ambientColor = renderModel.ambientColor {
+            ambientLightNode.light!.color = ambientColor
         }
         scene.rootNode.addChildNode(ambientLightNode)
 

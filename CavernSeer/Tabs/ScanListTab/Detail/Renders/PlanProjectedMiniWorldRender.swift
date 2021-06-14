@@ -36,7 +36,8 @@ struct PlanProjectedMiniWorldRender: View {
         return scan.toSCNNodes(
             color: color,
             quilt: quiltMesh,
-            lengthPref: unitsLength
+            lengthPref: unitsLength,
+            doubleSided: false
         )
     }
 

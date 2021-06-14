@@ -41,11 +41,7 @@ struct SavedScanDetailLinks: View {
             NavigationLink(
                 destination: MiniWorldRender(
                     scan: self.model.scan,
-                    color: meshColor,
-                    ambientColor: settings.ColorLightAmbient,
-                    quiltMesh: settings.ColorMeshQuilt,
-                    unitsLength: settings.UnitsLength,
-                    interactionMode3d: settings.InteractionMode3d
+                    settings: settings
                 )
             ) {
                 HStack {
