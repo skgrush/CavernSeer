@@ -93,7 +93,7 @@ final class ScanStore : StoreProtocol {
         }
     }
 
-    func copySaveFile(scanFile: ScanFile, name: String) throws -> URL {
+    func copySaveFile(scanFile: ScanFile, name: String, withLocation: Bool) throws -> URL {
         let newScan = ScanFile(
             name: name,
             timestamp: scanFile.timestamp,
@@ -103,7 +103,8 @@ final class ScanStore : StoreProtocol {
             startSnapshot: scanFile.startSnapshot,
             endSnapshot: scanFile.endSnapshot,
             stations: scanFile.stations,
-            lines: scanFile.lines
+            lines: scanFile.lines,
+            location: withLocation ? scanFile.location : nil
         )
 
         let newUrl = try self.saveFile(file: newScan)

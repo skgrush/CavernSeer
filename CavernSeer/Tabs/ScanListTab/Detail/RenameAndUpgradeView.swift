@@ -105,7 +105,8 @@ struct RenameAndUpgradeView : View {
         do {
             self.resultURL = try scanStore.copySaveFile(
                 scanFile: scan,
-                name: newName
+                name: newName,
+                withLocation: true
             )
             self.resultMessage = "\(self.resultURL!)"
         } catch {

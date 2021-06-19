@@ -40,6 +40,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     let stations: [SurveyStation]
     let lines: [SurveyLine]
 
+    let location: CSLocation?
+
     /**
      * Initializer from an `ARWorldMap` state and `AR` structures during scanning.
      */
@@ -50,7 +52,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         endSnap: SnapshotAnchor?,
         date: Date = Date(),
         stations: [SurveyStationEntity],
-        lines: [SurveyLineEntity]
+        lines: [SurveyLineEntity],
+        location: CLLocation?
     ) {
         self.init(
             name: name ?? Self.makeDefaultBaseName(
@@ -67,7 +70,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
             startSnapshot: startSnap.map { CSMeshSnapshot(snapshot: $0) },
             endSnapshot: endSnap.map { CSMeshSnapshot(snapshot: $0) },
             stations: stations.map { SurveyStation(entity: $0) },
-            lines: lines.map { SurveyLine(entity: $0) }
+            lines: lines.map { SurveyLine(entity: $0) },
+            location: location.map { CSLocation(loc: $0, manual: false) }
         )
     }
 
@@ -88,6 +92,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
                 try decoder.snapshot(key: PropertyKeys.endSnapshot)
             self.stations = try decoder.stations()
             self.lines = try decoder.lines()
+            self.location = try decoder.location()
         } catch DecodeError.badVersion {
             debugPrint("Bad version \(decoder.version)")
             return nil
@@ -113,7 +118,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         startSnapshot: CSMeshSnapshot?,
         endSnapshot: CSMeshSnapshot?,
         stations: [SurveyStation],
-        lines: [SurveyLine]
+        lines: [SurveyLine],
+        location: CSLocation?
     ) {
         self.encodingVersion = ScanFile.currentEncodingVersion
         self.timestamp = timestamp
@@ -125,6 +131,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         self.endSnapshot = endSnapshot
         self.stations = stations
         self.lines = lines
+        self.location = location
     }
 
     func encode(with coder: NSCoder) {
@@ -139,6 +146,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
 
         coder.encode(stations as NSArray, forKey: PropertyKeys.stations)
         coder.encode(lines as NSArray, forKey: PropertyKeys.lines)
+
+        coder.encode(location, forKey: PropertyKeys.location)
     }
 
     #if DEBUG
@@ -156,6 +165,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
 
         self.lines = []
         self.stations = []
+
+        self.location = nil
 
         super.init()
     }
@@ -194,6 +205,7 @@ extension ScanFile {
         static let endSnapshot = "endSnapshot"
         static let stations = "stations"
         static let lines = "lines"
+        static let location = "location"
     }
 
 
@@ -343,6 +355,17 @@ extension ScanFile {
                 }
             } else {
                 return []
+            }
+        }
+
+        func location() throws -> CSLocation? {
+            if decoder.containsValue(forKey: PropertyKeys.location) {
+                return decoder.decodeObject(
+                    of: CSLocation.self,
+                    forKey: PropertyKeys.location
+                )
+            } else {
+                return nil
             }
         }
 

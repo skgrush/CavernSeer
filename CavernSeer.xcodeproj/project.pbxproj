@@ -79,6 +79,7 @@
 		7E96712426745A39002B70B6 /* beige_v1.cavernseerscan in Resources */ = {isa = PBXBuildFile; fileRef = 7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */; };
 		7E96712A26755119002B70B6 /* green_v2.cavernseerscan in Resources */ = {isa = PBXBuildFile; fileRef = 7E96712926755119002B70B6 /* green_v2.cavernseerscan */; };
 		7E967130267D80D9002B70B6 /* GeneralRenderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96712F267D80D9002B70B6 /* GeneralRenderModel.swift */; };
+		7E967132267D821D002B70B6 /* CSLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967131267D821D002B70B6 /* CSLocation.swift */; };
 		7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F94E24B113290098D44B /* SurveyStation.swift */; };
 		7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */; };
 		7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95224B1161E0098D44B /* SurveyLine.swift */; };
@@ -208,6 +209,7 @@
 		7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = beige_v1.cavernseerscan; sourceTree = "<group>"; };
 		7E96712926755119002B70B6 /* green_v2.cavernseerscan */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = green_v2.cavernseerscan; sourceTree = "<group>"; };
 		7E96712F267D80D9002B70B6 /* GeneralRenderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralRenderModel.swift; sourceTree = "<group>"; };
+		7E967131267D821D002B70B6 /* CSLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSLocation.swift; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
 		7E99F95224B1161E0098D44B /* SurveyLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLine.swift; sourceTree = "<group>"; };
@@ -528,6 +530,7 @@
 		7E99F94D24B1130C0098D44B /* Serializations */ = {
 			isa = PBXGroup;
 			children = (
+				7E967131267D821D002B70B6 /* CSLocation.swift */,
 				7E6C0EEE24A8388C00129E8C /* ScanFile.swift */,
 				7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */,
 				7E9C2CF224B56C2400B9FC44 /* ScanFile+Nodes.swift */,
@@ -814,6 +817,7 @@
 				7E0C5ED524BACECE001C0D0E /* MergeTool.swift in Sources */,
 				7E9CF42E259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift in Sources */,
 				7E0C5EDE24BD5D4E001C0D0E /* ProjectFile.swift in Sources */,
+				7E967132267D821D002B70B6 /* CSLocation.swift in Sources */,
 				7E0913FE25B3DE350023215F /* ScannerControlModel.swift in Sources */,
 				7E6C0EAE24A800C200129E8C /* SceneDelegate.swift in Sources */,
 				7E9C2CF124B55FE800B9FC44 /* SavedScanDetailAdvanced.swift in Sources */,

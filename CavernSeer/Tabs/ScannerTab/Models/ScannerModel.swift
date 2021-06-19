@@ -202,7 +202,8 @@ final class ScannerModel:
                 endSnap: endAnchor,
                 date: date,
                 stations: stations,
-                lines: lines)
+                lines: lines,
+                location: nil)
 
             do {
                 _ = try scanStore.saveFile(file: scanFile)
