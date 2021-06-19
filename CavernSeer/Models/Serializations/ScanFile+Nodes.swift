@@ -25,6 +25,9 @@ extension ScanFile {
             )
         }
 
+        let captureNodes = (self.captures ?? [])
+            .map { capturedImageToNode(cap: $0) }
+
         let stationDict = self.stations.reduce(
             [SurveyStation.Identifier: SCNNode]()
         ) {
@@ -42,7 +45,7 @@ extension ScanFile {
             line.toSCNNode(stationDict: stationDict, lengthPref: lengthPref)
         }
 
-        return meshAnchorNodes + lineNodes + stationNodes
+        return meshAnchorNodes + lineNodes + stationNodes + captureNodes
     }
 }
 
@@ -107,4 +110,25 @@ fileprivate func elementCsToScn(
         primitiveCount: element.count,
         bytesPerIndex: element.bytesPerIndex
     )
+}
+
+fileprivate func capturedImageToNode(
+    cap: CSCapture
+) -> SCNNode {
+
+    let geometry = SCNGeometry(
+        sources: cap.sources.map { sourceCsToScn(source: $0) },
+        elements: cap.elements.map { elementCsToScn(element: $0) }
+    )
+
+    let texture = UIImage(data: cap.jpegData)
+    let imageMaterial = SCNMaterial()
+    imageMaterial.isDoubleSided = false
+    imageMaterial.diffuse.contents = texture
+    geometry.materials = [imageMaterial]
+
+
+    let node = SCNNode(geometry: geometry)
+
+    return node
 }

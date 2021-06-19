@@ -78,6 +78,8 @@
 		7E96712126745939002B70B6 /* ScanFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96712026745939002B70B6 /* ScanFileTests.swift */; };
 		7E96712426745A39002B70B6 /* beige_v1.cavernseerscan in Resources */ = {isa = PBXBuildFile; fileRef = 7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */; };
 		7E96712A26755119002B70B6 /* green_v2.cavernseerscan in Resources */ = {isa = PBXBuildFile; fileRef = 7E96712926755119002B70B6 /* green_v2.cavernseerscan */; };
+		7E96712C26757BFC002B70B6 /* CapturedImageSCNModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96712B26757BFC002B70B6 /* CapturedImageSCNModel.swift */; };
+		7E96712E2676D5DC002B70B6 /* GeneralRenderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E96712D2676D5DC002B70B6 /* GeneralRenderModel.swift */; };
 		7E99F94F24B113290098D44B /* SurveyStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F94E24B113290098D44B /* SurveyStation.swift */; };
 		7E99F95124B1134C0098D44B /* SurveyLineEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */; };
 		7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99F95224B1161E0098D44B /* SurveyLine.swift */; };
@@ -206,6 +208,8 @@
 		7E96712026745939002B70B6 /* ScanFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFileTests.swift; sourceTree = "<group>"; };
 		7E96712326745A39002B70B6 /* beige_v1.cavernseerscan */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = beige_v1.cavernseerscan; sourceTree = "<group>"; };
 		7E96712926755119002B70B6 /* green_v2.cavernseerscan */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = green_v2.cavernseerscan; sourceTree = "<group>"; };
+		7E96712B26757BFC002B70B6 /* CapturedImageSCNModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImageSCNModel.swift; sourceTree = "<group>"; };
+		7E96712D2676D5DC002B70B6 /* GeneralRenderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralRenderModel.swift; sourceTree = "<group>"; };
 		7E99F94E24B113290098D44B /* SurveyStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyStation.swift; sourceTree = "<group>"; };
 		7E99F95024B1134C0098D44B /* SurveyLineEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLineEntity.swift; sourceTree = "<group>"; };
 		7E99F95224B1161E0098D44B /* SurveyLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyLine.swift; sourceTree = "<group>"; };
@@ -322,6 +326,7 @@
 			children = (
 				7E6C0EF624A938ED00129E8C /* ScannerModel.swift */,
 				7E0913FD25B3DE350023215F /* ScannerControlModel.swift */,
+				7E96712B26757BFC002B70B6 /* CapturedImageSCNModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -593,6 +598,7 @@
 				7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */,
 				7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */,
 				7E5213FB2579D6F90015FA54 /* ElevationCrossSectionRender.swift */,
+				7E96712D2676D5DC002B70B6 /* GeneralRenderModel.swift */,
 			);
 			path = Renders;
 			sourceTree = "<group>";
@@ -789,6 +795,7 @@
 				7E0C5EDA24BBA2E0001C0D0E /* MergeToolModel.swift in Sources */,
 				7E0C5EEE24CA8977001C0D0E /* MakeProjectView.swift in Sources */,
 				7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */,
+				7E96712C26757BFC002B70B6 /* CapturedImageSCNModel.swift in Sources */,
 				7E23DB1C2545F02400BABB52 /* ScanFile+MDL.swift in Sources */,
 				7E6C0EE124A82A4A00129E8C /* TabsEnum.swift in Sources */,
 				7E6C0EDF24A827FE00129E8C /* TabProtocol.swift in Sources */,
@@ -826,6 +833,7 @@
 				7E96711A26705FD7002B70B6 /* SavedScanSnapshot.swift in Sources */,
 				7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */,
 				7E7FD2A7266498DE00F87D08 /* FileSettingsSection.swift in Sources */,
+				7E96712E2676D5DC002B70B6 /* GeneralRenderModel.swift in Sources */,
 				7E43C632256B599600170C17 /* SCNInteractionMode+name.swift in Sources */,
 				7E43C628256B48A800170C17 /* UnitsSettingsSection.swift in Sources */,
 				7E9C2CE224B3F74E00B9FC44 /* ScanListTabView.swift in Sources */,

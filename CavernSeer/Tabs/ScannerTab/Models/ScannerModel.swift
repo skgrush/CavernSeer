@@ -50,6 +50,8 @@ final class ScannerModel:
     /// state manager for survey lines, currently the only Drawables in the scene
     var surveyLines: DrawableContainer?
 
+    var capturedImages: [CapturedImageSCNModel] = []
+
     var scanConfiguration: ARWorldTrackingConfiguration?
 
     private var tapRecognizer: UITapGestureRecognizer?
@@ -170,6 +172,7 @@ final class ScannerModel:
 
         let startSnapshot = self.startSnapshot
         let stations = self.surveyStations
+        let captures = self.capturedImages
         let date = Date()
 
         #if !targetEnvironment(simulator)
@@ -202,7 +205,8 @@ final class ScannerModel:
                 endSnap: endAnchor,
                 date: date,
                 stations: stations,
-                lines: lines)
+                lines: lines,
+                captures: captures)
 
             do {
                 _ = try scanStore.saveFile(file: scanFile)
@@ -277,6 +281,51 @@ final class ScannerModel:
         drawView.setNeedsDisplay()
     }
 
+    func takeARSnapshot(
+        message: @escaping (_: String) -> Void
+    ) {
+        guard
+            let arView = self.arView,
+            let frame = arView.session.currentFrame,
+            let jpegData = CapturedImageSCNModel.getImage(frame: frame)?.jpegData(compressionQuality: 0.7)
+        else { return }
+
+        let camera = frame.camera
+        let meshAnchors = frame.anchors.compactMap { $0 as? ARMeshAnchor }
+        var totalCaptures = 0
+
+        for anchor in meshAnchors {
+            let cap = CapturedImageSCNModel(
+                anchor: anchor, camera: camera, jpegData: jpegData
+            )
+
+//            let imageMaterial = SCNMaterial()
+//            imageMaterial.isDoubleSided = false
+//            imageMaterial.diffuse.contents = image
+//            cap.geometry.materials = [imageMaterial]
+
+//            let anchorEntity = AnchorEntity(anchor: anchor)
+//            anchorEntity.components.set([
+//                ModelComponent(
+//            ])
+
+            capturedImages.append(cap)
+            totalCaptures += 1
+        }
+        message("Captured \(totalCaptures) images")
+
+//        arView?.session.getCurrentWorldMap { /* no self */ worldMap, error in
+//            guard let map = worldMap
+//            else {
+//                message("WorldMap Error: \(error!.localizedDescription)")
+//                done(false)
+//                return
+//            }
+//
+//
+//        }
+    }
+
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
         if self.startSnapshot == nil {
             self.startSnapshot = SnapshotAnchor(
@@ -289,8 +338,9 @@ final class ScannerModel:
     private func setupScanConfig() {
         scanConfiguration = ARWorldTrackingConfiguration()
         scanConfiguration!.sceneReconstruction = .mesh
-        scanConfiguration!.environmentTexturing = .none
+        scanConfiguration!.environmentTexturing = .automatic
         scanConfiguration!.worldAlignment = .gravityAndHeading
+        scanConfiguration!.frameSemantics.insert(.sceneDepth)
     }
 
     private func setupARView(arView: ARView) {

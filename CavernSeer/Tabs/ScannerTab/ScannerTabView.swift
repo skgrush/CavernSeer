@@ -39,6 +39,10 @@ struct ScannerTabView: View {
         ZStack(alignment: .bottom) {
             if isSelected {
                 ScannerContainerView(control: self.control)
+                    .overlay(
+                        arSnapshot
+                            .frame(alignment: .bottomTrailing)
+                    )
                     .edgesIgnoringSafeArea(.all)
             }
 
@@ -160,6 +164,21 @@ struct ScannerTabView: View {
             )
         }
     }
+
+    private var arSnapshot: some View {
+
+        let color: Color = .primary
+
+        /// the standard start-capture button
+        return Button(
+            action: { self.control.takeARSnapshot() },
+            label: {
+                Image(systemName: "camera.circle")
+                    .foregroundColor(color)
+                    .frame(width: 30, height: 30, alignment: .center)
+            }
+        )
+    }
 }
 
 
@@ -178,9 +197,9 @@ struct ScannerTabView_Previews: PreviewProvider {
                 .environment(\.colorScheme, .dark)
                 .environment(\.fakeScan, true)
 
-            view
-                .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
-                .environment(\.colorScheme, .light)
+//            view
+//                .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
+//                .environment(\.colorScheme, .light)
 
         }.environmentObject(store)
     }

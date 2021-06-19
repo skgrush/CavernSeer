@@ -103,7 +103,8 @@ final class ScanStore : StoreProtocol {
             startSnapshot: scanFile.startSnapshot,
             endSnapshot: scanFile.endSnapshot,
             stations: scanFile.stations,
-            lines: scanFile.lines
+            lines: scanFile.lines,
+            captures: scanFile.captures
         )
 
         let newUrl = try self.saveFile(file: newScan)

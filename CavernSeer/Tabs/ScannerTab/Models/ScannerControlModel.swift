@@ -112,6 +112,13 @@ class ScannerControlModel : ObservableObject {
         )
     }
 
+    func takeARSnapshot() {
+        guard let model = self.model
+        else { fatalError("Call to saveScan() when no model is set") }
+
+        model.takeARSnapshot(message: { self.message = $0 })
+    }
+
     func toggleTorch(_ enable: Bool) {
         self.torchEnabled = enable
     }

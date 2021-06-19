@@ -99,6 +99,9 @@ class GeneralRenderModel : ObservableObject {
         self.updateNodes()
     }
 
+    /**
+     * Recreate the set of scene nodes.
+     */
     private func updateNodes() {
         if scan != nil {
             sceneNodes = scan!.toSCNNodes(
@@ -113,17 +116,6 @@ class GeneralRenderModel : ObservableObject {
     }
 
     private func updateColor() {
-//        if quiltMesh {
-//            sceneNodes.forEach {
-//                $0.geometry?.firstMaterial?.diffuse.contents = UIColor(
-//                    hue: CGFloat(drand48()), saturation: 1, brightness: 1, alpha: 1
-//                )
-//            }
-//        } else if color != nil {
-//            sceneNodes.forEach {
-//                $0.geometry?.firstMaterial?.diffuse.contents = color
-//            }
-//        }
 
         shouldUpdateNodes = true
         shouldUpdateView = true
