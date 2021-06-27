@@ -14,12 +14,10 @@ protocol BaseProjectedMiniWorldRenderController :
 
     var showUI: Bool { get }
 
-    var sceneNodes: [SCNNode] { get }
-    var ambientColor: Color? { get }
-
     var selectedStation: SurveyStation? { get }
     var prevSelected: SurveyStation? { get set }
     var scaleBarModel: ScaleBarModel { get }
+    var renderModel: GeneralRenderModel { get }
 
     func postSceneAttachment(sceneView: SCNView)
 
@@ -70,6 +68,8 @@ extension BaseProjectedMiniWorldRenderController {
         if self.showUI {
             scaleBarModel.updateOverlay(bounds: uiView.frame)
         }
+
+        renderModel.viewUpdateHandler(scnView: uiView)
     }
 
     /**
@@ -141,10 +141,11 @@ extension BaseProjectedMiniWorldRenderController {
         let scene = SCNScene()
 
         let cameraNode = self.makeaCamera()
+        cameraNode.name = GeneralRenderModel.cameraNodeName
 
         scene.rootNode.addChildNode(cameraNode)
 
-        sceneNodes.forEach {
+        renderModel.sceneNodes.forEach {
             node in
                 // node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
                 scene.rootNode.addChildNode(node)
@@ -158,10 +159,11 @@ extension BaseProjectedMiniWorldRenderController {
 
     func makeAmbientLight() -> SCNNode {
         let ambientLightNode = SCNNode()
+        ambientLightNode.name = GeneralRenderModel.ambientLightNodeName
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = .ambient
-        if self.ambientColor != nil {
-            ambientLightNode.light!.color = UIColor(self.ambientColor!)
+        if let ambientColor = renderModel.ambientColor {
+            ambientLightNode.light!.color = ambientColor
         }
         return ambientLightNode
     }

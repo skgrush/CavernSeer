@@ -51,10 +51,7 @@ struct SavedScanDetailLinks: View {
             NavigationLink(
                 destination: PlanProjectedMiniWorldRender(
                     scan: self.model.scan,
-                    color: meshColor,
-                    ambientColor: settings.ColorLightAmbient,
-                    quiltMesh: settings.ColorMeshQuilt,
-                    unitsLength: settings.UnitsLength
+                    settings: settings
                 )
             ) {
                 HStack {
@@ -64,10 +61,7 @@ struct SavedScanDetailLinks: View {
             NavigationLink(
                 destination: ElevationProjectedMiniWorldRender(
                     scan: self.model.scan,
-                    color: meshColor,
-                    ambientColor: settings.ColorLightAmbient,
-                    quiltMesh: settings.ColorMeshQuilt,
-                    unitsLength: settings.UnitsLength
+                    settings: settings
                 )
             ) {
                 HStack {
@@ -77,10 +71,7 @@ struct SavedScanDetailLinks: View {
             NavigationLink(
             destination: ElevationCrossSectionRender(
                 scan: self.model.scan,
-                color: meshColor,
-                ambientColor: settings.ColorLightAmbient,
-                quiltMesh: settings.ColorMeshQuilt,
-                unitsLength: settings.UnitsLength
+                settings: settings
             )
             ) {
                 HStack {

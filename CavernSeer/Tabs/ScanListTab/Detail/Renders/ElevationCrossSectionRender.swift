@@ -203,11 +203,7 @@ struct ElevationCrossSectionRender: View {
     private static let CrossSectionDepth = 0.5
 
     var scan: ScanFile
-
-    var color: UIColor?
-    var ambientColor: Color?
-    var quiltMesh: Bool
-    var unitsLength: LengthPreference
+    var settings: SettingsStore
 
     @State
     private var doCrossSection = false
@@ -224,10 +220,7 @@ struct ElevationCrossSectionRender: View {
         ZStack(alignment: .topTrailing) {
             ElevationProjectedMiniWorldRender(
                 scan: scan,
-                color: color,
-                ambientColor: ambientColor,
-                quiltMesh: quiltMesh,
-                unitsLength: unitsLength,
+                settings: settings,
                 barSubview: barSubview,
                 depthOfField: depthOfField,
                 observer: drawOverlay
@@ -235,16 +228,12 @@ struct ElevationCrossSectionRender: View {
 
             PlanProjectedMiniWorldRender(
                 scan: scan,
-                color: color,
-                ambientColor: ambientColor,
-                quiltMesh: quiltMesh,
-                unitsLength: unitsLength,
+                settings: settings,
                 overlays: [drawOverlay],
                 showUI: false,
                 initialHeight: 20
             )
             .frame(width: 150, height: 150)
-            .shadow(radius: 2)
             .border(Color.primary, width: 2)
         }
     }

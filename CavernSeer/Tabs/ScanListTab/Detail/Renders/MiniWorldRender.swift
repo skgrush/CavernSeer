@@ -14,11 +14,6 @@ struct MiniWorldRender: View {
     var scan: ScanFile
     var settings: SettingsStore
 
-    var offset: SCNVector3 {
-        let center = scan.center
-        return SCNVector3Make(-center.x, -center.y, -center.z)
-    }
-
     @ObservedObject
     private var snapshotModel = SnapshotExportModel()
 
@@ -33,9 +28,9 @@ struct MiniWorldRender: View {
         .snapshotMenus(for: _snapshotModel)
         .navigationBarItems(trailing: HStack {
             snapshotModel.promptButton(scan: scan)
-            Button("doubleSided", action: { renderModel.toggleDoubleSided() })
+            renderModel.doubleSidedButton()
         })
-        .onAppear { appeared() }
+        .onAppear(perform: self.appeared)
     }
 
     private func appeared() {
@@ -89,47 +84,7 @@ final class MiniWorldRenderController :
         uiView.defaultCameraController.interactionMode =
             self.renderModel.interactionMode3d
 
-        if self.renderModel.shouldUpdateView {
-
-            if let ambientColor = self.renderModel.ambientColor {
-                uiView.scene?.rootNode
-                    .childNode(
-                        withName: "ambient-light", recursively: false
-                    )?.light?.color = ambientColor
-            }
-
-            if self.renderModel.shouldUpdateNodes {
-                if let scene = uiView.scene {
-                    scene.rootNode
-                        .childNodes {
-                            (node, _) in
-                            node.name != "the-camera" && node.name != "ambient-light"
-                        }
-                        .forEach { $0.removeFromParentNode() }
-
-                    let sceneNodes = self.renderModel.sceneNodes
-                    if self.renderModel.quiltMesh {
-                        sceneNodes.forEach {
-                            $0.geometry?.firstMaterial?.diffuse.contents = UIColor(
-                                hue: CGFloat(drand48()), saturation: 1, brightness: 1, alpha: 1
-                            )
-                        }
-                    } else if let color = self.renderModel.color {
-                        sceneNodes.forEach {
-                            $0.geometry?.firstMaterial?.diffuse.contents = color
-                        }
-                    }
-
-                    self.renderModel.sceneNodes.forEach {
-                        scene.rootNode.addChildNode($0)
-                    }
-
-                    self.renderModel.doneUpdating()
-                }
-            } else {
-                self.renderModel.doneUpdating()
-            }
-        }
+        self.renderModel.viewUpdateHandler(scnView: uiView)
     }
 
     private func makeaScene() -> SCNScene {

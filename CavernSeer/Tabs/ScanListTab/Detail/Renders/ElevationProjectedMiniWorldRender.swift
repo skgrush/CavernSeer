@@ -16,11 +16,7 @@ protocol SCNRenderObserver {
 struct ElevationProjectedMiniWorldRender: View {
 
     var scan: ScanFile
-
-    var color: UIColor?
-    var ambientColor: Color?
-    var quiltMesh: Bool
-    var unitsLength: LengthPreference
+    var settings: SettingsStore
 
     var barSubview: AnyView? = nil
 
@@ -37,20 +33,6 @@ struct ElevationProjectedMiniWorldRender: View {
 
     @State
     private var scaleBarModel = ScaleBarModel()
-
-    private var sceneNodes: [SCNNode] {
-        return scan.toSCNNodes(
-            color: color,
-            quilt: quiltMesh,
-            lengthPref: unitsLength,
-            doubleSided: true
-        )
-    }
-
-    private var offset: SCNVector3 {
-        let center = scan.center
-        return SCNVector3(center)
-    }
 
     /**
      * The rotation of the perspective, in degrees from magnetic north.
@@ -69,16 +51,17 @@ struct ElevationProjectedMiniWorldRender: View {
 
     @ObservedObject
     private var snapshotModel = SnapshotExportModel()
+    @ObservedObject
+    private var renderModel = GeneralRenderModel()
 
     var body: some View {
         VStack {
             ZStack {
                 ElevationProjectedMiniWorldRenderController(
-                    sceneNodes: sceneNodes,
-                    ambientColor: ambientColor,
                     rotation: $rotation,
                     depthOfField: depthOfField,
                     fly: $fly,
+                    renderModel: _renderModel,
                     snapshotModel: _snapshotModel,
                     selection: selection,
                     prevSelection: $prevSelection,
@@ -117,7 +100,15 @@ struct ElevationProjectedMiniWorldRender: View {
             }
         }
         .snapshotMenus(for: _snapshotModel)
-        .navigationBarItems(trailing: snapshotModel.promptButton(scan: scan))
+        .navigationBarItems(trailing: HStack {
+            snapshotModel.promptButton(scan: scan)
+            renderModel.doubleSidedButton()
+        })
+        .onAppear(perform: self.appeared)
+    }
+
+    private func appeared() {
+        self.renderModel.updateScanAndSettings(scan: scan, settings: settings)
     }
 }
 
@@ -127,8 +118,6 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
 
     private static let DefaultDepthOfField: Double = 1000
 
-    let sceneNodes: [SCNNode]
-    let ambientColor: Color?
     let showUI: Bool
 
     var depthOfField: Double?
@@ -143,14 +132,15 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
     var scaleBarModel: ScaleBarModel
     @ObservedObject
     var snapshotModel: SnapshotExportModel
+    @ObservedObject
+    var renderModel: GeneralRenderModel
     var observer: SCNRenderObserver?
 
     init(
-        sceneNodes: [SCNNode],
-        ambientColor: Color?,
         rotation: Binding<Int>,
         depthOfField: Double?,
         fly: Binding<Int>,
+        renderModel: ObservedObject<GeneralRenderModel>,
         snapshotModel: ObservedObject<SnapshotExportModel>,
         selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
@@ -158,11 +148,10 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
         scaleBarModel: Binding<ScaleBarModel>,
         showUI: Bool
     ) {
-        self.sceneNodes = sceneNodes
-        self.ambientColor = ambientColor
         self.depthOfField = depthOfField
         self._rotation = rotation
         self._fly = fly
+        self._renderModel = renderModel
         self._snapshotModel = snapshotModel
         self.selectedStation = selection
         self._prevSelected = prevSelection
