@@ -41,12 +41,12 @@ struct PlanProjectedMiniWorldRender: View {
         VStack {
             PlanProjectedMiniWorldRenderController(
                 height: $height,
-                renderModel: _renderModel,
-                snapshotModel: _snapshotModel,
+                renderModel: renderModel,
+                snapshotModel: snapshotModel,
                 selection: selection,
                 prevSelection: $prevSelection,
                 overlays: overlays,
-                scaleBarModel: $scaleBarModel,
+                scaleBarModel: scaleBarModel,
                 showUI: self.showUI
             )
             if self.showUI {
@@ -62,6 +62,7 @@ struct PlanProjectedMiniWorldRender: View {
             renderModel.doubleSidedButton()
         })
         .onAppear(perform: self.onAppear)
+        .onDisappear(perform: self.onDisappear)
     }
 
     private func onAppear() {
@@ -69,6 +70,10 @@ struct PlanProjectedMiniWorldRender: View {
             self.height = self.initialHeight!
         }
         self.renderModel.updateScanAndSettings(scan: scan, settings: settings)
+    }
+
+    private func onDisappear() {
+        self.renderModel.dismantle()
     }
 
     private var stepperLabel: String {
@@ -99,30 +104,27 @@ final class PlanProjectedMiniWorldRenderController :
     var selectedStation: SurveyStation?
     @Binding
     var prevSelected: SurveyStation?
-    @Binding
-    var scaleBarModel: ScaleBarModel
-    @ObservedObject
-    var snapshotModel: SnapshotExportModel
-    @ObservedObject
-    var renderModel: GeneralRenderModel
+    unowned var scaleBarModel: ScaleBarModel
+    unowned var snapshotModel: SnapshotExportModel
+    unowned var renderModel: GeneralRenderModel
 
     init(
         height: Binding<Int>,
-        renderModel: ObservedObject<GeneralRenderModel>,
-        snapshotModel: ObservedObject<SnapshotExportModel>,
+        renderModel: GeneralRenderModel,
+        snapshotModel: SnapshotExportModel,
         selection: SurveyStation?,
         prevSelection: Binding<SurveyStation?>,
         overlays: [SCNDrawSubview]?,
-        scaleBarModel: Binding<ScaleBarModel>,
+        scaleBarModel: ScaleBarModel,
         showUI: Bool
     ) {
         self._height = height
-        self._renderModel = renderModel
-        self._snapshotModel = snapshotModel
+        self.renderModel = renderModel
+        self.snapshotModel = snapshotModel
         self.selectedStation = selection
         self._prevSelected = prevSelection
         self.overlays = overlays
-        self._scaleBarModel = scaleBarModel
+        self.scaleBarModel = scaleBarModel
         self.showUI = showUI
 
         super.init(nibName: nil, bundle: nil)

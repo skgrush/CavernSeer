@@ -47,7 +47,7 @@ fileprivate class CrossSectionPlanDrawOverlay :
      * The (parent) plan view updated.
      */
     override func parentUpdated(view: SCNView) {
-
+        self.parentView = view
     }
 
     /**
@@ -82,7 +82,7 @@ fileprivate class CrossSectionPlanDrawOverlay :
      * The (parent) plan view dismantled
      */
     override func parentDismantled(view: SCNView) {
-
+        self.removeFromSuperview()
     }
 
     func renderObserver(renderer: SCNSceneRenderer) {
@@ -152,7 +152,7 @@ fileprivate class CrossSectionPlanDrawOverlay :
             {
 
                 self.projectAndDrawLines(
-                    view: view,
+                    parentView: view,
                     ctx: context,
                     points: [
                         left,
@@ -183,12 +183,12 @@ fileprivate class CrossSectionPlanDrawOverlay :
      * Don't forget to line width and stroke color ahead of time!
      */
     private func projectAndDrawLines(
-        view: SCNView,
+        parentView: SCNView,
         ctx: CGContext,
         points: [SCNVector3]
     ) {
         let projectedPoints = points
-            .map { view.projectPoint($0) }
+            .map { parentView.projectPoint($0) }
             .map { CGPoint(x: Double($0.x), y: Double($0.y)) }
 
         ctx.beginPath()

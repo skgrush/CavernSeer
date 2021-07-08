@@ -9,7 +9,7 @@
 import SwiftUI /// View
 import SceneKit /// SCN*
 
-protocol SCNRenderObserver {
+protocol SCNRenderObserver : AnyObject {
     func renderObserver(renderer: SCNSceneRenderer)
 }
 
@@ -61,12 +61,12 @@ struct ElevationProjectedMiniWorldRender: View {
                     rotation: $rotation,
                     depthOfField: depthOfField,
                     fly: $fly,
-                    renderModel: _renderModel,
-                    snapshotModel: _snapshotModel,
+                    renderModel: renderModel,
+                    snapshotModel: snapshotModel,
                     selection: selection,
-                    prevSelection: $prevSelection,
+                    prevSelection: prevSelection,
                     observer: observer,
-                    scaleBarModel: $scaleBarModel,
+                    scaleBarModel: scaleBarModel,
                     showUI: showUI
                 )
             }
@@ -105,10 +105,14 @@ struct ElevationProjectedMiniWorldRender: View {
             renderModel.doubleSidedButton()
         })
         .onAppear(perform: self.appeared)
+        .onDisappear(perform: self.disappeared)
     }
 
     private func appeared() {
         self.renderModel.updateScanAndSettings(scan: scan, settings: settings)
+    }
+    private func disappeared() {
+        self.renderModel.dismantle()
     }
 }
 
@@ -126,37 +130,33 @@ fileprivate final class ElevationProjectedMiniWorldRenderController :
     @Binding
     var fly: Int
     var selectedStation: SurveyStation?
-    @Binding
     var prevSelected: SurveyStation?
-    @Binding
-    var scaleBarModel: ScaleBarModel
-    @ObservedObject
-    var snapshotModel: SnapshotExportModel
-    @ObservedObject
-    var renderModel: GeneralRenderModel
-    var observer: SCNRenderObserver?
+    unowned var scaleBarModel: ScaleBarModel
+    unowned var snapshotModel: SnapshotExportModel
+    unowned var renderModel: GeneralRenderModel
+    unowned var observer: SCNRenderObserver?
 
     init(
         rotation: Binding<Int>,
         depthOfField: Double?,
         fly: Binding<Int>,
-        renderModel: ObservedObject<GeneralRenderModel>,
-        snapshotModel: ObservedObject<SnapshotExportModel>,
+        renderModel: GeneralRenderModel,
+        snapshotModel: SnapshotExportModel,
         selection: SurveyStation?,
-        prevSelection: Binding<SurveyStation?>,
+        prevSelection: SurveyStation?,
         observer: SCNRenderObserver?,
-        scaleBarModel: Binding<ScaleBarModel>,
+        scaleBarModel: ScaleBarModel,
         showUI: Bool
     ) {
         self.depthOfField = depthOfField
         self._rotation = rotation
         self._fly = fly
-        self._renderModel = renderModel
-        self._snapshotModel = snapshotModel
+        self.renderModel = renderModel
+        self.snapshotModel = snapshotModel
         self.selectedStation = selection
-        self._prevSelected = prevSelection
+        self.prevSelected = prevSelection
         self.observer = observer
-        self._scaleBarModel = scaleBarModel
+        self.scaleBarModel = scaleBarModel
         self.showUI = showUI
 
         super.init(nibName: nil, bundle: nil)

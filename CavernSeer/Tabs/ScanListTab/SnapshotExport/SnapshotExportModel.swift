@@ -13,7 +13,7 @@ import SpriteKit /// SKScene
 class SnapshotExportModel : ObservableObject {
     fileprivate static let multipliers = [1, 2, 4, 8]
 
-    private var scan: ScanFile?
+    private unowned var scan: ScanFile?
 
     @Published
     fileprivate var promptShowing = false
@@ -128,9 +128,9 @@ class SnapshotExportModel : ObservableObject {
     }
 
     func promptButton(scan: ScanFile) -> some View {
-        Button(action: {
-            self.scan = scan
-            self.promptShowing = true
+        self.scan = scan
+        return Button(action: {
+            [unowned self] in self.promptShowing = true
         }) {
             Image(systemName: "camera.on.rectangle")
                 .font(Font.system(.title))
@@ -144,26 +144,28 @@ extension View {
         for observable: ObservedObject<SnapshotExportModel>
     ) -> some View {
         let binding = observable.projectedValue
-        let model = observable.wrappedValue
+        unowned let model = observable.wrappedValue
 
         return self
             .actionSheet(isPresented: binding.promptShowing) {
+                [unowned model] in
                 ActionSheet(
                     title: Text("Export a scaled image"),
                     message: Text("Wait a few seconds for the render"),
-                    buttons: self.generateButtons(model)
+                    buttons: Self.generateButtons(model)
                 )
             }
 //            .alert(isPresented: binding.alertShowing) {
 //                Alert(title: Text(model.alertMessage))
 //            }
             .sheet(isPresented: binding.exportSheetShowing) {
+                [unowned model] in
                 ScanShareSheet(activityItems: [model.exportUrl!])
-                    .onDisappear { model.exportUrl = nil }
+                    .onDisappear { [unowned model] in model.exportUrl = nil }
             }
     }
 
-    fileprivate func generateButtons(
+    fileprivate static func generateButtons(
         _ model: SnapshotExportModel
     ) -> [ActionSheet.Button] {
         let sz = UIScreen.main.bounds.size
@@ -175,11 +177,11 @@ extension View {
                 mult in
                 ActionSheet.Button.default(
                     Text("@\(mult)x (~\(mult * width)x\(mult * height))"),
-                    action: { model.chooseSize(mult) }
+                    action: { [unowned model] in model.chooseSize(mult) }
                 )
             }
 
-        btns.append(.cancel({ model.chooseSize(nil) }))
+        btns.append(.cancel({ [unowned model] in model.chooseSize(nil) }))
 
         return btns
     }
