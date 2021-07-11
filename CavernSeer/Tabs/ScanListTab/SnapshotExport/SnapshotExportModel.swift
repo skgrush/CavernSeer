@@ -130,7 +130,7 @@ class SnapshotExportModel : ObservableObject {
     func promptButton(scan: ScanFile) -> some View {
         self.scan = scan
         return Button(action: {
-            [unowned self] in self.promptShowing = true
+            [weak self] in self?.promptShowing = true
         }) {
             Image(systemName: "camera.on.rectangle")
                 .font(Font.system(.title))

@@ -58,11 +58,12 @@ struct PlanProjectedMiniWorldRender: View {
         }
         .snapshotMenus(for: _snapshotModel)
         .navigationBarItems(trailing: HStack {
+            [unowned snapshotModel, unowned renderModel] in
             snapshotModel.promptButton(scan: scan)
             renderModel.doubleSidedButton()
         })
-        .onAppear(perform: self.onAppear)
-        .onDisappear(perform: self.onDisappear)
+        .onAppear(perform: { self.onAppear() })
+        .onDisappear(perform: { self.onDisappear() })
     }
 
     private func onAppear() {

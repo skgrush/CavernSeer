@@ -95,22 +95,23 @@ class GeneralRenderModel : ObservableObject {
     }
 
     func doubleSidedButton() -> some View {
-        Button(action: self.toggleDoubleSided) {
+        Button(action: {
+            [weak self] in
+            self!.doubleSided.toggle()
+            self!.sceneNodes.forEach {
+                [unowned self] in
+                $0.geometry?.firstMaterial?.isDoubleSided = self!.doubleSided
+            }
+            self!.shouldUpdateNodes = true
+            self!.shouldUpdateView = true
+        }) {
+            [unowned self] in
             Image(
                 systemName: self.doubleSided
                     ? "square.on.square"
                     : "square.on.square.dashed"
             )
         }
-    }
-
-    private func toggleDoubleSided() {
-        self.doubleSided = !self.doubleSided
-        sceneNodes.forEach {
-            $0.geometry?.firstMaterial?.isDoubleSided = doubleSided
-        }
-        shouldUpdateNodes = true
-        shouldUpdateView = true
     }
 
     func setSettings(_ settings: SettingsStore) {
