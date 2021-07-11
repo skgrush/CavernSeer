@@ -23,7 +23,7 @@ class GeneralRenderModel : ObservableObject {
     public private(set) var shouldUpdateNodes = false
     public private(set) var initialUpdate = true
 
-    public private(set) var scan: ScanFile? = nil
+    public private(set) weak var scan: ScanFile? = nil
     public private(set) var offset: SCNVector3? = nil
 
     public private(set) var sceneNodes: [SCNNode] = []
@@ -37,10 +37,15 @@ class GeneralRenderModel : ObservableObject {
     public private(set) var interactionMode3d: SCNInteractionMode = .orbitAngleMapping
     public private(set) var lengthPref: LengthPreference = .CustomaryFoot
 
-    private var settings: SettingsStore? = nil
+    private weak var settings: SettingsStore? = nil
     private var settingsCancelBag = Set<AnyCancellable>()
 
     init() {
+    }
+
+    func dismantle() {
+        sceneNodes.removeAll()
+        settingsCancelBag.removeAll()
     }
 
     func viewUpdateHandler(scnView: SCNView) {
@@ -90,7 +95,17 @@ class GeneralRenderModel : ObservableObject {
     }
 
     func doubleSidedButton() -> some View {
-        Button(action: self.toggleDoubleSided) {
+        Button(action: {
+            [weak self] in
+            self!.doubleSided.toggle()
+            self!.sceneNodes.forEach {
+                [unowned self] in
+                $0.geometry?.firstMaterial?.isDoubleSided = self!.doubleSided
+            }
+            self!.shouldUpdateNodes = true
+            self!.shouldUpdateView = true
+        }) {
+            [unowned self] in
             Image(
                 systemName: self.doubleSided
                     ? "square.on.square"
@@ -99,21 +114,13 @@ class GeneralRenderModel : ObservableObject {
         }
     }
 
-    private func toggleDoubleSided() {
-        self.doubleSided = !self.doubleSided
-        sceneNodes.forEach {
-            $0.geometry?.firstMaterial?.isDoubleSided = doubleSided
-        }
-        shouldUpdateNodes = true
-        shouldUpdateView = true
-    }
-
     func setSettings(_ settings: SettingsStore) {
         self.settings = settings
         self.settingsCancelBag.removeAll()
         settings.$ColorMesh
             .sink {
-                let cgColor = $0?.cgColor
+                [unowned self] color in
+                let cgColor = color?.cgColor
                 self.color = (cgColor != nil && cgColor!.alpha > 0.05)
                     ? UIColor(cgColor: cgColor!)
                     : nil
@@ -123,26 +130,29 @@ class GeneralRenderModel : ObservableObject {
             .store(in: &settingsCancelBag)
         settings.$ColorLightAmbient
             .sink {
-                color in
+                [unowned self] color in
                 self.ambientColor = color.map { UIColor($0) }
                 self.updateColor()
             }
             .store(in: &settingsCancelBag)
         settings.$ColorMeshQuilt
             .sink {
-                self.quiltMesh = $0 ?? self.quiltMesh
+                [unowned self] doQuiltMesh in
+                self.quiltMesh = doQuiltMesh ?? self.quiltMesh
                 self.updateColor()
             }
             .store(in: &settingsCancelBag)
         settings.$InteractionMode3d
             .sink {
-                self.interactionMode3d = $0 ?? self.interactionMode3d
+                [unowned self] mode in
+                self.interactionMode3d = mode ?? self.interactionMode3d
                 self.shouldUpdateView = true
             }
             .store(in: &settingsCancelBag)
         settings.$UnitsLength
             .sink {
-                self.lengthPref = $0 ?? self.lengthPref
+                [unowned self] pref in
+                self.lengthPref = pref ?? self.lengthPref
                 self.updateNodes()
             }
             .store(in: &settingsCancelBag)

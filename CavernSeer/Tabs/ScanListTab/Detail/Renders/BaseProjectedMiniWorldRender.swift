@@ -32,6 +32,10 @@ extension BaseProjectedMiniWorldRenderController {
     static var defaultColor: UIColor { .gray }
     static var selectedColor: UIColor { .blue }
 
+    static func dismantleUIView(_ uiView: SCNView, coordinator: Coordinator) {
+        uiView.overlaySKScene = nil
+    }
+
     func makeUIView(context: Context) -> SCNView {
         let sceneView = SCNView(frame: .zero)
         sceneView.backgroundColor = UIColor.systemBackground
@@ -81,11 +85,11 @@ extension BaseProjectedMiniWorldRenderController {
         atTime time: TimeInterval
     ) {
         if self.showUI && self.scaleBarModel.scene.size.width == 0 {
-            /// this really doesn't seem like the
-            DispatchQueue.main.async {
-                if let scn = renderer as? SCNView {
-
-                    self.scaleBarModel.updateOverlay(bounds: scn.frame)
+            /// this really doesn't seem like the right solution...
+            if let scnFrame = (renderer as? SCNView)?.frame {
+                DispatchQueue.main.async {
+                    [weak self] in /// this self might've already closed out?
+                    self?.scaleBarModel.updateOverlay(bounds: scnFrame)
                 }
             }
         }

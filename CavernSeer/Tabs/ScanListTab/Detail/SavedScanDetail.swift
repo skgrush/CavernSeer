@@ -110,7 +110,7 @@ struct SavedScanDetail: View {
                 secondaryButton: .cancel()
             )
         }
-        .onAppear(perform: { self.loadModel() })
+        .onAppear(perform: self.loadModel)
     }
 
     private func generateObj() {

@@ -22,8 +22,8 @@ struct MiniWorldRender: View {
 
     var body: some View {
         MiniWorldRenderController(
-            renderModel: _renderModel,
-            snapshotModel: _snapshotModel
+            renderModel: renderModel,
+            snapshotModel: snapshotModel
         )
         .snapshotMenus(for: _snapshotModel)
         .navigationBarItems(trailing: HStack {
@@ -41,17 +41,15 @@ struct MiniWorldRender: View {
 final class MiniWorldRenderController :
     UIViewController, UIViewRepresentable, SCNSceneRendererDelegate {
 
-    @ObservedObject
-    var snapshotModel: SnapshotExportModel
-    @ObservedObject
-    var renderModel: GeneralRenderModel
+    unowned var snapshotModel: SnapshotExportModel
+    unowned var renderModel: GeneralRenderModel
 
     init(
-        renderModel: ObservedObject<GeneralRenderModel>,
-        snapshotModel: ObservedObject<SnapshotExportModel>
+        renderModel: GeneralRenderModel,
+        snapshotModel: SnapshotExportModel
     ) {
-        self._renderModel = renderModel
-        self._snapshotModel = snapshotModel
+        self.renderModel = renderModel
+        self.snapshotModel = snapshotModel
         super.init(nibName: nil, bundle: nil)
     }
 
