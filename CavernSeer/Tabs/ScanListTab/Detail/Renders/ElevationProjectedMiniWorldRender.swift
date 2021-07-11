@@ -105,8 +105,8 @@ struct ElevationProjectedMiniWorldRender: View {
             snapshotModel.promptButton(scan: scan)
             renderModel.doubleSidedButton()
         })
-        .onAppear(perform: { self.appeared() })
-        .onDisappear(perform: { self.disappeared() })
+        .onAppear(perform: self.appeared)
+        .onDisappear(perform: self.disappeared)
     }
 
     private func appeared() {

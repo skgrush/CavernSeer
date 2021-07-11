@@ -62,8 +62,8 @@ struct PlanProjectedMiniWorldRender: View {
             snapshotModel.promptButton(scan: scan)
             renderModel.doubleSidedButton()
         })
-        .onAppear(perform: { self.onAppear() })
-        .onDisappear(perform: { self.onDisappear() })
+        .onAppear(perform: self.onAppear)
+        .onDisappear(perform: self.onDisappear)
     }
 
     private func onAppear() {
