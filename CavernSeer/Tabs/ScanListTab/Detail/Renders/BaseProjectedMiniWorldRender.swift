@@ -85,11 +85,11 @@ extension BaseProjectedMiniWorldRenderController {
         atTime time: TimeInterval
     ) {
         if self.showUI && self.scaleBarModel.scene.size.width == 0 {
-            /// this really doesn't seem like the
-            if let scn = renderer as? SCNView {
+            /// this really doesn't seem like the right solution...
+            if let scnFrame = (renderer as? SCNView)?.frame {
                 DispatchQueue.main.async {
-                    [unowned self] in
-                    self.scaleBarModel.updateOverlay(bounds: scn.frame)
+                    [weak self] in /// this self might've already closed out?
+                    self?.scaleBarModel.updateOverlay(bounds: scnFrame)
                 }
             }
         }
