@@ -36,14 +36,18 @@ struct SavedScanDetail: View {
     private var objExportUrl: URL?
     @State
     private var fileExt = "obj"
+    @State
+    private var loadError: String?
 
     private func loadModel() {
+        self.loadError = nil
         let url = scanStore.getNormalizedRealUrl(cache: self.cache)
         if self.model?.url != url {
             do {
                 self.model = try scanStore.getModel(url: url)
             } catch {
-                fatalError("Failed to find model: \(error.localizedDescription)")
+                self.loadError = error.localizedDescription
+                self.model = nil
             }
         }
     }
@@ -67,7 +71,7 @@ struct SavedScanDetail: View {
 
             Spacer()
 
-            Text(model?.id ?? "Loading...")
+            Text(model?.id ?? loadError ?? "Loading...")
                 .font(.title)
                 .padding()
 

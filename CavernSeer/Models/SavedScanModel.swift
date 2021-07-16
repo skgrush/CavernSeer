@@ -28,11 +28,19 @@ struct SavedScanModel: Identifiable, Hashable, SavedStoredFileProtocol {
 
         let data = try Data(contentsOf: url)
         self.fileSize = Int64(data.count)
-        guard let scan = try NSKeyedUnarchiver.unarchivedObject(
+        var scan: ScanFile
+        do {
+            scan = try NSKeyedUnarchiver.unarchivedObject(
                 ofClass: ScanFile.self,
                 from: data
-            )
-        else { throw FileOpenError.noFileInArchive(url: url) }
+            )!
+        } catch {
+            let nsError = error as NSError
+            if nsError.description.contains("ARMeshAnchor") && ProcessInfo.processInfo.isiOSAppOnMac {
+                throw FileOpenError.decodeError(err: "Version 1 incompatible with device")
+            }
+            throw FileOpenError.noFileInArchive(url: url)
+        }
         self.scan = scan
     }
 

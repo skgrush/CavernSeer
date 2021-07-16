@@ -93,17 +93,9 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
             self.stations = try decoder.stations()
             self.lines = try decoder.lines()
             self.location = try decoder.location()
-        } catch DecodeError.badVersion {
-            debugPrint("Bad version \(decoder.version)")
-            return nil
-        } catch DecodeError.castFailure(let property) {
-            debugPrint("Failed to cast \(property)")
-            return nil
-        } catch DecodeError.missingMandatory(let property) {
-            debugPrint("Missing mandatory key \(property)")
-            return nil
         } catch {
-            debugPrint("Unknown failure encoding; \(error)")
+            coder.failWithError(error)
+            debugPrint(error)
             return nil
         }
     }
@@ -312,7 +304,7 @@ extension ScanFile {
                             forKey: key
                         )
                     default:
-                        throw DecodeError.badVersion
+                        throw DecodeError.badVersion(version: version)
                 }
                 if snapshot != nil {
                     return snapshot!
@@ -379,6 +371,24 @@ extension ScanFile {
     enum DecodeError : Error {
         case castFailure(property: String)
         case missingMandatory(property: String)
-        case badVersion
+        case badVersion(version: Int32)
+        case nonScanFile(err: String)
+    }
+}
+
+extension ScanFile.DecodeError : LocalizedError {
+    var errorDescription: String? {
+        switch self {
+            case .badVersion(let version):
+                return "Bad version \(version)"
+            case .castFailure(let property):
+                return "Failed to cast \(property)"
+            case .missingMandatory(let property):
+                return "Missing mandatory key \(property)"
+            case .nonScanFile(let err):
+                return "Non scan file: \(err)"
+            default:
+                return nil
+        }
     }
 }

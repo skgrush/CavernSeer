@@ -11,3 +11,14 @@ import Foundation
 enum FileSaveError : Error {
     case AlreadyExists
 }
+
+extension FileSaveError : LocalizedError {
+    var errorDescription: String? {
+        switch self {
+            case .AlreadyExists:
+                return "Already exists in store"
+            default:
+                return nil
+        }
+    }
+}

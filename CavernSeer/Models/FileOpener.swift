@@ -62,12 +62,6 @@ final class FileOpener : ObservableObject {
 
                 successes[newUrl] = lastType
 
-            } catch FileOpenError.noFileInArchive(_) {
-                failures[url] = "No file in archive"
-            } catch FileOpenError.unknownExtension(let ext) {
-                failures[url] = "Unexpected extension '\(ext)'"
-            } catch FileSaveError.AlreadyExists {
-                failures[url] = "Already exists in store"
             } catch {
                 failures[url] = error.localizedDescription
             }
