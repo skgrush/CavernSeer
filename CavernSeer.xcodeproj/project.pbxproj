@@ -105,6 +105,7 @@
 		7EAE9CE92561FF5900EA66D0 /* UserDefaults+color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CE82561FF5900EA66D0 /* UserDefaults+color.swift */; };
 		7EAE9CEE2562148100EA66D0 /* LengthPreferenceEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CED2562148100EA66D0 /* LengthPreferenceEnum.swift */; };
 		7EAE9CF32562212D00EA66D0 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CF22562212D00EA66D0 /* SettingsStore.swift */; };
+		7EBF235C26A515A300161402 /* SavedScanMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBF235B26A515A300161402 /* SavedScanMapView.swift */; };
 		7EC0E46E2662DF7400E4B6BB /* StoredCacheFileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0E46D2662DF7400E4B6BB /* StoredCacheFileProtocol.swift */; };
 		7EC0E4702662F18000E4B6BB /* ScanCacheFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */; };
 /* End PBXBuildFile section */
@@ -235,6 +236,7 @@
 		7EAE9CE82561FF5900EA66D0 /* UserDefaults+color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+color.swift"; sourceTree = "<group>"; };
 		7EAE9CED2562148100EA66D0 /* LengthPreferenceEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LengthPreferenceEnum.swift; sourceTree = "<group>"; };
 		7EAE9CF22562212D00EA66D0 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		7EBF235B26A515A300161402 /* SavedScanMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanMapView.swift; sourceTree = "<group>"; };
 		7EC0E46D2662DF7400E4B6BB /* StoredCacheFileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredCacheFileProtocol.swift; sourceTree = "<group>"; };
 		7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCacheFile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -554,6 +556,7 @@
 				7E9C2D0C24BA2B7F00B9FC44 /* Renders */,
 				7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */,
 				7E96711926705FD7002B70B6 /* SavedScanSnapshot.swift */,
+				7EBF235B26A515A300161402 /* SavedScanMapView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -824,6 +827,7 @@
 				7EAE9CE92561FF5900EA66D0 /* UserDefaults+color.swift in Sources */,
 				7E6C0EF724A938ED00129E8C /* ScannerModel.swift in Sources */,
 				7E6C0EF124A838A000129E8C /* ScanStore.swift in Sources */,
+				7EBF235C26A515A300161402 /* SavedScanMapView.swift in Sources */,
 				7E0C5EE724C90D86001C0D0E /* SavedProjectModel.swift in Sources */,
 				7EAE9CEE2562148100EA66D0 /* LengthPreferenceEnum.swift in Sources */,
 				7E6C0EEF24A8388C00129E8C /* ScanFile.swift in Sources */,
