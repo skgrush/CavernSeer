@@ -85,14 +85,18 @@ final class CSLocation : NSObject, NSSecureCoding {
 
     func toCLLocation() -> CLLocation {
         return CLLocation(
-            coordinate: CLLocationCoordinate2D(
-                latitude: latitude,
-                longitude: longitude
-            ),
+            coordinate: toCoordinates(),
             altitude: altitude,
             horizontalAccuracy: horizontalAccuracy,
             verticalAccuracy: verticalAccuracy,
             timestamp: timestamp
+        )
+    }
+
+    func toCoordinates() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(
+            latitude: latitude,
+            longitude: longitude
         )
     }
 }
