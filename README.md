@@ -37,6 +37,14 @@ Clicking the center button again will complete and save the scan, which will app
  * Setting for changing the interaction mode in the 3d Render view. The recommended option is "Orbit angle mapping".
  * Debugging options where appropriate.
 
+## Data Structures ##
+
+### Coordinates ###
+The (x,y,z) coordinate system used is in Apple's [`gravityAndHeading`](https://developer.apple.com/documentation/arkit/arconfiguration/worldalignment/gravityandheading) world alignment:
+* East is `+x`
+* Up is `+y`
+* South is `+z` (Negative `z` values are pointing North)
+This is the right-hand rule with your middle finger pointing south, pointer finger up. 
 
 ## Getting Started (Development)
 
@@ -44,5 +52,6 @@ Depends on **iOS 14** functionality and thus requires **Xcode 12** to build.
 No external dependencies are required, so you should be able to clone the repo into Xcode and build to your device.
 
 Due to particulars with the serialization of Apple-owned data structures, actions relating to scan files (e.g. importing or rendering) aren't supported in the simulator.
+
 
 ## _More to come!_
