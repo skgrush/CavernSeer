@@ -12,15 +12,15 @@ import RealityKit
 
 
 struct ARMeshAnchorSet {
-    var meshes: [ARMeshAnchor] = []
+    private var meshes: [ARMeshAnchor] = []
 
     mutating func update(_ anchors: [ARMeshAnchor]) {
         anchors.forEach {
             anchor in
-            if let idx = meshes.firstIndex(of: anchor) {
-                meshes[idx] = anchor
+            if let idx = self.meshes.firstIndex(of: anchor) {
+                self.meshes[idx] = anchor
             } else {
-                meshes.append(anchor)
+                self.meshes.append(anchor)
             }
         }
     }
@@ -28,8 +28,8 @@ struct ARMeshAnchorSet {
     mutating func remove(_ anchors: [ARMeshAnchor]) {
         anchors.forEach {
             anchor in
-            if let idx = meshes.firstIndex(of: anchor) {
-                meshes.remove(at: idx)
+            if let idx = self.meshes.firstIndex(of: anchor) {
+                self.meshes.remove(at: idx)
             }
         }
     }
@@ -38,5 +38,9 @@ struct ARMeshAnchorSet {
         let meshes = self.meshes
         self.meshes.removeAll()
         return meshes
+    }
+
+    mutating func clear() {
+        self.meshes.removeAll()
     }
 }

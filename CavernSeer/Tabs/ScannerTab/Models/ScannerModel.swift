@@ -84,6 +84,7 @@ final class ScannerModel:
         self.arView = arView
         self.drawView = drawView
         self.surveyLines = surveyLines
+        self.savedAnchors.clear()
 
         setupARView(arView: arView)
         setupDrawView(drawView: drawView, arView: arView)
