@@ -47,6 +47,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
      */
     convenience init(
         map: ARWorldMap,
+        meshAnchors: [ARMeshAnchor]?,
         name: String? = nil,
         startSnap: SnapshotAnchor?,
         endSnap: SnapshotAnchor?,
@@ -55,6 +56,9 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         lines: [SurveyLineEntity],
         location: CLLocation?
     ) {
+        /// use the passed-in anchors OR pull out only the *true* ARMeshAnchors from the map
+        let decidedMeshAnchors = meshAnchors ?? map.anchors.compactMap { $0 as? ARMeshAnchor }
+
         self.init(
             name: name ?? Self.makeDefaultBaseName(
                 with: date,
@@ -63,9 +67,7 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
             timestamp: date,
             center: map.center,
             extent: map.extent,
-            /// pull out only the *true* ARMeshAnchors
-            meshAnchors: map.anchors
-                .compactMap { $0 as? ARMeshAnchor }
+            meshAnchors: decidedMeshAnchors
                 .map { CSMeshSlice(anchor: $0) },
             startSnapshot: startSnap.map { CSMeshSnapshot(snapshot: $0) },
             endSnapshot: endSnap.map { CSMeshSnapshot(snapshot: $0) },

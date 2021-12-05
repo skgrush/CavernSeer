@@ -50,6 +50,8 @@ final class ScannerModel:
     /// state manager for survey lines, currently the only Drawables in the scene
     var surveyLines: DrawableContainer?
 
+    var savedAnchors = ARMeshAnchorSet()
+
     var scanConfiguration: ARWorldTrackingConfiguration?
 
     private var tapRecognizer: UITapGestureRecognizer?
@@ -172,6 +174,8 @@ final class ScannerModel:
         let stations = self.surveyStations
         let date = Date()
 
+        let savedAnchors = self.savedAnchors.copyAndClear()
+
         #if !targetEnvironment(simulator)
         arView.session.getCurrentWorldMap { /* no self */ worldMap, error in
 
@@ -198,6 +202,7 @@ final class ScannerModel:
 
             let scanFile = ScanFile(
                 map: map,
+                meshAnchors: savedAnchors,
                 startSnap: startSnapshot,
                 endSnap: endAnchor,
                 date: date,
@@ -285,6 +290,39 @@ final class ScannerModel:
                 suffix: "start"
             )
         }
+
+        anchors
+            .compactMap { $0 as? ARMeshAnchor }
+            .forEach { savedAnchors.update($0) }
+
+//        let meshAnchors = anchors.compactMap { $0 as? ARMeshAnchor }
+//        if !meshAnchors.isEmpty {
+//            meshAnchors.forEach {
+//                var hasher = Hasher()
+//                $0.transform.columns.0.hash(into: &hasher)
+//                $0.transform.columns.1.hash(into: &hasher)
+//                $0.transform.columns.2.hash(into: &hasher)
+//                $0.transform.columns.3.hash(into: &hasher)
+//
+//                let hash = hasher.finalize()
+//                if savedAnchors[hash] != nil {
+//                    debugPrint("Found dupe!")
+//                }
+//                savedAnchors[savedAnchors.count] = $0
+//            }
+//        }
+    }
+
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        anchors
+            .compactMap { $0 as? ARMeshAnchor }
+            .forEach { savedAnchors.update($0) }
+    }
+
+    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        anchors
+            .compactMap { $0 as? ARMeshAnchor }
+            .forEach { savedAnchors.remove($0) }
     }
 
     private func setupScanConfig() {

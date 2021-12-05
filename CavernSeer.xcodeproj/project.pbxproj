@@ -105,6 +105,7 @@
 		7EAE9CE92561FF5900EA66D0 /* UserDefaults+color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CE82561FF5900EA66D0 /* UserDefaults+color.swift */; };
 		7EAE9CEE2562148100EA66D0 /* LengthPreferenceEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CED2562148100EA66D0 /* LengthPreferenceEnum.swift */; };
 		7EAE9CF32562212D00EA66D0 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CF22562212D00EA66D0 /* SettingsStore.swift */; };
+		7EB80B03275D734100AEAFF4 /* ARMeshAnchorSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB80B02275D734100AEAFF4 /* ARMeshAnchorSet.swift */; };
 		7EC0E46E2662DF7400E4B6BB /* StoredCacheFileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0E46D2662DF7400E4B6BB /* StoredCacheFileProtocol.swift */; };
 		7EC0E4702662F18000E4B6BB /* ScanCacheFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */; };
 /* End PBXBuildFile section */
@@ -235,6 +236,7 @@
 		7EAE9CE82561FF5900EA66D0 /* UserDefaults+color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+color.swift"; sourceTree = "<group>"; };
 		7EAE9CED2562148100EA66D0 /* LengthPreferenceEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LengthPreferenceEnum.swift; sourceTree = "<group>"; };
 		7EAE9CF22562212D00EA66D0 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		7EB80B02275D734100AEAFF4 /* ARMeshAnchorSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMeshAnchorSet.swift; sourceTree = "<group>"; };
 		7EC0E46D2662DF7400E4B6BB /* StoredCacheFileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredCacheFileProtocol.swift; sourceTree = "<group>"; };
 		7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCacheFile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -326,6 +328,7 @@
 			children = (
 				7E6C0EF624A938ED00129E8C /* ScannerModel.swift */,
 				7E0913FD25B3DE350023215F /* ScannerControlModel.swift */,
+				7EB80B02275D734100AEAFF4 /* ARMeshAnchorSet.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -797,6 +800,7 @@
 				7E4003AE24AD5C7E00B709BD /* NSCoder+simd.swift in Sources */,
 				7E23DB1C2545F02400BABB52 /* ScanFile+MDL.swift in Sources */,
 				7E6C0EE124A82A4A00129E8C /* TabsEnum.swift in Sources */,
+				7EB80B03275D734100AEAFF4 /* ARMeshAnchorSet.swift in Sources */,
 				7E6C0EDF24A827FE00129E8C /* TabProtocol.swift in Sources */,
 				7E9C2CF724B6937B00B9FC44 /* ScanShareSheet.swift in Sources */,
 				7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */,
