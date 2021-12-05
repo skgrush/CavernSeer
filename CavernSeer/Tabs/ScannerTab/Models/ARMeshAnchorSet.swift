@@ -14,17 +14,23 @@ import RealityKit
 struct ARMeshAnchorSet {
     var meshes: [ARMeshAnchor] = []
 
-    mutating func update(_ anchor: ARMeshAnchor) {
-        if let idx = meshes.firstIndex(of: anchor) {
-            meshes[idx] = anchor
-        } else {
-            meshes.append(anchor)
+    mutating func update(_ anchors: [ARMeshAnchor]) {
+        anchors.forEach {
+            anchor in
+            if let idx = meshes.firstIndex(of: anchor) {
+                meshes[idx] = anchor
+            } else {
+                meshes.append(anchor)
+            }
         }
     }
 
-    mutating func remove(_ anchor: ARMeshAnchor) {
-        if let idx = meshes.firstIndex(of: anchor) {
-            meshes.remove(at: idx)
+    mutating func remove(_ anchors: [ARMeshAnchor]) {
+        anchors.forEach {
+            anchor in
+            if let idx = meshes.firstIndex(of: anchor) {
+                meshes.remove(at: idx)
+            }
         }
     }
 

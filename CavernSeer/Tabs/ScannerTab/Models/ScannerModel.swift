@@ -291,38 +291,15 @@ final class ScannerModel:
             )
         }
 
-        anchors
-            .compactMap { $0 as? ARMeshAnchor }
-            .forEach { savedAnchors.update($0) }
-
-//        let meshAnchors = anchors.compactMap { $0 as? ARMeshAnchor }
-//        if !meshAnchors.isEmpty {
-//            meshAnchors.forEach {
-//                var hasher = Hasher()
-//                $0.transform.columns.0.hash(into: &hasher)
-//                $0.transform.columns.1.hash(into: &hasher)
-//                $0.transform.columns.2.hash(into: &hasher)
-//                $0.transform.columns.3.hash(into: &hasher)
-//
-//                let hash = hasher.finalize()
-//                if savedAnchors[hash] != nil {
-//                    debugPrint("Found dupe!")
-//                }
-//                savedAnchors[savedAnchors.count] = $0
-//            }
-//        }
+        savedAnchors.update(anchors.compactMap { $0 as? ARMeshAnchor })
     }
 
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        anchors
-            .compactMap { $0 as? ARMeshAnchor }
-            .forEach { savedAnchors.update($0) }
+        savedAnchors.update(anchors.compactMap { $0 as? ARMeshAnchor })
     }
 
     func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
-        anchors
-            .compactMap { $0 as? ARMeshAnchor }
-            .forEach { savedAnchors.remove($0) }
+        savedAnchors.remove(anchors.compactMap { $0 as? ARMeshAnchor })
     }
 
     private func setupScanConfig() {
