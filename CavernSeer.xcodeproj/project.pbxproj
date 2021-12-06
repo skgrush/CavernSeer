@@ -564,7 +564,7 @@
 		7E9C2CF924B80F3000B9FC44 /* docs */ = {
 			isa = PBXGroup;
 			children = (
-				7E9C2CFD24B8105600B9FC44 /* icon */,
+				7E9C2CFD24B8105600B9FC44 /* icons */,
 				7E4003AA24AD579000B709BD /* Proposal.md */,
 				7E7FD2BD2665E37B00F87D08 /* Description.txt */,
 				7E7FD2BE2665E3F800F87D08 /* PrivacyPolicy.md */,
@@ -572,7 +572,7 @@
 			path = docs;
 			sourceTree = "<group>";
 		};
-		7E9C2CFD24B8105600B9FC44 /* icon */ = {
+		7E9C2CFD24B8105600B9FC44 /* icons */ = {
 			isa = PBXGroup;
 			children = (
 				7E23DB092544F19C00BABB52 /* icon-29.png */,
@@ -589,7 +589,7 @@
 				7E91C09F25DA0B73000130FD /* iconflat.svg */,
 				7E9C2CFF24B810D900B9FC44 /* icon-inkscape.svg */,
 			);
-			path = icon;
+			path = icons;
 			sourceTree = "<group>";
 		};
 		7E9C2D0C24BA2B7F00B9FC44 /* Renders */ = {
