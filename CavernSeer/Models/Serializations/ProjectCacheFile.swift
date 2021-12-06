@@ -64,8 +64,9 @@ final class ProjectCacheFile : NSObject, NSSecureCoding, StoredCacheFileProtocol
             if decoder.containsValue(forKey: PropertyKeys.jpegImageData) {
                 guard
                     let jpegImageData = decoder.decodeObject(
+                        of: NSData.self,
                         forKey: PropertyKeys.jpegImageData
-                    ) as? Data
+                    ) as Data?
                 else { return nil }
                 self.jpegImageData = jpegImageData
             } else {

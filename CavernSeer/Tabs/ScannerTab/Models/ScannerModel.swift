@@ -50,6 +50,8 @@ final class ScannerModel:
     /// state manager for survey lines, currently the only Drawables in the scene
     var surveyLines: DrawableContainer?
 
+    var savedAnchors = ARMeshAnchorSet()
+
     var scanConfiguration: ARWorldTrackingConfiguration?
 
     private var tapRecognizer: UITapGestureRecognizer?
@@ -82,6 +84,7 @@ final class ScannerModel:
         self.arView = arView
         self.drawView = drawView
         self.surveyLines = surveyLines
+        self.savedAnchors.clear()
 
         setupARView(arView: arView)
         setupDrawView(drawView: drawView, arView: arView)
@@ -172,6 +175,8 @@ final class ScannerModel:
         let stations = self.surveyStations
         let date = Date()
 
+        let savedAnchors = self.savedAnchors.copyAndClear()
+
         #if !targetEnvironment(simulator)
         arView.session.getCurrentWorldMap { /* no self */ worldMap, error in
 
@@ -198,6 +203,7 @@ final class ScannerModel:
 
             let scanFile = ScanFile(
                 map: map,
+                meshAnchors: savedAnchors,
                 startSnap: startSnapshot,
                 endSnap: endAnchor,
                 date: date,
@@ -285,6 +291,16 @@ final class ScannerModel:
                 suffix: "start"
             )
         }
+
+        savedAnchors.update(anchors.compactMap { $0 as? ARMeshAnchor })
+    }
+
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        savedAnchors.update(anchors.compactMap { $0 as? ARMeshAnchor })
+    }
+
+    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        savedAnchors.remove(anchors.compactMap { $0 as? ARMeshAnchor })
     }
 
     private func setupScanConfig() {

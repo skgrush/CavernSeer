@@ -75,24 +75,22 @@ struct SavedScanDetail: View {
                 SavedScanDetailLinks(model: model)
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    self.showObjExport = false
-                    self.showShare = true
+        .navigationBarItems(
+            trailing: HStack {
+                Button(
+                    action: {
+                        self.showObjExport = false
+                        self.showShare = true
 
-                }) {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(Font.system(.title))
-                }
+                    },
+                    label: { Image(systemName: "square.and.arrow.up") }
+                )
+                Button(
+                    action: { self.showObjPrompt = true },
+                    label: { Image(systemName: "arrow.up.bin") }
+                )
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { self.showObjPrompt = true }) {
-                    Image(systemName: "arrow.up.bin")
-                        .font(Font.system(.title))
-                }
-            }
-        }
+        )
         .sheet(isPresented: $showShare) {
             if let model = self.model {
                 ScanShareSheet(activityItems: [
