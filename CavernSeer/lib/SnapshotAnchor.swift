@@ -68,7 +68,10 @@ class SnapshotAnchor: ARAnchor {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        if let snapshot = aDecoder.decodeObject(forKey: "snapshot") as? Data {
+        if let snapshot = aDecoder.decodeObject(
+            of: NSData.self,
+            forKey: "snapshot"
+        ) as Data? {
             self.imageData = snapshot
         } else {
             return nil

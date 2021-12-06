@@ -45,8 +45,9 @@ final class SurveyStation: NSObject, NSSecureCoding {
             decoder.decode_simd_float4x4(prefix: PropertyKeys.transform)
         if decoder.containsValue(forKey: PropertyKeys.name) {
             self.name = decoder.decodeObject(
+                of: NSString.self,
                 forKey: PropertyKeys.name
-            ) as! String
+            )! as String
         } else {
             self.name = self.identifier.uuidString
         }

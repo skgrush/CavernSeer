@@ -57,7 +57,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         location: CLLocation?
     ) {
         /// use the passed-in anchors OR pull out only the *true* ARMeshAnchors from the map
-        let decidedMeshAnchors = meshAnchors ?? map.anchors.compactMap { $0 as? ARMeshAnchor }
+        let decidedMeshAnchors = meshAnchors
+            ?? map.anchors.compactMap { $0 as? ARMeshAnchor }
 
         self.init(
             name: name ?? Self.makeDefaultBaseName(
@@ -233,8 +234,9 @@ extension ScanFile {
             if decoder.containsValue(forKey: PropertyKeys.name) {
                 if
                     let name = decoder.decodeObject(
+                        of: NSString.self,
                         forKey: PropertyKeys.name
-                    ) as? String
+                    ) as String?
                 {
                     return name
                 } else {
