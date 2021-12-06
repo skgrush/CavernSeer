@@ -145,6 +145,7 @@ class ScanFileTests : XCTestCase {
         expected.stations.enumerated().forEach {
             (idx, expectedStation) in
 
+            XCTAssertLessThan(idx, scan.stations.count)
             let actualStation = scan.stations[idx]
             let (expectedN, expectedId, expectedFirstCol) = expectedStation
 
@@ -159,6 +160,7 @@ class ScanFileTests : XCTestCase {
         expected.lines.enumerated().forEach {
             (idx, expectedLine) in
 
+            XCTAssertLessThan(idx, scan.lines.count)
             let actualLine = scan.lines[idx]
             let (expectedStart, expectedEnd) = expectedLine
             XCTAssertEqual(actualLine.startIdentifier, expectedStart)
@@ -231,38 +233,38 @@ struct BeigeV1 : StaticScanFileTestData {
 struct GreenV2 : StaticScanFileTestData {
     static let filename = "green_v2"
     static let version = Int32(2)
-    static let dateString = "2021-06-12T152707-0500"
+    static let dateString = "2021-12-05T203557-0600"
     static let name = "scan_greenly"
-    static let center = simd_make_float3(-0.20601714, -0.32335350, -0.15596294)
-    static let extent = simd_make_float3( 1.85254570,  0.73570687,  1.64377730)
+    static let center = simd_make_float3(-0.2989502, -0.65702164, 0.14327115)
+    static let extent = simd_make_float3( 1.7053952,  1.27001600, 1.88892030)
     static let startTx = simd_float4x4([
-        [0.2978186, -0.18020217, 0.93745995, 0.0],
-        [0.877244, -0.3356371, -0.34320626, 0.0],
-        [0.37649286, 0.92459434, 0.058122333, 0.0],
-        [0.0443862, 0.06979229, 0.029168703, 1.0]
+        [0.41472444, -0.43204734, -0.80083627, 0.0],
+        [-0.8816027, 0.027172042, -0.47120965, 0.0],
+        [0.22534524, 0.9014416, -0.36962518, 0.0],
+        [-0.0034897916, 0.0009838478, 0.009048734, 1.0000001]
     ])
-    static let startSize = 138913
-    static let startUUID = UUID(uuidString: "22463EB4-FF55-4BFB-BCC9-F5A8097DDCD5")!
+    static let startSize = 194628
+    static let startUUID = UUID(uuidString: "644CDBC7-7A08-432E-82B5-ACF9413BDC71")!
 
-    static let meshCount = 4
+    static let meshCount = 2
     static let mesh0Tx = simd_float4x4([
-        [0.29151917, 0.0, 0.95656496, 0.0],
-        [0.0, 0.99999994, 0.0, 0.0],
-        [-0.95656496, 0.0, 0.29151917, 0.0],
-        [-0.03496813, -0.14766495, 0.064373806, 0.99999994]
+        [0.51103294, 0.0, -0.85956115, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.85956115, 0.0, 0.51103294, 0.0],
+        [0.018149931, -0.24505126, 0.027160278, 1.0]
     ])
-    static let mesh0Vertices = 10
-    static let mesh0Faces = 8
-    static let mesh0Normals = 10
+    static let mesh0Vertices = 84
+    static let mesh0Faces = 128
+    static let mesh0Normals = 84
 
     static let stationCount = 2
     static let lineCount = 1
     /// Simplified description of a `SurveyStation`, with the first row
     static let stations: [(String?, UUID, simd_float4)] = [
-        (nil, UUID(uuidString: "6C1076DE-23B1-4A68-8049-AFB1B7491BC5")!, simd_float4(0.5459795, -0.38785884, 0.7426117, 0.0)),
-        (nil, UUID(uuidString: "95B9B4B2-F1C2-4BDC-98BA-B1546A950C9A")!, simd_float4(0.86360294, 0.4699514, 0.18258071, 0.0)),
+        (nil, UUID(uuidString: "23C58D52-2535-4936-BA34-1727A643B21E")!, simd_float4(-0.9602766, 0.0, 0.27905017, 0.0)),
+        (nil, UUID(uuidString: "E171F8A4-41F8-4616-AA18-C50F03D4310D")!, simd_float4(-0.8043165, -0.17596605, -0.56754804, 0.0)),
     ]
     static let lines: [(UUID, UUID)] = [
-        (UUID(uuidString: "6C1076DE-23B1-4A68-8049-AFB1B7491BC5")!, UUID(uuidString: "95B9B4B2-F1C2-4BDC-98BA-B1546A950C9A")!),
+        (UUID(uuidString: "23C58D52-2535-4936-BA34-1727A643B21E")!, UUID(uuidString: "E171F8A4-41F8-4616-AA18-C50F03D4310D")!),
     ]
 }
