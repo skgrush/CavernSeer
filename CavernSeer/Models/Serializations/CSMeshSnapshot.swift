@@ -52,8 +52,9 @@ final class CSMeshSnapshot : NSObject, NSSecureCoding {
 
         if decoder.containsValue(forKey: PropertyKeys.name) {
             self.name = decoder.decodeObject(
+                of: NSString.self,
                 forKey: PropertyKeys.name
-            ) as? String
+            ) as String?
         } else {
             self.name = nil
         }
