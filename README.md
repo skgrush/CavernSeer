@@ -1,6 +1,6 @@
 <img src="/docs/icons/icon-167.png" align="right">
 
-#  CavernSeer v0.3.2
+#  CavernSeer v0.3.3-dev
 > An iPadOS and iOS application for scanning 3D spaces
 
 Designed for cave and shelter surveying, CavernSeer leverages the LiDAR scanner of the 2020 iPad Pro and the iPhone 12 Pro, and RealityKit's scene reconstruction, to generate relatively-accurate 3D meshes of real-world spaces and render them in various convenient ways.
