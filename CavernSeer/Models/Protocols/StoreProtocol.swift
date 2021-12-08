@@ -33,6 +33,8 @@ protocol StoreProtocol : ObservableObject {
     var modelDataInMemory: [ModelType] { get set }
 
     var caches: [CacheType] { get set }
+
+    func makeErrorCacheInstance(_ url: URL, error: Error) -> CacheType
 }
 
 
@@ -124,8 +126,10 @@ extension StoreProtocol {
                             )
                             newCaches.insert(newDatum, at: offset)
                         } catch {
-                            completion?(error)
-                            return
+//                            completion?(error)
+//                            return
+                            let errCache = self.makeErrorCacheInstance(url, error: error)
+                            newCaches.insert(errCache, at: offset)
                         }
                 }
             }

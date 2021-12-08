@@ -111,6 +111,16 @@ final class ScanStore : StoreProtocol {
 
         return newUrl
     }
+
+    func makeErrorCacheInstance(_ url: URL, error: Error) -> ScanCacheFile {
+        return ScanCacheFile(
+            realFileURL: url,
+            timestamp: Date.distantFuture,
+            displayName: "Error! \(url.deletingPathExtension().lastPathComponent)",
+            img: nil,
+            error: error
+        )
+    }
 }
 
 

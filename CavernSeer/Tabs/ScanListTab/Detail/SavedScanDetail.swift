@@ -19,6 +19,9 @@ struct SavedScanDetail: View {
     var scanStore: ScanStore
 
     @State
+    var error: Error?
+
+    @State
     private var model: SavedScanModel? = nil
     @State
     private var isPresentingRender = false
@@ -38,6 +41,11 @@ struct SavedScanDetail: View {
     private var fileExt = "obj"
 
     private func loadModel() {
+        if let err = self.cache.error {
+            self.error = err
+            return
+        }
+
         let url = scanStore.getNormalizedRealUrl(cache: self.cache)
         if self.model?.url != url {
             do {
@@ -67,7 +75,7 @@ struct SavedScanDetail: View {
 
             Spacer()
 
-            Text(model?.id ?? "Loading...")
+            Text(model?.id ?? error?.localizedDescription ?? "Loading...")
                 .font(.title)
                 .padding()
 

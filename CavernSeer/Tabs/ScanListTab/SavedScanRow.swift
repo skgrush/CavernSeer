@@ -30,7 +30,12 @@ struct SavedScanRow: View {
 
     init(cache: ScanCacheFile, image: Image? = nil) {
         self.cache = cache
-        self.image = image ?? makeSnapshot(data: cache.jpegImageData)
+
+        if cache.error == nil {
+            self.image = image ?? makeSnapshot(data: cache.jpegImageData)
+        } else {
+            self.image = Image(systemName: "exclamationmark.triangle")
+        }
     }
 
     private func makeSnapshot(data: Data?) -> Image? {

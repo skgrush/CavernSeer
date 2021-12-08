@@ -34,4 +34,13 @@ final class ProjectStore : StoreProtocol {
     init() {
         (self.dataDirectory, self.cacheDirectory) = self.getOrCreateDirectories()
     }
+
+    func makeErrorCacheInstance(_ url: URL, error: Error) -> ProjectCacheFile {
+        return ProjectCacheFile(
+            realFileURL: url,
+            timestamp: Date(),
+            displayName: "Error: \(error.localizedDescription)",
+            img: nil
+        )
+    }
 }
