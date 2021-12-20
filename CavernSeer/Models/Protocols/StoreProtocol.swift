@@ -155,6 +155,10 @@ extension StoreProtocol {
             let cacheUrl = cache.getCacheURL(cacheDir: cacheDirectory)
             do {
                 try fileManager.removeItem(at: cacheUrl)
+            } catch {
+                debugPrint("Deleting cacheUrl failed but that's okay", cacheUrl)
+            }
+            do {
                 try fileManager.removeItem(at: dataUrl)
             } catch {
                 fatalError("Deletion failed: \(error.localizedDescription)")
