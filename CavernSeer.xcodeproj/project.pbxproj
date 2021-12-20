@@ -44,6 +44,7 @@
 		7E43C628256B48A800170C17 /* UnitsSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E43C627256B48A800170C17 /* UnitsSettingsSection.swift */; };
 		7E43C62D256B49AB00170C17 /* Interaction3dSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E43C62C256B49AB00170C17 /* Interaction3dSettingsSection.swift */; };
 		7E43C632256B599600170C17 /* SCNInteractionMode+name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E43C631256B599600170C17 /* SCNInteractionMode+name.swift */; };
+		7E460B9327602B4800BE763D /* DebugSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E460B9227602B4800BE763D /* DebugSection.swift */; };
 		7E4888342557534900894D43 /* ElevationProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */; };
 		7E488839255754B200894D43 /* BaseProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */; };
 		7E5213F42579D1420015FA54 /* RotationControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5213F32579D1420015FA54 /* RotationControls.swift */; };
@@ -168,6 +169,7 @@
 		7E43C627256B48A800170C17 /* UnitsSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitsSettingsSection.swift; sourceTree = "<group>"; };
 		7E43C62C256B49AB00170C17 /* Interaction3dSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interaction3dSettingsSection.swift; sourceTree = "<group>"; };
 		7E43C631256B599600170C17 /* SCNInteractionMode+name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNInteractionMode+name.swift"; sourceTree = "<group>"; };
+		7E460B9227602B4800BE763D /* DebugSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSection.swift; sourceTree = "<group>"; };
 		7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
 		7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
 		7E5213F32579D1420015FA54 /* RotationControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationControls.swift; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 				7E43C627256B48A800170C17 /* UnitsSettingsSection.swift */,
 				7E43C62C256B49AB00170C17 /* Interaction3dSettingsSection.swift */,
 				7E7FD2A6266498DE00F87D08 /* FileSettingsSection.swift */,
+				7E460B9227602B4800BE763D /* DebugSection.swift */,
 			);
 			path = sections;
 			sourceTree = "<group>";
@@ -791,6 +794,7 @@
 				7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */,
 				7E43C620256B477900170C17 /* ColorsSettingsSection.swift in Sources */,
 				7E7DEEEA25AA28F000320150 /* Double+round.swift in Sources */,
+				7E460B9327602B4800BE763D /* DebugSection.swift in Sources */,
 				7E0C5EFB24CE639E001C0D0E /* FileSaveError.swift in Sources */,
 				7E0C5EF624CE580B001C0D0E /* FileOpener.swift in Sources */,
 				7E23DB2A254E457000BABB52 /* ScaleBarModel.swift in Sources */,
