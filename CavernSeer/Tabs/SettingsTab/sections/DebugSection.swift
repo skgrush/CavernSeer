@@ -15,7 +15,7 @@ struct DebugSection: View {
     let keys = [
         ("CFBundleShortVersionString", "Version"),
         ("CFBundleVersion", "Build"),
-        ("PlatformTargetPrefix", "Platform Target"),
+        ("CS:PlatformTargetPrefix", "Platform Target"),
         ("MinimumOSVersion", "MinimumOSVersion"),
 
     ]

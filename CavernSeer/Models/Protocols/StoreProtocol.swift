@@ -126,8 +126,6 @@ extension StoreProtocol {
                             )
                             newCaches.insert(newDatum, at: offset)
                         } catch {
-//                            completion?(error)
-//                            return
                             let errCache = self.makeErrorCacheInstance(url, error: error)
                             newCaches.insert(errCache, at: offset)
                         }
