@@ -20,18 +20,20 @@ final class ScanCacheFile : NSObject, NSSecureCoding, StoredCacheFileProtocol {
     let id: String
     let timestamp: Date
     let displayName: String
+    let error: Error?
 
     var realFileURL: URL? = nil
 
     let jpegImageData: Data?
 
-    init(realFileURL: URL, timestamp: Date, displayName: String, img: Data?) {
+    init(realFileURL: URL, timestamp: Date, displayName: String, img: Data?, error: Error? = nil) {
         self.encodingVersion = Self.currentEncodingVersion
         self.id = realFileURL.deletingPathExtension().lastPathComponent
         self.timestamp = timestamp
         self.displayName = displayName
         self.realFileURL = realFileURL
         self.jpegImageData = img
+        self.error = error
     }
 
     required init?(coder decoder: NSCoder) {
@@ -41,6 +43,7 @@ final class ScanCacheFile : NSObject, NSSecureCoding, StoredCacheFileProtocol {
                 ? decoder.decodeInt32(forKey: PropertyKeys.version)
                 : 1
         self.encodingVersion = version
+        self.error = nil
 
         if (version == 1) {
             guard
@@ -97,6 +100,7 @@ final class ScanCacheFile : NSObject, NSSecureCoding, StoredCacheFileProtocol {
         self.displayName = id
         self.encodingVersion = Self.currentEncodingVersion
         self.jpegImageData = nil
+        self.error = nil
         self.timestamp = Date()
     }
     #endif

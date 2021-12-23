@@ -3,7 +3,7 @@
 //  CavernSeer
 //
 //  Created by Samuel Grush on 7/6/20.
-//  Copyright © 2020 Samuel K. Grush. All rights reserved.
+//  Copyright © 2021 Samuel K. Grush. All rights reserved.
 //
 
 import SwiftUI /// View
@@ -30,7 +30,12 @@ struct SavedScanRow: View {
 
     init(cache: ScanCacheFile, image: Image? = nil) {
         self.cache = cache
-        self.image = image ?? makeSnapshot(data: cache.jpegImageData)
+
+        if cache.error == nil {
+            self.image = image ?? makeSnapshot(data: cache.jpegImageData)
+        } else {
+            self.image = Image(systemName: "exclamationmark.triangle")
+        }
     }
 
     private func makeSnapshot(data: Data?) -> Image? {

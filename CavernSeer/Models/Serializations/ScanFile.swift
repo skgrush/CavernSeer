@@ -3,7 +3,7 @@
 //  CavernSeer
 //
 //  Created by Samuel Grush on 6/21/20.
-//  Copyright © 2020 Samuel K. Grush. All rights reserved.
+//  Copyright © 2021 Samuel K. Grush. All rights reserved.
 //
 
 import Foundation
@@ -41,6 +41,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
     let lines: [SurveyLine]
 
     let location: CSLocation?
+
+    let stationPositionDict: [SurveyStation.Identifier: simd_float3]
 
     /**
      * Initializer from an `ARWorldMap` state and `AR` structures during scanning.
@@ -109,6 +111,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
             debugPrint("Unknown failure encoding; \(error)")
             return nil
         }
+
+        self.stationPositionDict = Self.generateStationDict(self.stations)
     }
 
 
@@ -135,6 +139,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
         self.stations = stations
         self.lines = lines
         self.location = location
+
+        self.stationPositionDict = Self.generateStationDict(self.stations)
     }
 
     func encode(with coder: NSCoder) {
@@ -171,6 +177,8 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
 
         self.location = nil
 
+        self.stationPositionDict = Self.generateStationDict(self.stations)
+
         super.init()
     }
     #endif
@@ -193,6 +201,23 @@ final class ScanFile : NSObject, NSSecureCoding, StoredFileProtocol {
             displayName: name,
             img: img
         )
+    }
+
+    func getDistance(line: SurveyLine, lengthPref: LengthPreference) -> String {
+        return line.getDistance(
+            stationDict: stationPositionDict,
+            lengthPref: lengthPref
+        )
+    }
+
+    private static func generateStationDict(
+        _ stations: [SurveyStation]
+    ) -> [SurveyStation.Identifier: simd_float3] {
+        var dict = [SurveyStation.Identifier: simd_float3]()
+        stations.forEach {
+            dict[$0.identifier] = $0.transform.toPosition()
+        }
+        return dict
     }
 }
 

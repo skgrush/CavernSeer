@@ -3,7 +3,7 @@
 //  CavernSeer
 //
 //  Created by Samuel Grush on 11/15/20.
-//  Copyright © 2020 Samuel K. Grush. All rights reserved.
+//  Copyright © 2021 Samuel K. Grush. All rights reserved.
 //
 
 import SwiftUI
@@ -48,6 +48,10 @@ struct SettingsTabView: View {
 
                 Section(header: Text("Files")) {
                     FileSettingsSection()
+                }
+
+                Section(header: Text("Debug")) {
+                    DebugSection()
                 }
             }
         }

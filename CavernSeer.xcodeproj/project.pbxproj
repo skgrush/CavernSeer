@@ -44,6 +44,7 @@
 		7E43C628256B48A800170C17 /* UnitsSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E43C627256B48A800170C17 /* UnitsSettingsSection.swift */; };
 		7E43C62D256B49AB00170C17 /* Interaction3dSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E43C62C256B49AB00170C17 /* Interaction3dSettingsSection.swift */; };
 		7E43C632256B599600170C17 /* SCNInteractionMode+name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E43C631256B599600170C17 /* SCNInteractionMode+name.swift */; };
+		7E460B9327602B4800BE763D /* DebugSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E460B9227602B4800BE763D /* DebugSection.swift */; };
 		7E4888342557534900894D43 /* ElevationProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */; };
 		7E488839255754B200894D43 /* BaseProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */; };
 		7E5213F42579D1420015FA54 /* RotationControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5213F32579D1420015FA54 /* RotationControls.swift */; };
@@ -100,6 +101,7 @@
 		7E9CF3D1259D3DDA0036F6F7 /* StoredFileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF3D0259D3DDA0036F6F7 /* StoredFileProtocol.swift */; };
 		7E9CF3D6259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF3D5259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift */; };
 		7E9CF42E259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CF42D259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift */; };
+		7EAAA3DD2770225600B25CFC /* simd+simd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAAA3DC2770225500B25CFC /* simd+simd.swift */; };
 		7EAE9CCD2561B88600EA66D0 /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CCC2561B88600EA66D0 /* SettingsTabView.swift */; };
 		7EAE9CD52561C6B700EA66D0 /* SettingsKeyEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CD42561C6B700EA66D0 /* SettingsKeyEnum.swift */; };
 		7EAE9CE92561FF5900EA66D0 /* UserDefaults+color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAE9CE82561FF5900EA66D0 /* UserDefaults+color.swift */; };
@@ -167,6 +169,7 @@
 		7E43C627256B48A800170C17 /* UnitsSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitsSettingsSection.swift; sourceTree = "<group>"; };
 		7E43C62C256B49AB00170C17 /* Interaction3dSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interaction3dSettingsSection.swift; sourceTree = "<group>"; };
 		7E43C631256B599600170C17 /* SCNInteractionMode+name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNInteractionMode+name.swift"; sourceTree = "<group>"; };
+		7E460B9227602B4800BE763D /* DebugSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSection.swift; sourceTree = "<group>"; };
 		7E4888332557534900894D43 /* ElevationProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
 		7E488838255754B200894D43 /* BaseProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
 		7E5213F32579D1420015FA54 /* RotationControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationControls.swift; sourceTree = "<group>"; };
@@ -231,6 +234,7 @@
 		7E9CF3D0259D3DDA0036F6F7 /* StoredFileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredFileProtocol.swift; sourceTree = "<group>"; };
 		7E9CF3D5259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStoredFileProtocol.swift; sourceTree = "<group>"; };
 		7E9CF42D259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlanProjectedMiniWorldRender.swift; sourceTree = "<group>"; };
+		7EAAA3DC2770225500B25CFC /* simd+simd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "simd+simd.swift"; sourceTree = "<group>"; };
 		7EAE9CCC2561B88600EA66D0 /* SettingsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabView.swift; sourceTree = "<group>"; };
 		7EAE9CD42561C6B700EA66D0 /* SettingsKeyEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsKeyEnum.swift; sourceTree = "<group>"; };
 		7EAE9CE82561FF5900EA66D0 /* UserDefaults+color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+color.swift"; sourceTree = "<group>"; };
@@ -319,6 +323,7 @@
 				7E43C631256B599600170C17 /* SCNInteractionMode+name.swift */,
 				7E7DEEE425AA24CE00320150 /* Float+round.swift */,
 				7E7DEEE925AA28F000320150 /* Double+round.swift */,
+				7EAAA3DC2770225500B25CFC /* simd+simd.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -361,6 +366,7 @@
 				7E43C627256B48A800170C17 /* UnitsSettingsSection.swift */,
 				7E43C62C256B49AB00170C17 /* Interaction3dSettingsSection.swift */,
 				7E7FD2A6266498DE00F87D08 /* FileSettingsSection.swift */,
+				7E460B9227602B4800BE763D /* DebugSection.swift */,
 			);
 			path = sections;
 			sourceTree = "<group>";
@@ -780,6 +786,7 @@
 				7E0C5EE124C8F60D001C0D0E /* ProjectListTabView.swift in Sources */,
 				7EAE9CD52561C6B700EA66D0 /* SettingsKeyEnum.swift in Sources */,
 				7E96711826704395002B70B6 /* CSMeshSnapshot.swift in Sources */,
+				7EAAA3DD2770225600B25CFC /* simd+simd.swift in Sources */,
 				7E43C62D256B49AB00170C17 /* Interaction3dSettingsSection.swift in Sources */,
 				7E6C0EF524A9323900129E8C /* ScannerContainerView.swift in Sources */,
 				7E9C2CEA24B3FD5700B9FC44 /* SavedScanRow.swift in Sources */,
@@ -787,6 +794,7 @@
 				7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */,
 				7E43C620256B477900170C17 /* ColorsSettingsSection.swift in Sources */,
 				7E7DEEEA25AA28F000320150 /* Double+round.swift in Sources */,
+				7E460B9327602B4800BE763D /* DebugSection.swift in Sources */,
 				7E0C5EFB24CE639E001C0D0E /* FileSaveError.swift in Sources */,
 				7E0C5EF624CE580B001C0D0E /* FileOpener.swift in Sources */,
 				7E23DB2A254E457000BABB52 /* ScaleBarModel.swift in Sources */,
@@ -1020,7 +1028,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.2;
+				MARKETING_VERSION = "0.3.3-dev";
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -1045,7 +1053,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.2;
+				MARKETING_VERSION = "0.3.3-dev";
 				PRODUCT_BUNDLE_IDENTIFIER = org.grush.CavernSeer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;

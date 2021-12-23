@@ -3,7 +3,7 @@
 //  CavernSeer
 //
 //  Created by Samuel Grush on 7/4/20.
-//  Copyright © 2020 Samuel K. Grush. All rights reserved.
+//  Copyright © 2021 Samuel K. Grush. All rights reserved.
 //
 
 import Foundation
@@ -50,6 +50,24 @@ final class SurveyLine: NSObject, NSSecureCoding {
 
 
 extension SurveyLine {
+    func getDistance(
+        stationDict: [SurveyStation.Identifier: simd_float3],
+        lengthPref: LengthPreference
+    ) -> String {
+        guard
+            let start = stationDict[self.startIdentifier],
+            let end = stationDict[self.endIdentifier]
+        else {
+            fatalError("SurveyLine.toSCNNode start/end not in dict")
+        }
+
+        return getDistanceString(
+            start,
+            end,
+            lengthPref: lengthPref
+        )
+    }
+
     func toSCNNode(
         stationDict: [SurveyStation.Identifier:SCNNode],
         lengthPref: LengthPreference

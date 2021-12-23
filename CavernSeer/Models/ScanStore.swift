@@ -3,7 +3,7 @@
 //  CavernSeer
 //
 //  Created by Samuel Grush on 6/27/20.
-//  Copyright © 2020 Samuel K. Grush. All rights reserved.
+//  Copyright © 2021 Samuel K. Grush. All rights reserved.
 //
 
 import Foundation
@@ -110,6 +110,16 @@ final class ScanStore : StoreProtocol {
         let newUrl = try self.saveFile(file: newScan)
 
         return newUrl
+    }
+
+    func makeErrorCacheInstance(_ url: URL, error: Error) -> ScanCacheFile {
+        return ScanCacheFile(
+            realFileURL: url,
+            timestamp: Date.distantFuture,
+            displayName: "Error! \(url.deletingPathExtension().lastPathComponent)",
+            img: nil,
+            error: error
+        )
     }
 }
 

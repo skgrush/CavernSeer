@@ -33,6 +33,8 @@ protocol StoreProtocol : ObservableObject {
     var modelDataInMemory: [ModelType] { get set }
 
     var caches: [CacheType] { get set }
+
+    func makeErrorCacheInstance(_ url: URL, error: Error) -> CacheType
 }
 
 
@@ -124,8 +126,8 @@ extension StoreProtocol {
                             )
                             newCaches.insert(newDatum, at: offset)
                         } catch {
-                            completion?(error)
-                            return
+                            let errCache = self.makeErrorCacheInstance(url, error: error)
+                            newCaches.insert(errCache, at: offset)
                         }
                 }
             }
@@ -151,6 +153,10 @@ extension StoreProtocol {
             let cacheUrl = cache.getCacheURL(cacheDir: cacheDirectory)
             do {
                 try fileManager.removeItem(at: cacheUrl)
+            } catch {
+                debugPrint("Deleting cacheUrl failed but that's okay", cacheUrl)
+            }
+            do {
                 try fileManager.removeItem(at: dataUrl)
             } catch {
                 fatalError("Deletion failed: \(error.localizedDescription)")

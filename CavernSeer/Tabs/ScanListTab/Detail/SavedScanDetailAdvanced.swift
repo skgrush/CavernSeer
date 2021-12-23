@@ -3,7 +3,7 @@
 //  CavernSeer
 //
 //  Created by Samuel Grush on 7/7/20.
-//  Copyright © 2020 Samuel K. Grush. All rights reserved.
+//  Copyright © 2021 Samuel K. Grush. All rights reserved.
 //
 
 import SwiftUI /// View
@@ -53,7 +53,10 @@ struct SavedScanDetailAdvanced: View {
                 List(model.scan.meshAnchors, id: \.identifier) {
                     anchor in
                     NavigationLink(
-                        destination: MeshAnchorDetail(anchor: anchor)
+                        destination: MeshAnchorDetail(
+                            anchor: anchor,
+                            xyzView: xyzView
+                        )
                     ) {
                         HStack {
                             Text(anchor.description)
@@ -69,7 +72,7 @@ struct SavedScanDetailAdvanced: View {
                     station in
                     HStack {
                         Text(station.identifier.uuidString)
-                        Text(station.transform.debugDescription)
+                        xyzView(model.scan.stationPositionDict[station.identifier]!)
                     }
                 }
             }
@@ -81,6 +84,10 @@ struct SavedScanDetailAdvanced: View {
                     HStack {
                         Text(line.startIdentifier.uuidString)
                         Text(line.endIdentifier.uuidString)
+                        Text(model.scan.getDistance(
+                            line: line,
+                            lengthPref: unitLength
+                        ))
                     }
                 }
             }
@@ -168,6 +175,7 @@ struct SavedScanDetailAdvanced: View {
 
 struct MeshAnchorDetail: View {
     var anchor: CSMeshSlice
+    var xyzView: (simd_float3) -> AnyView
 
     var body: some View {
         VStack {
@@ -175,6 +183,10 @@ struct MeshAnchorDetail: View {
                 .font(.title)
             VStack {
                 Text("transform: \(anchor.transform.debugDescription)")
+                HStack {
+                    Text("position:")
+                    xyzView(anchor.transform.toPosition())
+                }
                 Text("Vertex count: \(anchor.vertices.count)")
                 Text("Normal count: \(anchor.normals.count)")
                 Text("Face count: \(anchor.faces.count)")
