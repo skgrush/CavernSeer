@@ -405,7 +405,6 @@
 		7E6C0EAA24A800C200129E8C /* CavernSeer */ = {
 			isa = PBXGroup;
 			children = (
-				7E0C5EF724CE5EFC001C0D0E /* errors */,
 				7E4003AC24AD5A5A00B709BD /* extensions */,
 				7E6C0EEB24A834B700129E8C /* lib */,
 				7E6C0EEA24A8346F00129E8C /* Models */,
@@ -493,6 +492,7 @@
 		7E6C0EEA24A8346F00129E8C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7ECA8423277422A5004FFD98 /* Enums */,
 				7E4003B324AD7B5D00B709BD /* Protocols */,
 				7E99F94D24B1130C0098D44B /* Serializations */,
 				7E4003B624AD8FD500B709BD /* Entities */,
@@ -504,8 +504,6 @@
 				7E23DB112544FDA800BABB52 /* ObjSerializer.swift */,
 				7E23DB29254E457000BABB52 /* ScaleBarModel.swift */,
 				7EAE9CF22562212D00EA66D0 /* SettingsStore.swift */,
-				7EAE9CD42561C6B700EA66D0 /* SettingsKeyEnum.swift */,
-				7EAE9CED2562148100EA66D0 /* LengthPreferenceEnum.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -619,6 +617,16 @@
 				7EAE9CCC2561B88600EA66D0 /* SettingsTabView.swift */,
 			);
 			path = SettingsTab;
+			sourceTree = "<group>";
+		};
+		7ECA8423277422A5004FFD98 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				7E0C5EF724CE5EFC001C0D0E /* errors */,
+				7EAE9CED2562148100EA66D0 /* LengthPreferenceEnum.swift */,
+				7EAE9CD42561C6B700EA66D0 /* SettingsKeyEnum.swift */,
+			);
+			path = Enums;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
