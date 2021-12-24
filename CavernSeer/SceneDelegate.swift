@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let settingsStore = SettingsStore()
 
-        let scanStore = ScanStore()
+        let scanStore = ScanStore(settings: settingsStore)
         let projectStore = ProjectStore()
         let fileOpener = FileOpener(scanStore, projectStore)
         let objSerializer = ObjSerializer()

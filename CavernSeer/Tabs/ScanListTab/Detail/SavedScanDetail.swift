@@ -164,7 +164,7 @@ struct SavedScanDetail: View {
 #if DEBUG
 struct SavedScanDetail_Previews: PreviewProvider {
     private static let settings = SettingsStore()
-    private static let scanStore = setupScanStore()
+    private static let scanStore = setupScanStore(settings: settings)
     private static let serializer = ObjSerializer()
 
     private static let cacheItem = dummyScanCaches[1]
@@ -205,8 +205,8 @@ struct SavedScanDetail_Previews: PreviewProvider {
         }
     }
 
-    private static func setupScanStore() -> ScanStore {
-        let store = ScanStore()
+    private static func setupScanStore(settings: SettingsStore) -> ScanStore {
+        let store = ScanStore(settings: settings)
 
         store.modelDataInMemory = dummySavedScans
         store.caches = dummyScanCaches

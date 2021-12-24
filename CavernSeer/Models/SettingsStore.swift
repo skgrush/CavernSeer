@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 import SceneKit
+import Combine
 
 
 final class SettingsStore : NSObject, ObservableObject {
@@ -26,6 +27,8 @@ final class SettingsStore : NSObject, ObservableObject {
         .pan,
         .truck,
     ]
+
+    private var cancelBag = Set<AnyCancellable>()
 
     private let def = UserDefaults.standard
 
@@ -78,6 +81,10 @@ final class SettingsStore : NSObject, ObservableObject {
     @Published
     var measureFormatter: MeasurementFormatter
 
+    @available(iOS 15, *)
+    @Published
+    var sortComparator: CacheSortComparator<ScanCacheFile> = .init(.fileName)
+
     let dateFormatter: DateFormatter
 
     private func setValue<ValT:Equatable>(
@@ -115,6 +122,16 @@ final class SettingsStore : NSObject, ObservableObject {
 
         /// pull all values out of `UserDefaults` into our published properties
         self.updateValues(keys: allKeys)
+
+        if #available(iOS 15, *) {
+            self.$SortingMethod.combineLatest(self.$SortingOrder)
+                .sink { [self] method, order in
+                    self.sortComparator = .init(method, order)
+                }
+                .store(in: &cancelBag)
+
+            self.sortComparator = .init(SortingMethod, SortingOrder)
+        }
 
         /// observe changes to all our values
         allKeys.forEach {

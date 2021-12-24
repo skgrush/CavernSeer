@@ -43,4 +43,8 @@ final class ProjectStore : StoreProtocol {
             img: nil
         )
     }
+
+    func sortCaches() {
+        self.caches = caches
+    }
 }

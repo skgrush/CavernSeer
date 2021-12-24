@@ -7,11 +7,17 @@
 //
 
 import Foundation
+import Combine
 
 final class ScanStore : StoreProtocol {
+
+    private var cancelBag = Set<AnyCancellable>()
+
     typealias FileType = ScanFile
     typealias ModelType = SavedScanModel
     typealias CacheType = ScanCacheFile
+
+    let settings: SettingsStore
 
     let directoryName: String = "scans"
     let filePrefix: String = FileType.filePrefix
@@ -33,8 +39,15 @@ final class ScanStore : StoreProtocol {
     internal var fileManager = FileManager.default
     internal var dateFormatter = ISO8601DateFormatter()
 
-    init() {
+    init(settings: SettingsStore) {
+        self.settings = settings
         (self.dataDirectory, self.cacheDirectory) = getOrCreateDirectories()
+
+        if #available(iOS 15, *) {
+            self.settings.$sortComparator.sink { comparator in
+                self.sortCaches(comparator)
+            }.store(in: &cancelBag)
+        }
     }
 
     /**
@@ -120,6 +133,23 @@ final class ScanStore : StoreProtocol {
             img: nil,
             error: error
         )
+    }
+
+    @available(iOS 15, *)
+    func sortCaches(_ comparator: CacheSortComparator<ScanCacheFile>? = nil) {
+        let cmp = comparator ?? self.settings.sortComparator
+        self.caches.sort(using: cmp)
+    }
+
+    @available(iOS, obsoleted: 15)
+    func sortCaches() {
+        if #available(iOS 15, *) {
+            self.sortCaches(nil)
+        } else {
+            caches.sort(by: {
+                $0.id.compare($1.id, options: .literal) == .orderedAscending
+            })
+        }
     }
 }
 

@@ -166,8 +166,8 @@ struct ScannerTabView: View {
 #if DEBUG
 
 struct ScannerTabView_Previews: PreviewProvider {
-
-    private static let store = ScanStore()
+    private static let settings = SettingsStore()
+    private static let store = ScanStore(settings: settings)
 
     private static let tab = ScannerTab()
 

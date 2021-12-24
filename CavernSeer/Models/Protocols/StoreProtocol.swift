@@ -35,6 +35,8 @@ protocol StoreProtocol : ObservableObject {
     var caches: [CacheType] { get set }
 
     func makeErrorCacheInstance(_ url: URL, error: Error) -> CacheType
+
+    func sortCaches()
 }
 
 
@@ -137,6 +139,7 @@ extension StoreProtocol {
 
                 self.caches.removeAll()
                 self.caches.append(contentsOf: newCaches)
+                self.sortCaches()
 
                 completion?(nil)
             }

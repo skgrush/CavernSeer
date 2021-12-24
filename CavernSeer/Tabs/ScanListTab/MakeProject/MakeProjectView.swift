@@ -24,7 +24,7 @@ struct MakeProjectView: View {
 struct MakeProjectView_Previews: PreviewProvider {
     static var previews: some View {
         let projStore = ProjectStore()
-        let scanStore = ScanStore()
+        let scanStore = ScanStore(settings: SettingsStore())
 
         return MakeProjectView(
             projectStore: projStore,

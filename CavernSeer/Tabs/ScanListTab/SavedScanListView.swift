@@ -13,6 +13,9 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
     @EnvironmentObject
     var scanStore: ScanStore
 
+    @EnvironmentObject
+    var settings: SettingsStore
+
     var listStyle: ListStyleT
 
     @State
@@ -51,6 +54,9 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
                     label: { Image(systemName: "arrow.clockwise") }
                 )
                 editButton
+                if #available(iOS 15, *) {
+                    sortMenu
+                }
             }
         )
         .toolbar {
@@ -104,6 +110,34 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
                     : "Edit"
             )
         })
+    }
+
+    @available(iOS 15, *)
+    private var sortMenu: some View {
+        Menu {
+            Picker(
+                selection: $settings.SortingMethod,
+                label: Image(systemName: SettingsKey.SortingMethod.name)
+            ) {
+                ForEach(SortMethod.allCases) {
+                    method in
+                    Text(method.name).tag(method)
+                }
+            }
+            .pickerStyle(.inline)
+                Picker(
+                    selection: $settings.SortingOrder,
+                    label: Text(SettingsKey.SortingOrder.name)
+                ) {
+                    ForEach(CSSortOrder.allCases) {
+                        order in
+                        Text(order.name).tag(order)
+                    }
+                }
+                .pickerStyle(.inline)
+        } label: {
+            Image(systemName: "arrow.up.arrow.down")
+        }
     }
 
     private func deleteSelected() {
