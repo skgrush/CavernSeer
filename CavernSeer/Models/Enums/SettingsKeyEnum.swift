@@ -3,7 +3,7 @@
 //  CavernSeer
 //
 //  Created by Samuel Grush on 11/15/20.
-//  Copyright © 2020 Samuel K. Grush. All rights reserved.
+//  Copyright © 2021 Samuel K. Grush. All rights reserved.
 //
 
 import Foundation
@@ -24,6 +24,12 @@ enum SettingsKey : String, CaseIterable {
 
     /** an `SCNInteractionMode` */
     case InteractionMode3d
+
+    /** a `SortMethod` */
+    case SortingMethod
+
+    /** a `CSSortOrder` */
+    case SortingOrder
 }
 
 extension SettingsKey {
@@ -41,6 +47,11 @@ extension SettingsKey {
 
             case .InteractionMode3d:
                 return "3D render interaction mode"
+
+            case .SortingMethod:
+                return "Sorting method"
+            case .SortingOrder:
+                return "Sorting order"
         }
     }
 
@@ -58,6 +69,11 @@ extension SettingsKey {
 
             case .InteractionMode3d:
                 return SCNInteractionMode.orbitAngleMapping
+
+            case .SortingMethod:
+                return SortMethod.fileName
+            case .SortingOrder:
+                return CSSortOrder.forward
         }
     }
 
@@ -76,6 +92,11 @@ extension SettingsKey {
 
             case .InteractionMode3d:
                 return (value as! SCNInteractionMode).rawValue
+
+            case .SortingMethod:
+                return (value as! SortMethod).rawValue
+            case .SortingOrder:
+                return (value as! CSSortOrder).rawValue
         }
     }
 }

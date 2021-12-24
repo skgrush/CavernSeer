@@ -59,6 +59,20 @@ final class SettingsStore : NSObject, ObservableObject {
     }
 
     @Published
+    var SortingMethod: SortMethod = .fileName {
+        didSet {
+            setValue(.SortingMethod, from: oldValue, to: SortingMethod)
+        }
+    }
+
+    @Published
+    var SortingOrder: CSSortOrder = .forward {
+        didSet {
+            setValue(.SortingOrder, from: oldValue, to: SortingOrder)
+        }
+    }
+
+    @Published
     var formatter: NumberFormatter
 
     @Published
@@ -172,6 +186,18 @@ final class SettingsStore : NSObject, ObservableObject {
                     self.InteractionMode3d = SCNInteractionMode(
                         rawValue: def.integer(forKey: e.rawValue)
                     ) ?? (e.defaultValue as! SCNInteractionMode)
+
+                case SettingsKey.SortingMethod.rawValue:
+                    let e = SettingsKey.SortingMethod
+                    self.SortingMethod = SortMethod(
+                        rawValue: def.integer(forKey: e.rawValue)
+                    ) ?? (e.defaultValue as! SortMethod)
+
+                case SettingsKey.SortingOrder.rawValue:
+                    let e = SettingsKey.SortingOrder
+                    self.SortingOrder = CSSortOrder(
+                        rawValue: def.integer(forKey: e.rawValue)
+                    ) ?? (e.defaultValue as! CSSortOrder)
 
                 default:
                     debugPrint(
