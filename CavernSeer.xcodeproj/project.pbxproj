@@ -110,6 +110,10 @@
 		7EB80B03275D734100AEAFF4 /* ARMeshAnchorSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB80B02275D734100AEAFF4 /* ARMeshAnchorSet.swift */; };
 		7EC0E46E2662DF7400E4B6BB /* StoredCacheFileProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0E46D2662DF7400E4B6BB /* StoredCacheFileProtocol.swift */; };
 		7EC0E4702662F18000E4B6BB /* ScanCacheFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */; };
+		7ECA84252774244E004FFD98 /* SortMethodEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA84242774244E004FFD98 /* SortMethodEnum.swift */; };
+		7ECA84272774295A004FFD98 /* ScanFileSortComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA84262774295A004FFD98 /* ScanFileSortComparator.swift */; };
+		7ECA842B27755D4D004FFD98 /* CSSortOrderEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA842A27755D4D004FFD98 /* CSSortOrderEnum.swift */; };
+		7ECA842D27757099004FFD98 /* ComparisonResult+reverse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA842C27757099004FFD98 /* ComparisonResult+reverse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -243,6 +247,10 @@
 		7EB80B02275D734100AEAFF4 /* ARMeshAnchorSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMeshAnchorSet.swift; sourceTree = "<group>"; };
 		7EC0E46D2662DF7400E4B6BB /* StoredCacheFileProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredCacheFileProtocol.swift; sourceTree = "<group>"; };
 		7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCacheFile.swift; sourceTree = "<group>"; };
+		7ECA84242774244E004FFD98 /* SortMethodEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethodEnum.swift; sourceTree = "<group>"; };
+		7ECA84262774295A004FFD98 /* ScanFileSortComparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFileSortComparator.swift; sourceTree = "<group>"; };
+		7ECA842A27755D4D004FFD98 /* CSSortOrderEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSortOrderEnum.swift; sourceTree = "<group>"; };
+		7ECA842C27757099004FFD98 /* ComparisonResult+reverse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComparisonResult+reverse.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -324,6 +332,7 @@
 				7E7DEEE425AA24CE00320150 /* Float+round.swift */,
 				7E7DEEE925AA28F000320150 /* Double+round.swift */,
 				7EAAA3DC2770225500B25CFC /* simd+simd.swift */,
+				7ECA842C27757099004FFD98 /* ComparisonResult+reverse.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -504,6 +513,7 @@
 				7E23DB112544FDA800BABB52 /* ObjSerializer.swift */,
 				7E23DB29254E457000BABB52 /* ScaleBarModel.swift */,
 				7EAE9CF22562212D00EA66D0 /* SettingsStore.swift */,
+				7ECA84262774295A004FFD98 /* ScanFileSortComparator.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -625,6 +635,8 @@
 				7E0C5EF724CE5EFC001C0D0E /* errors */,
 				7EAE9CED2562148100EA66D0 /* LengthPreferenceEnum.swift */,
 				7EAE9CD42561C6B700EA66D0 /* SettingsKeyEnum.swift */,
+				7ECA84242774244E004FFD98 /* SortMethodEnum.swift */,
+				7ECA842A27755D4D004FFD98 /* CSSortOrderEnum.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -819,8 +831,10 @@
 				7EB80B03275D734100AEAFF4 /* ARMeshAnchorSet.swift in Sources */,
 				7E6C0EDF24A827FE00129E8C /* TabProtocol.swift in Sources */,
 				7E9C2CF724B6937B00B9FC44 /* ScanShareSheet.swift in Sources */,
+				7ECA84272774295A004FFD98 /* ScanFileSortComparator.swift in Sources */,
 				7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */,
 				7E9C2CE624B3FBFE00B9FC44 /* SavedScanListView.swift in Sources */,
+				7ECA842B27755D4D004FFD98 /* CSSortOrderEnum.swift in Sources */,
 				7E9CF3D6259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift in Sources */,
 				7E09141C25B67DF40023215F /* MTLTexture+Z.swift in Sources */,
 				7EC0E4702662F18000E4B6BB /* ScanCacheFile.swift in Sources */,
@@ -834,6 +848,7 @@
 				7EAE9CCD2561B88600EA66D0 /* SettingsTabView.swift in Sources */,
 				7E967116266D7793002B70B6 /* RenameAndUpgradeView.swift in Sources */,
 				7E5213FC2579D6F90015FA54 /* ElevationCrossSectionRender.swift in Sources */,
+				7ECA842D27757099004FFD98 /* ComparisonResult+reverse.swift in Sources */,
 				7E0C5ED524BACECE001C0D0E /* MergeTool.swift in Sources */,
 				7E9CF42E259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift in Sources */,
 				7E0C5EDE24BD5D4E001C0D0E /* ProjectFile.swift in Sources */,
@@ -854,6 +869,7 @@
 				7E967130267D80D9002B70B6 /* GeneralRenderModel.swift in Sources */,
 				7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */,
 				7E7FD2A7266498DE00F87D08 /* FileSettingsSection.swift in Sources */,
+				7ECA84252774244E004FFD98 /* SortMethodEnum.swift in Sources */,
 				7E43C632256B599600170C17 /* SCNInteractionMode+name.swift in Sources */,
 				7E43C628256B48A800170C17 /* UnitsSettingsSection.swift in Sources */,
 				7E9C2CE224B3F74E00B9FC44 /* ScanListTabView.swift in Sources */,
