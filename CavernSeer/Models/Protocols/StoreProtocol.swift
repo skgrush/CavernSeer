@@ -16,10 +16,9 @@ import Foundation
  */
 protocol StoreProtocol : ObservableObject {
     associatedtype ModelType: SavedStoredFileProtocol
-    associatedtype FileType: StoredFileProtocol = ModelType.FileType
-    associatedtype CacheType: StoredCacheFileProtocol
-        = FileType.CacheType
 
+    typealias FileType = ModelType.FileType
+    typealias CacheType = FileType.CacheType
     @available(iOS 15, *)
     typealias CacheComparator = CacheSortComparator<CacheType>
 
@@ -203,7 +202,7 @@ extension StoreProtocol {
             throw FileSaveError.AlreadyExists
         }
 
-        let file = model.getFile() as! Self.FileType
+        let file = model.getFile()
         return try saveFile(file: file, baseName: model.id)
     }
 
@@ -270,7 +269,7 @@ extension StoreProtocol {
             let modelFile = model.getFile()
             let cacheFile = modelFile.createCacheFile(
                 thisFileURL: realFileURL
-            ) as! Self.CacheType
+            )
             let cacheFileData = try NSKeyedArchiver.archivedData(
                 withRootObject: cacheFile,
                 requiringSecureCoding: true
