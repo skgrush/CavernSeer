@@ -166,8 +166,8 @@ struct ScannerTabView: View {
 #if DEBUG
 
 struct ScannerTabView_Previews: PreviewProvider {
-
-    private static let store = ScanStore()
+    private static let settings = SettingsStore()
+    private static let store = ScanStore(settings: settings)
 
     private static let tab = ScannerTab()
 
@@ -207,10 +207,10 @@ fileprivate struct FakeScanEnvironmentKey: EnvironmentKey {
 fileprivate extension EnvironmentValues {
     var fakeScan: Bool {
         get {
-            return self[FakeScanEnvironmentKey]
+            return self[FakeScanEnvironmentKey.self]
         }
         set {
-            self[FakeScanEnvironmentKey] = newValue
+            self[FakeScanEnvironmentKey.self] = newValue
         }
     }
 }

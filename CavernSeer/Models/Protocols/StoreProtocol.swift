@@ -16,9 +16,11 @@ import Foundation
  */
 protocol StoreProtocol : ObservableObject {
     associatedtype ModelType: SavedStoredFileProtocol
-    associatedtype FileType: StoredFileProtocol = ModelType.FileType
-    associatedtype CacheType: StoredCacheFileProtocol
-        = FileType.CacheType
+
+    typealias FileType = ModelType.FileType
+    typealias CacheType = FileType.CacheType
+    @available(iOS 15, *)
+    typealias CacheComparator = CacheSortComparator<CacheType>
 
     /** basename of directories used for stored files and previews */
     var directoryName: String { get }
@@ -34,6 +36,9 @@ protocol StoreProtocol : ObservableObject {
 
     var caches: [CacheType] { get set }
 
+    @available(iOS 15, *)
+    var cacheComparator: CacheComparator { get }
+
     func makeErrorCacheInstance(_ url: URL, error: Error) -> CacheType
 }
 
@@ -41,6 +46,26 @@ protocol StoreProtocol : ObservableObject {
 extension StoreProtocol {
 
     static var MaxInMemoryModels: Int { 2 }
+
+    @available(iOS 15, *)
+    func sortCaches(_ comparator: CacheComparator?) {
+        let cmp = comparator ?? self.cacheComparator
+        self.caches.sort(using: cmp)
+    }
+
+    /**
+     * Generic sorter for iOS 14. Calls the iOS 15 version if available, allowing this to do both.
+     */
+    @available(iOS, obsoleted: 15)
+    func sortCaches() {
+        if #available(iOS 15, *) {
+            self.sortCaches(nil)
+        } else {
+            caches.sort(by: {
+                $0.id.compare($1.id, options: .literal) == .orderedAscending
+            })
+        }
+    }
 
     /**
      * Try to get a model from a baseName; first try the cache, then try the file
@@ -137,6 +162,7 @@ extension StoreProtocol {
 
                 self.caches.removeAll()
                 self.caches.append(contentsOf: newCaches)
+                self.sortCaches()
 
                 completion?(nil)
             }
@@ -176,7 +202,7 @@ extension StoreProtocol {
             throw FileSaveError.AlreadyExists
         }
 
-        let file = model.getFile() as! Self.FileType
+        let file = model.getFile()
         return try saveFile(file: file, baseName: model.id)
     }
 
@@ -243,7 +269,7 @@ extension StoreProtocol {
             let modelFile = model.getFile()
             let cacheFile = modelFile.createCacheFile(
                 thisFileURL: realFileURL
-            ) as! Self.CacheType
+            )
             let cacheFileData = try NSKeyedArchiver.archivedData(
                 withRootObject: cacheFile,
                 requiringSecureCoding: true

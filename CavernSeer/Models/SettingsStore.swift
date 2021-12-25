@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 import SceneKit
+import Combine
 
 
 final class SettingsStore : NSObject, ObservableObject {
@@ -26,6 +27,8 @@ final class SettingsStore : NSObject, ObservableObject {
         .pan,
         .truck,
     ]
+
+    private var cancelBag = Set<AnyCancellable>()
 
     private let def = UserDefaults.standard
 
@@ -59,10 +62,28 @@ final class SettingsStore : NSObject, ObservableObject {
     }
 
     @Published
+    var SortingMethod: SortMethod = .fileName {
+        didSet {
+            setValue(.SortingMethod, from: oldValue, to: SortingMethod)
+        }
+    }
+
+    @Published
+    var SortingOrder: CSSortOrder = .forward {
+        didSet {
+            setValue(.SortingOrder, from: oldValue, to: SortingOrder)
+        }
+    }
+
+    @Published
     var formatter: NumberFormatter
 
     @Published
     var measureFormatter: MeasurementFormatter
+
+    @available(iOS 15, *)
+    @Published
+    var sortComparator: CacheSortComparator<ScanCacheFile> = .init(.fileName)
 
     let dateFormatter: DateFormatter
 
@@ -101,6 +122,16 @@ final class SettingsStore : NSObject, ObservableObject {
 
         /// pull all values out of `UserDefaults` into our published properties
         self.updateValues(keys: allKeys)
+
+        if #available(iOS 15, *) {
+            self.$SortingMethod.combineLatest(self.$SortingOrder)
+                .sink { [self] method, order in
+                    self.sortComparator = .init(method, order)
+                }
+                .store(in: &cancelBag)
+
+            self.sortComparator = .init(SortingMethod, SortingOrder)
+        }
 
         /// observe changes to all our values
         allKeys.forEach {
@@ -172,6 +203,18 @@ final class SettingsStore : NSObject, ObservableObject {
                     self.InteractionMode3d = SCNInteractionMode(
                         rawValue: def.integer(forKey: e.rawValue)
                     ) ?? (e.defaultValue as! SCNInteractionMode)
+
+                case SettingsKey.SortingMethod.rawValue:
+                    let e = SettingsKey.SortingMethod
+                    self.SortingMethod = SortMethod(
+                        rawValue: def.integer(forKey: e.rawValue)
+                    ) ?? (e.defaultValue as! SortMethod)
+
+                case SettingsKey.SortingOrder.rawValue:
+                    let e = SettingsKey.SortingOrder
+                    self.SortingOrder = CSSortOrder(
+                        rawValue: def.integer(forKey: e.rawValue)
+                    ) ?? (e.defaultValue as! CSSortOrder)
 
                 default:
                     debugPrint(

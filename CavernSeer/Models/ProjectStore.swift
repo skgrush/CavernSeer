@@ -28,6 +28,11 @@ final class ProjectStore : StoreProtocol {
     /// selected `ProjectFile.id`s
     var selection = Set<String>()
 
+    @available(iOS 15, *)
+    var cacheComparator: CacheComparator {
+        CacheSortComparator<ProjectCacheFile>(.fileName)
+    }
+
     internal var fileManager = FileManager.default
     internal var dateFormatter = ISO8601DateFormatter()
 

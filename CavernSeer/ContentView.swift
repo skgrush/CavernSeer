@@ -3,7 +3,7 @@
 //  CavernSeer
 //
 //  Created by Samuel Grush on 6/27/20.
-//  Copyright © 2020 Samuel K. Grush. All rights reserved.
+//  Copyright © 2021 Samuel K. Grush. All rights reserved.
 //
 
 import SwiftUI
@@ -103,7 +103,8 @@ struct ContentView_Previews: PreviewProvider {
 
     static var previews: some View {
 
-        let scanStore = ScanStore()
+        let settings = SettingsStore()
+        let scanStore = ScanStore(settings: settings)
         let projStore = ProjectStore()
         let fileOpener = FileOpener(scanStore, projStore)
 

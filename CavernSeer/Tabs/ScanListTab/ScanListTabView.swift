@@ -59,7 +59,7 @@ struct ScanListTabView_Previews: PreviewProvider {
     }
 
     private static func setupScanStore() -> ScanStore {
-        let store = ScanStore()
+        let store = ScanStore(settings: SettingsStore())
 
         store.modelDataInMemory = dummySavedScans
         store.caches = dummyScanCaches
