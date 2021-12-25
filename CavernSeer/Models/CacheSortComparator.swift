@@ -1,5 +1,5 @@
 //
-//  ScanFileSortComparator.swift
+//  CacheSortComparator.swift
 //  CavernSeer
 //
 //  Created by Samuel Grush on 12/22/21.
