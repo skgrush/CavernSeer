@@ -1,5 +1,5 @@
 //
-//  SettingsEnum.swift
+//  SettingsKeyEnum.swift
 //  CavernSeer
 //
 //  Created by Samuel Grush on 11/15/20.

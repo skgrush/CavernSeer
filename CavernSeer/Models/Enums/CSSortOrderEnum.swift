@@ -1,5 +1,5 @@
 //
-//  CSSortOrder.swift
+//  CSSortOrderEnum.swift
 //  CavernSeer
 //
 //  Created by Samuel Grush on 12/23/21.

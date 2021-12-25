@@ -1,5 +1,5 @@
 //
-//  SortMethod.swift
+//  SortMethodEnum.swift
 //  CavernSeer
 //
 //  Created by Samuel Grush on 12/22/21.
