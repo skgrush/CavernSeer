@@ -27,6 +27,9 @@ final class ScanStore : StoreProtocol {
 
     var modelDataInMemory: [SavedScanModel] = []
 
+    @available(iOS 15, *)
+    var cacheComparator: CacheComparator { self.settings.sortComparator }
+
     @Published
     var caches = [ScanCacheFile]()
 
@@ -133,23 +136,6 @@ final class ScanStore : StoreProtocol {
             img: nil,
             error: error
         )
-    }
-
-    @available(iOS 15, *)
-    func sortCaches(_ comparator: CacheSortComparator<ScanCacheFile>? = nil) {
-        let cmp = comparator ?? self.settings.sortComparator
-        self.caches.sort(using: cmp)
-    }
-
-    @available(iOS, obsoleted: 15)
-    func sortCaches() {
-        if #available(iOS 15, *) {
-            self.sortCaches(nil)
-        } else {
-            caches.sort(by: {
-                $0.id.compare($1.id, options: .literal) == .orderedAscending
-            })
-        }
     }
 }
 

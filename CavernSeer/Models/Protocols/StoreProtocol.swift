@@ -20,6 +20,9 @@ protocol StoreProtocol : ObservableObject {
     associatedtype CacheType: StoredCacheFileProtocol
         = FileType.CacheType
 
+    @available(iOS 15, *)
+    typealias CacheComparator = CacheSortComparator<CacheType>
+
     /** basename of directories used for stored files and previews */
     var directoryName: String { get }
     var filePrefix: String { get }
@@ -34,15 +37,36 @@ protocol StoreProtocol : ObservableObject {
 
     var caches: [CacheType] { get set }
 
-    func makeErrorCacheInstance(_ url: URL, error: Error) -> CacheType
+    @available(iOS 15, *)
+    var cacheComparator: CacheComparator { get }
 
-    func sortCaches()
+    func makeErrorCacheInstance(_ url: URL, error: Error) -> CacheType
 }
 
 
 extension StoreProtocol {
 
     static var MaxInMemoryModels: Int { 2 }
+
+    @available(iOS 15, *)
+    func sortCaches(_ comparator: CacheComparator?) {
+        let cmp = comparator ?? self.cacheComparator
+        self.caches.sort(using: cmp)
+    }
+
+    /**
+     * Generic sorter for iOS 14. Calls the iOS 15 version if available, allowing this to do both.
+     */
+    @available(iOS, obsoleted: 15)
+    func sortCaches() {
+        if #available(iOS 15, *) {
+            self.sortCaches(nil)
+        } else {
+            caches.sort(by: {
+                $0.id.compare($1.id, options: .literal) == .orderedAscending
+            })
+        }
+    }
 
     /**
      * Try to get a model from a baseName; first try the cache, then try the file
