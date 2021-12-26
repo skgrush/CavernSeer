@@ -54,9 +54,7 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
                     label: { Image(systemName: "arrow.clockwise") }
                 )
                 editButton
-                if #available(iOS 15, *) {
-                    sortMenu
-                }
+                sortMenu
             }
         )
         .toolbar {
@@ -112,7 +110,6 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
         })
     }
 
-    @available(iOS 15, *)
     private var sortMenu: some View {
         Menu {
             Picker(

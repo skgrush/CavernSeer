@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOS 15, *)
 class CacheSortComparator<TCache : StoredCacheFileProtocol> : SortComparator {
     typealias Compared = TCache
 

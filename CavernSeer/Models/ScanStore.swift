@@ -27,7 +27,6 @@ final class ScanStore : StoreProtocol {
 
     var modelDataInMemory: [SavedScanModel] = []
 
-    @available(iOS 15, *)
     var cacheComparator: CacheComparator { self.settings.sortComparator }
 
     @Published
@@ -46,11 +45,9 @@ final class ScanStore : StoreProtocol {
         self.settings = settings
         (self.dataDirectory, self.cacheDirectory) = getOrCreateDirectories()
 
-        if #available(iOS 15, *) {
-            self.settings.$sortComparator.sink { comparator in
-                self.sortCaches(comparator)
-            }.store(in: &cancelBag)
-        }
+        self.settings.$sortComparator.sink { comparator in
+            self.sortCaches(comparator)
+        }.store(in: &cancelBag)
     }
 
     /**
