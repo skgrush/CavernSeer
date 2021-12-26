@@ -15,10 +15,6 @@ class CacheSortComparator<TCache : StoredCacheFileProtocol> : SortComparator {
     let method: SortMethod
     var order: SortOrder
 
-    convenience init(_ method: SortMethod, _ order: CSSortOrder) {
-        self.init(method, order.toSortOrder())
-    }
-
     init(_ method: SortMethod, _ order: SortOrder = .forward) {
         self.method = method
         self.order = order

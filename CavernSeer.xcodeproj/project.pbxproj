@@ -71,6 +71,8 @@
 		7E7DEEEA25AA28F000320150 /* Double+round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7DEEE925AA28F000320150 /* Double+round.swift */; };
 		7E7FD2A52664810D00F87D08 /* ProjectCacheFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7FD2A42664810D00F87D08 /* ProjectCacheFile.swift */; };
 		7E7FD2A7266498DE00F87D08 /* FileSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7FD2A6266498DE00F87D08 /* FileSettingsSection.swift */; };
+		7E80ED9F2777E851008E662F /* SortOrder+CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E80ED9E2777E851008E662F /* SortOrder+CaseIterable.swift */; };
+		7E80EDA12777ED16008E662F /* SortOrder+rawValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E80EDA02777ED16008E662F /* SortOrder+rawValue.swift */; };
 		7E91C0A025DA0B73000130FD /* iconflat.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7E91C09F25DA0B73000130FD /* iconflat.svg */; };
 		7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967112266B14D7002B70B6 /* CSMeshSlice.swift */; };
 		7E967116266D7793002B70B6 /* RenameAndUpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */; };
@@ -112,7 +114,6 @@
 		7EC0E4702662F18000E4B6BB /* ScanCacheFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */; };
 		7ECA84252774244E004FFD98 /* SortMethodEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA84242774244E004FFD98 /* SortMethodEnum.swift */; };
 		7ECA84272774295A004FFD98 /* CacheSortComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA84262774295A004FFD98 /* CacheSortComparator.swift */; };
-		7ECA842B27755D4D004FFD98 /* CSSortOrderEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA842A27755D4D004FFD98 /* CSSortOrderEnum.swift */; };
 		7ECA842D27757099004FFD98 /* ComparisonResult+reverse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA842C27757099004FFD98 /* ComparisonResult+reverse.swift */; };
 /* End PBXBuildFile section */
 
@@ -208,6 +209,8 @@
 		7E7FD2A6266498DE00F87D08 /* FileSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSettingsSection.swift; sourceTree = "<group>"; };
 		7E7FD2BD2665E37B00F87D08 /* Description.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Description.txt; sourceTree = "<group>"; };
 		7E7FD2BE2665E3F800F87D08 /* PrivacyPolicy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PrivacyPolicy.md; sourceTree = "<group>"; };
+		7E80ED9E2777E851008E662F /* SortOrder+CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SortOrder+CaseIterable.swift"; sourceTree = "<group>"; };
+		7E80EDA02777ED16008E662F /* SortOrder+rawValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SortOrder+rawValue.swift"; sourceTree = "<group>"; };
 		7E91C09F25DA0B73000130FD /* iconflat.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = iconflat.svg; sourceTree = "<group>"; };
 		7E967112266B14D7002B70B6 /* CSMeshSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSlice.swift; sourceTree = "<group>"; };
 		7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAndUpgradeView.swift; sourceTree = "<group>"; };
@@ -249,7 +252,6 @@
 		7EC0E46F2662F18000E4B6BB /* ScanCacheFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCacheFile.swift; sourceTree = "<group>"; };
 		7ECA84242774244E004FFD98 /* SortMethodEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethodEnum.swift; sourceTree = "<group>"; };
 		7ECA84262774295A004FFD98 /* CacheSortComparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheSortComparator.swift; sourceTree = "<group>"; };
-		7ECA842A27755D4D004FFD98 /* CSSortOrderEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSortOrderEnum.swift; sourceTree = "<group>"; };
 		7ECA842C27757099004FFD98 /* ComparisonResult+reverse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComparisonResult+reverse.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -333,6 +335,8 @@
 				7E7DEEE925AA28F000320150 /* Double+round.swift */,
 				7EAAA3DC2770225500B25CFC /* simd+simd.swift */,
 				7ECA842C27757099004FFD98 /* ComparisonResult+reverse.swift */,
+				7E80ED9E2777E851008E662F /* SortOrder+CaseIterable.swift */,
+				7E80EDA02777ED16008E662F /* SortOrder+rawValue.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -636,7 +640,6 @@
 				7EAE9CED2562148100EA66D0 /* LengthPreferenceEnum.swift */,
 				7EAE9CD42561C6B700EA66D0 /* SettingsKeyEnum.swift */,
 				7ECA84242774244E004FFD98 /* SortMethodEnum.swift */,
-				7ECA842A27755D4D004FFD98 /* CSSortOrderEnum.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -834,7 +837,6 @@
 				7ECA84272774295A004FFD98 /* CacheSortComparator.swift in Sources */,
 				7E4003B024AD5DC600B709BD /* DrawOverlay.swift in Sources */,
 				7E9C2CE624B3FBFE00B9FC44 /* SavedScanListView.swift in Sources */,
-				7ECA842B27755D4D004FFD98 /* CSSortOrderEnum.swift in Sources */,
 				7E9CF3D6259D3DEB0036F6F7 /* SavedStoredFileProtocol.swift in Sources */,
 				7E09141C25B67DF40023215F /* MTLTexture+Z.swift in Sources */,
 				7EC0E4702662F18000E4B6BB /* ScanCacheFile.swift in Sources */,
@@ -850,6 +852,7 @@
 				7E5213FC2579D6F90015FA54 /* ElevationCrossSectionRender.swift in Sources */,
 				7ECA842D27757099004FFD98 /* ComparisonResult+reverse.swift in Sources */,
 				7E0C5ED524BACECE001C0D0E /* MergeTool.swift in Sources */,
+				7E80EDA12777ED16008E662F /* SortOrder+rawValue.swift in Sources */,
 				7E9CF42E259FC4010036F6F7 /* PlanProjectedMiniWorldRender.swift in Sources */,
 				7E0C5EDE24BD5D4E001C0D0E /* ProjectFile.swift in Sources */,
 				7E967132267D821D002B70B6 /* CSLocation.swift in Sources */,
@@ -858,6 +861,7 @@
 				7E9C2CF124B55FE800B9FC44 /* SavedScanDetailAdvanced.swift in Sources */,
 				7EAE9CE92561FF5900EA66D0 /* UserDefaults+color.swift in Sources */,
 				7E6C0EF724A938ED00129E8C /* ScannerModel.swift in Sources */,
+				7E80ED9F2777E851008E662F /* SortOrder+CaseIterable.swift in Sources */,
 				7E6C0EF124A838A000129E8C /* ScanStore.swift in Sources */,
 				7E0C5EE724C90D86001C0D0E /* SavedProjectModel.swift in Sources */,
 				7EAE9CEE2562148100EA66D0 /* LengthPreferenceEnum.swift in Sources */,

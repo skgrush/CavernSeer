@@ -126,10 +126,8 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
                     selection: $settings.SortingOrder,
                     label: Text(SettingsKey.SortingOrder.name)
                 ) {
-                    ForEach(CSSortOrder.allCases) {
-                        order in
-                        Text(order.name).tag(order)
-                    }
+                    Text("Ascending").tag(SortOrder.forward)
+                    Text("Descending").tag(SortOrder.reverse)
                 }
                 .pickerStyle(.inline)
         } label: {

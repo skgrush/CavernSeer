@@ -69,7 +69,7 @@ final class SettingsStore : NSObject, ObservableObject {
     }
 
     @Published
-    var SortingOrder: CSSortOrder = .forward {
+    var SortingOrder: SortOrder = .forward {
         didSet {
             setValue(.SortingOrder, from: oldValue, to: SortingOrder)
         }
@@ -209,9 +209,9 @@ final class SettingsStore : NSObject, ObservableObject {
 
                 case SettingsKey.SortingOrder.rawValue:
                     let e = SettingsKey.SortingOrder
-                    self.SortingOrder = CSSortOrder(
+                    self.SortingOrder = SortOrder(
                         rawValue: def.integer(forKey: e.rawValue)
-                    ) ?? (e.defaultValue as! CSSortOrder)
+                    ) ?? (e.defaultValue as! SortOrder)
 
                 default:
                     debugPrint(

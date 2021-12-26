@@ -73,7 +73,7 @@ extension SettingsKey {
             case .SortingMethod:
                 return SortMethod.fileName
             case .SortingOrder:
-                return CSSortOrder.forward
+                return SortOrder.forward
         }
     }
 
@@ -96,7 +96,7 @@ extension SettingsKey {
             case .SortingMethod:
                 return (value as! SortMethod).rawValue
             case .SortingOrder:
-                return (value as! CSSortOrder).rawValue
+                return (value as! SortOrder).rawValue
         }
     }
 }
