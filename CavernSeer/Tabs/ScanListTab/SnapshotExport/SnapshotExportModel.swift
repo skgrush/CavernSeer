@@ -14,18 +14,13 @@ class SnapshotExportModel : ObservableObject {
     fileprivate static let multipliers = [1, 2, 4, 8]
 
     private unowned var scan: ScanFile?
+    private unowned var imageSharer: ShareSheetUtility?
 
     @Published
     fileprivate var promptShowing = false
 
     @Published
-    fileprivate var exportSheetShowing = false
-
-    @Published
     private var multiplier: Int?
-
-    @Published
-    fileprivate var exportUrl: URL?
 
     /// Currently not in use due to some kind of issue with altert interactions
     @Published
@@ -68,6 +63,7 @@ class SnapshotExportModel : ObservableObject {
         guard
             let multiplierInt = self.multiplier,
             let scan = self.scan,
+            let sharer = self.imageSharer,
             let device = MTLCreateSystemDefaultDevice()
         else {
             debugPrint("renderASnapshot guard failed")
@@ -89,14 +85,9 @@ class SnapshotExportModel : ObservableObject {
         renderer.overlaySKScene = overlay
         renderer.autoenablesDefaultLighting = true
 
-        let temporaryDirectoryURL = FileManager.default.temporaryDirectory
         let name = scan.name
             .replacingOccurrences(of: ":", with: "")
             .replacingOccurrences(of: "/", with: "")
-
-        let tempUrl = temporaryDirectoryURL
-            .appendingPathComponent(name)
-            .appendingPathExtension("png")
 
         let img = renderer.snapshot(
             atTime: TimeInterval(0),
@@ -104,31 +95,17 @@ class SnapshotExportModel : ObservableObject {
             antialiasingMode: .multisampling4X
         )
 
-        guard let imgData = img.pngData()
-        else {
-            debugPrint("Failed to get pngData")
-            self.chooseSize(nil)
-            return
-        }
-
         do {
-            try imgData.write(to: tempUrl)
+            try sharer.shareImage(img, type: .png, basename: name)
         } catch {
-            debugPrint("Failed to write file \(error.localizedDescription)")
+            debugPrint("Failed to write file \(error)")
             self.chooseSize(nil)
-            return
         }
-
-        debugPrint("Wrote img render to", tempUrl)
-
-        self.chooseSize(nil)
-
-        self.exportUrl = tempUrl
-        self.exportSheetShowing = true
     }
 
-    func promptButton(scan: ScanFile) -> some View {
+    func promptButton(scan: ScanFile, sharer: ShareSheetUtility) -> some View {
         self.scan = scan
+        self.imageSharer = sharer
         return Button(action: {
             [weak self] in self?.promptShowing = true
         }) {
@@ -154,14 +131,6 @@ extension View {
                     message: Text("Wait a few seconds for the render"),
                     buttons: Self.generateButtons(model)
                 )
-            }
-//            .alert(isPresented: binding.alertShowing) {
-//                Alert(title: Text(model.alertMessage))
-//            }
-            .sheet(isPresented: binding.exportSheetShowing) {
-                [unowned model] in
-                ScanShareSheet(activityItems: [model.exportUrl!])
-                    .onDisappear { [unowned model] in model.exportUrl = nil }
             }
     }
 

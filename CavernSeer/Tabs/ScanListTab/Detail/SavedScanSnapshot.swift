@@ -9,19 +9,18 @@
 import SwiftUI
 
 struct SavedScanSnapshot: View {
-    var scan: ScanFile?
 
-    @State
-    var showShare = false
-    @State
-    var shareImg: UIImage?
+    @EnvironmentObject
+    var shareImage: ShareSheetUtility
+
+    var scan: ScanFile?
 
     var body: some View {
         HStack {
             self.showSnapshot(snapshot: scan?.startSnapshot)
-                .map { styleAndAddContextMenu(uiImg: $0) }
+                .map { styleAndAddContextMenu(uiImg: $0, suffix: "start") }
             self.showSnapshot(snapshot: scan?.endSnapshot)
-                .map { styleAndAddContextMenu(uiImg: $0) }
+                .map { styleAndAddContextMenu(uiImg: $0, suffix: "end") }
         }
     }
 
@@ -34,7 +33,7 @@ struct SavedScanSnapshot: View {
         return uiImg
     }
 
-    private func styleAndAddContextMenu(uiImg: UIImage) -> some View {
+    private func styleAndAddContextMenu(uiImg: UIImage, suffix: String) -> some View {
         return Image(uiImage: uiImg)
             .resizable()
             .scaledToFit()
@@ -45,7 +44,7 @@ struct SavedScanSnapshot: View {
                     Label("Copy", systemImage: "doc.on.doc")
                 }
                 Button {
-                    shareImage(uiImg: uiImg)
+                    shareImage(uiImg: uiImg, suffix: suffix)
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
@@ -58,13 +57,13 @@ struct SavedScanSnapshot: View {
         pasteboard.image = uiImg
     }
 
-    private func shareImage(uiImg: UIImage) {
-        let actVC = UIActivityViewController(
-            activityItems: [uiImg],
-            applicationActivities: nil
-        )
-        UIApplication.shared.windows.first?.rootViewController?
-            .present(actVC, animated: true)
+    private func shareImage(uiImg: UIImage, suffix: String) {
+        let bn = "\(scan!.name) \(suffix).jpg"
+        do {
+            try self.shareImage.shareImage(uiImg, type: .jpeg, basename: bn)
+        } catch {
+            fatalError("Error sharing image \(error)")
+        }
     }
 }
 
