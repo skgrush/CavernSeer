@@ -99,6 +99,8 @@ struct SavedScanDetail: View {
             } label: {
                 Text("Cancel")
             }
+        } message: {
+            Text("'\(model?.id ?? "scan")' to \(fileExt) file")
         }
         .alert(Text("Exporting..."), isPresented: $showObjLoading) {
             Button(role: .cancel) {
@@ -112,6 +114,9 @@ struct SavedScanDetail: View {
             } label: {
                 Text("Cancel")
             }
+        } message: {
+            Text("Generating '\(model?.id ?? "scan").\(fileExt)';")
+            Text("Once generated, share sheet will open file.")
         }
         .onAppear(perform: self.loadModel)
     }
@@ -131,7 +136,7 @@ struct SavedScanDetail: View {
         self.taskModel.precancelled = false
 
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
-        let name = model.scan.name
+        let name = model.id
             .replacingOccurrences(of: ":", with: "")
             .replacingOccurrences(of: "/", with: "")
 
