@@ -12,20 +12,23 @@ import MetalKit /// MTKMeshBufferAllocator
 extension ScanFile {
     /**
      * Generate an `MDLAsset` from the `ScanFile`'s mesh data.
+     * Async allows this to be cancelled part-way through the process.
      */
-    func toMDLAsset(device: MTLDevice) -> MDLAsset {
+    func toMDLAsset(device: MTLDevice) async throws -> MDLAsset {
 
         let allocator = MTKMeshBufferAllocator(device: device)
 
         let mdlAsset = MDLAsset()
 
-        self.meshAnchors.forEach {
-            anchor in
+        for anchor in self.meshAnchors {
+            try Task.checkCancellation()
+            await Task { [anchor] in
                 mdlAsset.add(
                     anchor.toMDLMesh(
                         allocator: allocator
                     )
                 )
+            }.value
         }
 
         return mdlAsset

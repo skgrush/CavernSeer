@@ -16,7 +16,7 @@ class ObjSerializer : ObservableObject {
      * Generate a mesh from the `ScanFile` and serialize it to the `URL`
      * based on the file extension.
      */
-    func serializeScanViaMDL(scan: ScanFile, url: URL) throws {
+    func serializeScanViaMDL(scan: ScanFile, url: URL) async throws {
         if (
             !MDLAsset.canExportFileExtension(url.pathExtension) ||
             url.pathExtension != fileExtension
@@ -26,7 +26,7 @@ class ObjSerializer : ObservableObject {
         guard let device = MTLCreateSystemDefaultDevice()
         else { throw ObjSerializationError.DeviceUnsupported }
 
-        let mdlAsset = scan.toMDLAsset(device: device)
+        let mdlAsset = try await scan.toMDLAsset(device: device)
 
         try mdlAsset.export(to: url)
     }
