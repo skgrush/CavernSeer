@@ -14,6 +14,8 @@ struct SavedScanDetail: View {
     @EnvironmentObject
     var objSerializer: ObjSerializer
     @EnvironmentObject
+    var sharer: ShareSheetUtility
+    @EnvironmentObject
     var settings: SettingsStore
     @EnvironmentObject
     var scanStore: ScanStore
@@ -28,15 +30,9 @@ struct SavedScanDetail: View {
     @State
     private var isPresentingMap = false
     @State
-    private var showShare = false
-    @State
     private var showObjPrompt = false
     @State
-    private var showObjExport = false
-    @State
     private var showExportLoading = false
-    @State
-    private var objExportUrl: URL?
     @State
     private var fileExt = "obj"
 
@@ -86,11 +82,7 @@ struct SavedScanDetail: View {
         .navigationBarItems(
             trailing: HStack {
                 Button(
-                    action: {
-                        self.showObjExport = false
-                        self.showShare = true
-
-                    },
+                    action: { self.sharer.share([model!.url]) },
                     label: { Image(systemName: "square.and.arrow.up") }
                 )
                 Button(
@@ -99,13 +91,6 @@ struct SavedScanDetail: View {
                 )
             }
         )
-        .sheet(isPresented: $showShare) {
-            if let model = self.model {
-                ScanShareSheet(activityItems: [
-                    self.showObjExport ? self.objExportUrl! : model.url
-                ])
-            }
-        }
         .alert(isPresented: $showObjPrompt) {
             Alert(
                 title: Text("Export"),
@@ -125,7 +110,6 @@ struct SavedScanDetail: View {
         }
 
         self.showObjPrompt = false
-        self.showShare = false
         DispatchQueue.global().async {
             self.showExportLoading = true
         }
@@ -140,8 +124,6 @@ struct SavedScanDetail: View {
             .appendingPathComponent(name)
             .appendingPathExtension(self.fileExt)
 
-        self.objExportUrl = tempUrl
-
         DispatchQueue.global().async {
             do {
                 try objSerializer.serializeScanViaMDL(
@@ -155,8 +137,7 @@ struct SavedScanDetail: View {
             }
 
             self.showExportLoading = false
-            self.showObjExport = true
-            self.showShare = true
+            self.sharer.share([tempUrl])
         }
     }
 }
