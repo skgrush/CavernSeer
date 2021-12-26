@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOS 15, *)
 extension ComparisonResult {
     func reverse() -> ComparisonResult {
         .init(rawValue: -self.rawValue)!

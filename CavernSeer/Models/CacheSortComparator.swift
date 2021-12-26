@@ -8,17 +8,12 @@
 
 import Foundation
 
-@available(iOS 15, *)
 class CacheSortComparator<TCache : StoredCacheFileProtocol> : SortComparator {
     typealias Compared = TCache
 
     private let compareMethod: (Compared, Compared) -> ComparisonResult
     let method: SortMethod
     var order: SortOrder
-
-    convenience init(_ method: SortMethod, _ order: CSSortOrder) {
-        self.init(method, order.toSortOrder())
-    }
 
     init(_ method: SortMethod, _ order: SortOrder = .forward) {
         self.method = method
