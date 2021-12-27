@@ -19,6 +19,9 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
     var listStyle: ListStyleT
 
     @State
+    private var searchText = ""
+
+    @State
     private var editMode: EditMode = .inactive
 
     @State
@@ -30,9 +33,21 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
 //    @State
 //    private var showMergeTool = false
 
+    var searchResults: [ScanCacheFile] {
+        if searchText.isEmpty {
+            return scanStore.caches
+        } else {
+            let term = searchText.lowercased()
+            let results = scanStore.caches.filter {
+                $0.searchableText.contains(term)
+            }
+            return results
+        }
+    }
+
     var body: some View {
         List(selection: $scanStore.selection) {
-            ForEach(scanStore.caches) {
+            ForEach(searchResults) {
                 cache
                 in
                 NavigationLink(
@@ -45,8 +60,8 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
             }
             .onDelete(perform: delete)
         }
+        .searchable(text: $searchText)
         .environment(\.editMode, self.$editMode)
-        .navigationTitle("Scan List")
         .navigationBarItems(
             trailing: HStack {
                 Button(
