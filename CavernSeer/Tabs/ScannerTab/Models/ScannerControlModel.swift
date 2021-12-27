@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import Combine
 
 class ScannerControlModel : ObservableObject {
+    private var cancelBag = Set<AnyCancellable>()
 
     /** The active scanner model. Only accessible while scanning is enabled. */
     @Published
@@ -45,6 +47,16 @@ class ScannerControlModel : ObservableObject {
     /** If we even have access to the camera. `nil` if not yet checked. */
     public private(set) var cameraEnabled: Bool?
 
+    /** Controls the full screen presentation. `renderingARView` MUST be true if this is true.  */
+    @Published
+    public var fullscreenPresented = false
+
+    init() {
+        $renderingARView.sink { newValue in
+            self.fullscreenPresented = newValue
+        }.store(in: &cancelBag)
+    }
+
     /**
      * Stop the passive camera, construct a `ScannerModel` and start the active AR camera.
      */
@@ -66,14 +78,15 @@ class ScannerControlModel : ObservableObject {
     }
 
     /**
-     * Simply stops rendering the ARView, triggering the `ActiveARViewContainer` to
-     * disappear, subsequently calling `scanDisappearing`.
+     * Closes the `fullScreenCover`, which stops rendering the ARView,
+     * which causes the `ActiveARViewContainer` to disappear, which calls `scanDisappearing`,
+     * which starts the rendering the passive view.
      *
      * Does  not save the scan.
      */
     func cancelScan() {
-        if self.renderingARView {
-            self.renderingARView = false
+        if self.fullscreenPresented {
+            self.fullscreenPresented = false
         }
         if self.scanEnabled {
             self.scanEnabled = false
@@ -95,6 +108,7 @@ class ScannerControlModel : ObservableObject {
         self.torchEnabled = false
 
         self.renderingPassiveView = true
+        self.renderingARView = false
     }
 
     /**

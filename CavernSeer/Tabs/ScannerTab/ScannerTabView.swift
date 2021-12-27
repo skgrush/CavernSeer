@@ -36,16 +36,26 @@ struct ScannerTabView: View {
     private var control = ScannerControlModel()
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            if isSelected {
-                ScannerContainerView(control: self.control)
-                    .edgesIgnoringSafeArea(.all)
+        if isSelected && control.cameraEnabled != false {
+            if control.renderingPassiveView {
+                ZStack(alignment: .bottom) {
+                    PassiveCameraViewContainer(control: control)
+                        .edgesIgnoringSafeArea(.all)
+                    passiveControls.background(controlBackground)
+                }
+            } else if control.renderingARView {
+                Spacer().fullScreenCover(
+                    isPresented: $control.fullscreenPresented
+                ) {
+                    ZStack(alignment: .bottom) {
+                        ActiveARViewContainer(control: control)
+                            .edgesIgnoringSafeArea(.all)
+                        activeControls.background(controlBackground)
+                    }
+                }
             }
-
-            controls
-                .background(
-                    Color(UIColor.systemGray6).opacity(0.4).ignoresSafeArea()
-                )
+        } else {
+            Spacer()
         }
     }
 
@@ -53,35 +63,49 @@ struct ScannerTabView: View {
         return self.control.scanEnabled || self.fakeScan
     }
 
-    private var controls: some View {
+    // MARK: - Control views
+
+    private let controlPadding = EdgeInsets(top: 5, leading: 10, bottom: 20, trailing: 10)
+
+    private var controlBackground: some View {
+        Color(UIColor.systemGray6).opacity(0.4).ignoresSafeArea()
+    }
+
+    private var activeControls: some View {
         VStack {
-            if !self.control.message.isEmpty {
-                HStack {
-                    Text(self.control.message)
-                }
-            }
+            messageView
 
             // controls
             HStack(alignment: .bottom) {
                 debugButtons.frame(width: 100, height: controlFrameHeight)
-
                 Spacer()
-
-                if scanEnabled {
-                    saveOrCancel
-                } else {
-                    captureButton
-                }
-
+                saveOrCancel
                 Spacer()
-
-                if scanEnabled {
-                    flashButton.frame(width: 100, height: controlFrameHeight)
-                } else {
-                    Spacer().frame(width: 100, height: controlFrameHeight)
-                }
+                flashButton.frame(width: 100, height: controlFrameHeight)
             }
-            .padding(.init(top: 5, leading: 10, bottom: 20, trailing: 10))
+            .padding(controlPadding)
+        }
+    }
+
+    private var passiveControls: some View {
+        VStack {
+            messageView
+
+            // controls
+            HStack(alignment: .bottom) {
+                Spacer()
+                captureButton.frame(height: controlFrameHeight)
+                Spacer()
+            }
+            .padding(controlPadding)
+        }
+    }
+
+    private var messageView: some View {
+        HStack {
+            if !self.control.message.isEmpty {
+                Text(self.control.message)
+            }
         }
     }
 
