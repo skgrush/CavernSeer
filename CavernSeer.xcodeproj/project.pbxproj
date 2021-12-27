@@ -423,7 +423,6 @@
 				7E4003AC24AD5A5A00B709BD /* extensions */,
 				7E6C0EEB24A834B700129E8C /* lib */,
 				7E6C0EEA24A8346F00129E8C /* Models */,
-				7E80EDA62778E517008E662F /* GlobalViews */,
 				7E6C0EDB24A825E700129E8C /* Tabs */,
 				7E6C0EAB24A800C200129E8C /* AppDelegate.swift */,
 				7E6C0EAD24A800C200129E8C /* SceneDelegate.swift */,
@@ -549,13 +548,6 @@
 				7E80EDA32777FF9F008E662F /* ShareSheetUtility.swift */,
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		7E80EDA62778E517008E662F /* GlobalViews */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = GlobalViews;
 			sourceTree = "<group>";
 		};
 		7E96711F26745916002B70B6 /* ModelsTests */ = {
