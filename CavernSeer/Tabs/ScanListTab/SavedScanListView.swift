@@ -62,17 +62,11 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
         }
         .searchable(text: $searchText)
         .environment(\.editMode, self.$editMode)
-        .navigationBarItems(
-            trailing: HStack {
-                Button(
-                    action: { self.scanStore.update() },
-                    label: { Image(systemName: "arrow.clockwise") }
-                )
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 editButton
                 sortMenu
             }
-        )
-        .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
                 if editMode == .active {
                     Button(

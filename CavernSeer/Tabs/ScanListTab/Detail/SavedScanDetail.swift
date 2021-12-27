@@ -76,8 +76,8 @@ struct SavedScanDetail: View {
                 SavedScanDetailLinks(model: model)
             }
         }
-        .navigationBarItems(
-            trailing: HStack {
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button(
                     action: { self.sharer.share([model!.url]) },
                     label: { Image(systemName: "square.and.arrow.up") }

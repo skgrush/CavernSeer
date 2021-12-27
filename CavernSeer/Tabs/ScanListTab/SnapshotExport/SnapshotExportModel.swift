@@ -110,7 +110,6 @@ class SnapshotExportModel : ObservableObject {
             [weak self] in self?.promptShowing = true
         }) {
             Image(systemName: "camera.on.rectangle")
-                .font(Font.system(.title))
         }
     }
 }

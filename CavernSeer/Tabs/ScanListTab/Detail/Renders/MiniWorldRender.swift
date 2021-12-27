@@ -29,11 +29,13 @@ struct MiniWorldRender: View {
             snapshotModel: snapshotModel
         )
         .snapshotMenus(for: _snapshotModel)
-        .navigationBarItems(trailing: HStack {
-            [unowned snapshotModel, unowned renderModel, unowned imageSharer] in
-            snapshotModel.promptButton(scan: scan, sharer: imageSharer)
-            renderModel.doubleSidedButton()
-        })
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                [unowned snapshotModel, unowned renderModel, unowned imageSharer] in
+                snapshotModel.promptButton(scan: scan, sharer: imageSharer)
+                renderModel.doubleSidedButton()
+            }
+        }
         .onAppear(perform: self.appeared)
     }
 

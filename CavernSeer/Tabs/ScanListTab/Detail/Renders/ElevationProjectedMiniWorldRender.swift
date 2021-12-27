@@ -103,11 +103,13 @@ struct ElevationProjectedMiniWorldRender: View {
             }
         }
         .snapshotMenus(for: _snapshotModel)
-        .navigationBarItems(trailing: HStack {
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
             [unowned snapshotModel, unowned renderModel, unowned imageSharer] in
-            snapshotModel.promptButton(scan: scan, sharer: imageSharer)
-            renderModel.doubleSidedButton()
-        })
+                snapshotModel.promptButton(scan: scan, sharer: imageSharer)
+                renderModel.doubleSidedButton()
+            }
+        }
         .onAppear(perform: self.appeared)
         .onDisappear(perform: self.disappeared)
     }
