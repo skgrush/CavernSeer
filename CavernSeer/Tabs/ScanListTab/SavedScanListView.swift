@@ -66,6 +66,7 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
         }
         .environment(\.editMode, self.$editMode)
         .navigationTitle(Text("Scan List"))
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 editButton
