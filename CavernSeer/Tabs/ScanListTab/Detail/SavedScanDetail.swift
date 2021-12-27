@@ -88,12 +88,13 @@ struct SavedScanDetail: View {
                 )
             }
         }
-        .confirmationDialog(
+        /// for some reason, using `.confirmationDialog` breaks the two-alert timing
+        .alert(
             Text("Export '\(model?.id ?? "scan")' to \(fileExt.uppercased()) file?"),
-            isPresented: $showObjPrompt,
-            titleVisibility: .visible
+            isPresented: $showObjPrompt
         ) {
             Button(role: .destructive) {
+                self.showObjPrompt = false
                 startGeneratingObj()
             } label: {
                 Text("Export")
@@ -129,7 +130,7 @@ struct SavedScanDetail: View {
         }
 
         // give the UI time to close the alert which called this
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.5) {
             self.generateObjAsync(model: model)
         }
     }
@@ -183,7 +184,7 @@ struct SavedScanDetail: View {
                         self.taskModel.objTask = nil
 
                         DispatchQueue.main.asyncAfter(
-                            deadline: .now() + 5
+                            deadline: .now() + 0.5
                         ) {
                             self.sharer.share([tempUrl])
                         }
