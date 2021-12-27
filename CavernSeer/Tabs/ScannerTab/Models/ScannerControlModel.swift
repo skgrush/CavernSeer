@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 class ScannerControlModel : ObservableObject {
     private var cancelBag = Set<AnyCancellable>()
@@ -54,6 +55,11 @@ class ScannerControlModel : ObservableObject {
     init() {
         $renderingARView.sink { newValue in
             self.fullscreenPresented = newValue
+        }.store(in: &cancelBag)
+
+        /// if-and-only-if in fullscreen view, prevent the device from idling to sleep
+        $fullscreenPresented.sink { presented in
+            UIApplication.shared.isIdleTimerDisabled = presented
         }.store(in: &cancelBag)
     }
 
