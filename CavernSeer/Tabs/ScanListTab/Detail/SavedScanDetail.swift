@@ -8,11 +8,19 @@
 
 import SwiftUI /// View
 
+class ObjTaskModel {
+    /** Set to cancel the task before it's been initialized */
+    var precancelled = false
+    var objTask: Task<(), Error>?
+}
+
 struct SavedScanDetail: View {
     var cache: ScanCacheFile
 
     @EnvironmentObject
     var objSerializer: ObjSerializer
+    @EnvironmentObject
+    var sharer: ShareSheetUtility
     @EnvironmentObject
     var settings: SettingsStore
     @EnvironmentObject
@@ -28,17 +36,14 @@ struct SavedScanDetail: View {
     @State
     private var isPresentingMap = false
     @State
-    private var showShare = false
-    @State
     private var showObjPrompt = false
     @State
-    private var showObjExport = false
-    @State
-    private var showExportLoading = false
-    @State
-    private var objExportUrl: URL?
+    private var showObjLoading = false
     @State
     private var fileExt = "obj"
+
+    @State
+    private var taskModel = ObjTaskModel()
 
     private func loadModel() {
         if let err = self.cache.error {
@@ -58,18 +63,6 @@ struct SavedScanDetail: View {
 
     var body: some View {
         VStack {
-            if showExportLoading {
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Exporting '\(self.fileExt)' file...").bold()
-                        Text(self.model?.scan.name ?? "ERROR finding scan name")
-                    }
-                    Spacer()
-                }
-                .padding(12)
-                .background(Color.green)
-                .cornerRadius(8)
-            }
 
             SavedScanSnapshot(scan: model?.scan)
 
@@ -83,14 +76,10 @@ struct SavedScanDetail: View {
                 SavedScanDetailLinks(model: model)
             }
         }
-        .navigationBarItems(
-            trailing: HStack {
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button(
-                    action: {
-                        self.showObjExport = false
-                        self.showShare = true
-
-                    },
+                    action: { self.sharer.share([model!.url]) },
                     label: { Image(systemName: "square.and.arrow.up") }
                 )
                 Button(
@@ -98,40 +87,59 @@ struct SavedScanDetail: View {
                     label: { Image(systemName: "arrow.up.bin") }
                 )
             }
-        )
-        .sheet(isPresented: $showShare) {
-            if let model = self.model {
-                ScanShareSheet(activityItems: [
-                    self.showObjExport ? self.objExportUrl! : model.url
-                ])
+        }
+        /// for some reason, using `.confirmationDialog` breaks the two-alert timing
+        .alert(
+            Text("Export '\(model?.id ?? "scan")' to \(fileExt.uppercased()) file?"),
+            isPresented: $showObjPrompt
+        ) {
+            Button(role: .destructive) {
+                self.showObjPrompt = false
+                startGeneratingObj()
+            } label: {
+                Text("Export")
+            }
+            Button(role: .cancel) {
+                self.showObjPrompt = false
+            } label: {
+                Text("Cancel")
             }
         }
-        .alert(isPresented: $showObjPrompt) {
-            Alert(
-                title: Text("Export"),
-                message: Text("Generate and export '\(self.fileExt)' file?"),
-                primaryButton: .destructive(Text("Export")) {
-                    generateObj()
-                },
-                secondaryButton: .cancel()
-            )
+        .alert(Text("Exporting..."), isPresented: $showObjLoading) {
+            Button(role: .cancel) {
+                if let objTask = self.taskModel.objTask {
+                    objTask.cancel()
+                    self.taskModel.objTask = nil
+                } else {
+                    // if you cancel before the task has initialized
+                    self.taskModel.precancelled = true
+                }
+            } label: {
+                Text("Cancel")
+            }
+        } message: {
+            Text("Generating '\(model?.id ?? "scan").\(fileExt)';")
+            Text("Once generated, share sheet will open file.")
         }
         .onAppear(perform: self.loadModel)
     }
 
-    private func generateObj() {
+    private func startGeneratingObj() {
         guard let model = self.model else {
             return
         }
 
-        self.showObjPrompt = false
-        self.showShare = false
-        DispatchQueue.global().async {
-            self.showExportLoading = true
+        // give the UI time to close the alert which called this
+        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.5) {
+            self.generateObjAsync(model: model)
         }
+    }
+
+    private func generateObjAsync(model: SavedScanModel) {
+        self.taskModel.precancelled = false
 
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
-        let name = model.scan.name
+        let name = model.id
             .replacingOccurrences(of: ":", with: "")
             .replacingOccurrences(of: "/", with: "")
 
@@ -140,23 +148,51 @@ struct SavedScanDetail: View {
             .appendingPathComponent(name)
             .appendingPathExtension(self.fileExt)
 
-        self.objExportUrl = tempUrl
+        self.showObjLoading = true
 
-        DispatchQueue.global().async {
-            do {
-                try objSerializer.serializeScanViaMDL(
-                    scan: model.scan,
-                    url: tempUrl
-                )
-            } catch {
-                fatalError(
-                    "Error generating file: \(error.localizedDescription)"
-                )
+        // give the UI time to show the ObjLoading alert
+        DispatchQueue.global(qos: .userInitiated).async {
+
+            // create a task that can be cancelled
+            self.taskModel.objTask = Task {
+                try Task.checkCancellation()
+                if self.taskModel.precancelled {
+                    self.taskModel.precancelled = false
+                    return
+                }
+
+                do {
+                    try await objSerializer.serializeScanViaMDL(
+                        scan: model.scan,
+                        url: tempUrl
+                    )
+                } catch is CancellationError {
+                    return // cancelled
+                } catch {
+                    fatalError(
+                        "Error generating file: \(error.localizedDescription)"
+                    )
+                }
+
+                try Task.checkCancellation()
+
+                DispatchQueue.main.async {
+                    self.showObjLoading = false
+
+                    do {
+                        try Task.checkCancellation()
+                        self.taskModel.objTask = nil
+
+                        DispatchQueue.main.asyncAfter(
+                            deadline: .now() + 0.5
+                        ) {
+                            self.sharer.share([tempUrl])
+                        }
+                    } catch {
+                        return
+                    }
+                }
             }
-
-            self.showExportLoading = false
-            self.showObjExport = true
-            self.showShare = true
         }
     }
 }

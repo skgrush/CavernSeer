@@ -69,16 +69,15 @@ struct RenameAndUpgradeView : View {
                 }
             }
         }
-        .alert(isPresented: $showingResultAlert) {
-            Alert(
-                title: Text(resultURL != nil ? "Successfully wrote file" : "Error writing file!"),
-                message: Text(resultMessage),
-                dismissButton: .default(Text("Ok")) {
-                    if resultURL != nil {
-                        scanStore.setVisible(visible: resultURL!, updateFirst: true)
-                    }
+        .alert(
+            Text(resultURL != nil ? "Successfully wrote file" : "Error writing file!"),
+            isPresented: $showingResultAlert
+        ) {
+            Button("Ok", role: nil) {
+                if let resultURL = resultURL {
+                    scanStore.setVisible(visible: resultURL, updateFirst: true)
                 }
-            )
+            }
         }
     }
 

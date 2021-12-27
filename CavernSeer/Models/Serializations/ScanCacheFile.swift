@@ -22,6 +22,7 @@ final class ScanCacheFile : NSObject, NSSecureCoding, StoredCacheFileProtocol {
     let displayName: String
     let error: Error?
 
+    var searchableText: String = ""
     var realFileURL: URL? = nil
 
     let jpegImageData: Data?
@@ -34,6 +35,10 @@ final class ScanCacheFile : NSObject, NSSecureCoding, StoredCacheFileProtocol {
         self.realFileURL = realFileURL
         self.jpegImageData = img
         self.error = error
+
+        super.init()
+
+        self.searchableText = getSearchableText()
     }
 
     required init?(coder decoder: NSCoder) {
@@ -77,6 +82,10 @@ final class ScanCacheFile : NSObject, NSSecureCoding, StoredCacheFileProtocol {
                 self.jpegImageData = nil
             }
 
+            super.init()
+
+            self.searchableText = getSearchableText()
+
         } else {
             fatalError("Unexpected encoding version \(version)")
         }
@@ -90,6 +99,15 @@ final class ScanCacheFile : NSObject, NSSecureCoding, StoredCacheFileProtocol {
         if jpegImageData != nil {
             coder.encode(jpegImageData, forKey: PropertyKeys.jpegImageData)
         }
+    }
+
+    private func getSearchableText() -> String {
+        return [
+            displayName,
+            timestamp.formatted(date: .long, time: .omitted)
+        ]
+            .joined(separator: "\u{0}")
+            .lowercased()
     }
 
     #if DEBUG

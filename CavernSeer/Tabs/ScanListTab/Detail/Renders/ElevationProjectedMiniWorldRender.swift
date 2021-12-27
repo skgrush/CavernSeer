@@ -15,6 +15,9 @@ protocol SCNRenderObserver : AnyObject {
 
 struct ElevationProjectedMiniWorldRender: View {
 
+    @EnvironmentObject
+    var imageSharer: ShareSheetUtility
+
     var scan: ScanFile
     var settings: SettingsStore
 
@@ -100,11 +103,13 @@ struct ElevationProjectedMiniWorldRender: View {
             }
         }
         .snapshotMenus(for: _snapshotModel)
-        .navigationBarItems(trailing: HStack {
-            [unowned snapshotModel, unowned renderModel] in
-            snapshotModel.promptButton(scan: scan)
-            renderModel.doubleSidedButton()
-        })
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+            [unowned snapshotModel, unowned renderModel, unowned imageSharer] in
+                snapshotModel.promptButton(scan: scan, sharer: imageSharer)
+                renderModel.doubleSidedButton()
+            }
+        }
         .onAppear(perform: self.appeared)
         .onDisappear(perform: self.disappeared)
     }

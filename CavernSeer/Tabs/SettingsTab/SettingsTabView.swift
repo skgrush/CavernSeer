@@ -20,6 +20,11 @@ final class SettingsTab : TabProtocol {
     }
 }
 
+enum SettingsPage {
+    case preferences
+    case advanced
+}
+
 struct SettingsTabView: View {
 
     @EnvironmentObject
@@ -27,34 +32,57 @@ struct SettingsTabView: View {
 
     var isSelected: Bool
 
+    @State
+    var selection: SettingsPage? = .preferences
+
     var body: some View {
         NavigationView {
-            Form {
+            List {
+                NavigationLink(
+                    tag: SettingsPage.preferences,
+                    selection: $selection,
+                    destination: {
+                        Form {
+                            /// colors
+                            Section(header: Text("Color")) {
+                                ColorsSettingsSection()
+                            }
 
-                /// colors
-                Section(header: Text("Color")) {
-                    ColorsSettingsSection()
+                            /// units
+                            Section(header: Text("Units")) {
+                                UnitsSettingsSection()
+                            }
+
+                            /// 3D interaction mode
+                            Section {
+                                Interaction3dSettingsSection()
+                            }
+                        }
+                    }
+                ) {
+                    HStack { Text("Preferences") }
                 }
 
-                /// units
-                Section(header: Text("Units")) {
-                    UnitsSettingsSection()
-                }
+                NavigationLink(
+                    tag: SettingsPage.advanced,
+                    selection: $selection,
+                    destination: {
+                        Form {
+                            Section(header: Text("Files")) {
+                                FileSettingsSection()
+                            }
 
-                /// 3D interaction mode
-                Section {
-                    Interaction3dSettingsSection()
-                }
-
-                Section(header: Text("Files")) {
-                    FileSettingsSection()
-                }
-
-                Section(header: Text("Debug")) {
-                    DebugSection()
+                            Section(header: Text("Debug")) {
+                                DebugSection()
+                            }
+                        }
+                    }
+                ) {
+                    Text("Advanced")
                 }
             }
         }
+        .navigationViewStyle(.automatic)
     }
 }
 

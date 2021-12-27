@@ -33,15 +33,17 @@ struct FileSettingsSection: View {
                     Text("Delete all stored files")
                         .foregroundColor(Color(UIColor.systemRed))
                 }
-                .alert(isPresented: $showDeletePrompt) {
-                    Alert(
-                        title: Text("Delete all files stored in the app?"),
-                        message: Text("This cannot be undone!"),
-                        primaryButton: .destructive(Text("Delete all")) {
-                            deleteAllFiles()
-                        },
-                        secondaryButton: .cancel()
-                    )
+                .confirmationDialog(
+                    Text("Delete all files stored in the app? This cannot be undone!"),
+                    isPresented: $showDeletePrompt,
+                    titleVisibility: .visible
+                ) {
+                    Button("Delete all", role: .destructive) {
+                        deleteAllFiles()
+                    }
+                    Button("Cancel", role: .cancel) {
+                        showDeletePrompt = false
+                    }
                 }
             }
         }

@@ -11,6 +11,9 @@ import SceneKit /// SCN*
 
 struct MiniWorldRender: View {
 
+    @EnvironmentObject
+    var imageSharer: ShareSheetUtility
+
     var scan: ScanFile
     var settings: SettingsStore
 
@@ -26,10 +29,13 @@ struct MiniWorldRender: View {
             snapshotModel: snapshotModel
         )
         .snapshotMenus(for: _snapshotModel)
-        .navigationBarItems(trailing: HStack {
-            snapshotModel.promptButton(scan: scan)
-            renderModel.doubleSidedButton()
-        })
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                [unowned snapshotModel, unowned renderModel, unowned imageSharer] in
+                snapshotModel.promptButton(scan: scan, sharer: imageSharer)
+                renderModel.doubleSidedButton()
+            }
+        }
         .onAppear(perform: self.appeared)
     }
 

@@ -31,7 +31,7 @@ struct ScanListTabView: View {
 
     var body: some View {
         NavigationView {
-            SavedScanListView(listStyle: SidebarListStyle())
+            SavedScanListView(listStyle: .sidebar)
         }
     }
 }
