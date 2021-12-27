@@ -73,12 +73,14 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
             }
         )
         .toolbar {
-            ToolbarItem(placement: editMode == .active ? .bottomBar : .keyboard) {
-                Button(
-                    action: { self.deleteSelected() },
-                    label: { Image(systemName: "trash") }
-                )
-                .disabled(self.scanStore.selection.isEmpty)
+            ToolbarItemGroup(placement: .bottomBar) {
+                if editMode == .active {
+                    Button(
+                        action: { self.deleteSelected() },
+                        label: { Image(systemName: "trash") }
+                    )
+                    .disabled(self.scanStore.selection.isEmpty)
+                }
             }
 
 // TODO: Merge Tool
