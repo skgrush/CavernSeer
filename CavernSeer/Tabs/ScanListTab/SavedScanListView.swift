@@ -58,7 +58,7 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
             }
         )
         .toolbar {
-            ToolbarItem(placement: .bottomBar) {
+            ToolbarItem(placement: editMode == .active ? .bottomBar : .keyboard) {
                 Button(
                     action: { self.deleteSelected() },
                     label: { Image(systemName: "trash") }
