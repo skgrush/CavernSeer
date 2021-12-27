@@ -87,8 +87,12 @@ struct SavedScanDetail: View {
                     label: { Image(systemName: "arrow.up.bin") }
                 )
             }
-        )
-        .alert(Text("Export \(fileExt)?"), isPresented: $showObjPrompt) {
+        }
+        .confirmationDialog(
+            Text("Export '\(model?.id ?? "scan")' to \(fileExt.uppercased()) file?"),
+            isPresented: $showObjPrompt,
+            titleVisibility: .visible
+        ) {
             Button(role: .destructive) {
                 startGeneratingObj()
             } label: {
@@ -99,8 +103,6 @@ struct SavedScanDetail: View {
             } label: {
                 Text("Cancel")
             }
-        } message: {
-            Text("'\(model?.id ?? "scan")' to \(fileExt) file")
         }
         .alert(Text("Exporting..."), isPresented: $showObjLoading) {
             Button(role: .cancel) {
