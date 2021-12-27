@@ -60,8 +60,12 @@ struct SavedScanListView<ListStyleT: ListStyle>: View {
             }
             .onDelete(perform: delete)
         }
-        .searchable(text: $searchText)
+        .searchable(text: $searchText, placement: .navigationBarDrawer)
+        .refreshable {
+            self.scanStore.update()
+        }
         .environment(\.editMode, self.$editMode)
+        .navigationTitle(Text("Scan List"))
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 editButton
