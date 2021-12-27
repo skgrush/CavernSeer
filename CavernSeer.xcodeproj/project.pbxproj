@@ -508,7 +508,6 @@
 			isa = PBXGroup;
 			children = (
 				7E80EDA52778CCD5008E662F /* Utilities */,
-				7E80EDA22777FF90008E662F /* Functions */,
 				7ECA8423277422A5004FFD98 /* Enums */,
 				7E4003B324AD7B5D00B709BD /* Protocols */,
 				7E99F94D24B1130C0098D44B /* Serializations */,
@@ -517,8 +516,6 @@
 				7E6C0EF224A838E200129E8C /* SavedScanModel.swift */,
 				7E0C5EE424C90746001C0D0E /* ProjectStore.swift */,
 				7E0C5EE624C90D86001C0D0E /* SavedProjectModel.swift */,
-				7E0C5EF524CE580B001C0D0E /* FileOpener.swift */,
-				7E23DB112544FDA800BABB52 /* ObjSerializer.swift */,
 				7E23DB29254E457000BABB52 /* ScaleBarModel.swift */,
 				7EAE9CF22562212D00EA66D0 /* SettingsStore.swift */,
 				7ECA84262774295A004FFD98 /* CacheSortComparator.swift */,
@@ -535,17 +532,12 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
-		7E80EDA22777FF90008E662F /* Functions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Functions;
-			sourceTree = "<group>";
-		};
 		7E80EDA52778CCD5008E662F /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				7E80EDA32777FF9F008E662F /* ShareSheetUtility.swift */,
+				7E23DB112544FDA800BABB52 /* ObjSerializer.swift */,
+				7E0C5EF524CE580B001C0D0E /* FileOpener.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
