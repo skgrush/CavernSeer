@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CS:PlatformTargetPrefix</key>
-	<string>$(SWIFT_PLATFORM_TARGET_PREFIX)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDocumentTypes</key>
@@ -33,12 +31,16 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CS:PlatformTargetPrefix</key>
+	<string>$(SWIFT_PLATFORM_TARGET_PREFIX)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is used for augmented reality scanning.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Optionally see GPS location before starting a scan.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Optional saving of high-resolution images</string>
 	<key>UIApplicationSceneManifest</key>

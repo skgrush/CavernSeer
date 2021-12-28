@@ -93,9 +93,11 @@ struct ScannerTabView: View {
 
             // controls
             HStack(alignment: .bottom) {
+                Spacer().frame(width: 100, height: controlFrameHeight)
                 Spacer()
                 captureButton.frame(height: controlFrameHeight)
                 Spacer()
+                CompassView().frame(width: 100, height: controlFrameHeight)
             }
             .padding(controlPadding)
         }
