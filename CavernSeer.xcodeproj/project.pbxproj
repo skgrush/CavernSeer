@@ -65,7 +65,6 @@
 		7E6C0EEF24A8388C00129E8C /* ScanFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EEE24A8388C00129E8C /* ScanFile.swift */; };
 		7E6C0EF124A838A000129E8C /* ScanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF024A838A000129E8C /* ScanStore.swift */; };
 		7E6C0EF324A838E200129E8C /* SavedScanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF224A838E200129E8C /* SavedScanModel.swift */; };
-		7E6C0EF524A9323900129E8C /* ScannerContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF424A9323900129E8C /* ScannerContainerView.swift */; };
 		7E6C0EF724A938ED00129E8C /* ScannerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6C0EF624A938ED00129E8C /* ScannerModel.swift */; };
 		7E7DEEE525AA24CE00320150 /* Float+round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7DEEE425AA24CE00320150 /* Float+round.swift */; };
 		7E7DEEEA25AA28F000320150 /* Double+round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7DEEE925AA28F000320150 /* Double+round.swift */; };
@@ -74,6 +73,8 @@
 		7E80ED9F2777E851008E662F /* SortOrder+CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E80ED9E2777E851008E662F /* SortOrder+CaseIterable.swift */; };
 		7E80EDA12777ED16008E662F /* SortOrder+rawValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E80EDA02777ED16008E662F /* SortOrder+rawValue.swift */; };
 		7E80EDA42777FF9F008E662F /* ShareSheetUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E80EDA32777FF9F008E662F /* ShareSheetUtility.swift */; };
+		7E80EDAA277A8A6D008E662F /* CompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E80EDA9277A8A6C008E662F /* CompassView.swift */; };
+		7E80EDAC277AB16B008E662F /* ScannerGPSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E80EDAB277AB16B008E662F /* ScannerGPSView.swift */; };
 		7E91C0A025DA0B73000130FD /* iconflat.svg in Resources */ = {isa = PBXBuildFile; fileRef = 7E91C09F25DA0B73000130FD /* iconflat.svg */; };
 		7E967113266B14D7002B70B6 /* CSMeshSlice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967112266B14D7002B70B6 /* CSMeshSlice.swift */; };
 		7E967116266D7793002B70B6 /* RenameAndUpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */; };
@@ -202,7 +203,6 @@
 		7E6C0EEE24A8388C00129E8C /* ScanFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFile.swift; sourceTree = "<group>"; };
 		7E6C0EF024A838A000129E8C /* ScanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStore.swift; sourceTree = "<group>"; };
 		7E6C0EF224A838E200129E8C /* SavedScanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScanModel.swift; sourceTree = "<group>"; };
-		7E6C0EF424A9323900129E8C /* ScannerContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerContainerView.swift; sourceTree = "<group>"; };
 		7E6C0EF624A938ED00129E8C /* ScannerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerModel.swift; sourceTree = "<group>"; };
 		7E7DEEE425AA24CE00320150 /* Float+round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Float+round.swift"; sourceTree = "<group>"; };
 		7E7DEEE925AA28F000320150 /* Double+round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+round.swift"; sourceTree = "<group>"; };
@@ -213,6 +213,8 @@
 		7E80ED9E2777E851008E662F /* SortOrder+CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SortOrder+CaseIterable.swift"; sourceTree = "<group>"; };
 		7E80EDA02777ED16008E662F /* SortOrder+rawValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SortOrder+rawValue.swift"; sourceTree = "<group>"; };
 		7E80EDA32777FF9F008E662F /* ShareSheetUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetUtility.swift; sourceTree = "<group>"; };
+		7E80EDA9277A8A6C008E662F /* CompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassView.swift; sourceTree = "<group>"; };
+		7E80EDAB277AB16B008E662F /* ScannerGPSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerGPSView.swift; sourceTree = "<group>"; };
 		7E91C09F25DA0B73000130FD /* iconflat.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = iconflat.svg; sourceTree = "<group>"; };
 		7E967112266B14D7002B70B6 /* CSMeshSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSMeshSlice.swift; sourceTree = "<group>"; };
 		7E967115266D7793002B70B6 /* RenameAndUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAndUpgradeView.swift; sourceTree = "<group>"; };
@@ -481,10 +483,11 @@
 			children = (
 				7E4003B124AD5E5300B709BD /* Models */,
 				7E6C0EE824A82CC700129E8C /* ScannerTabView.swift */,
-				7E6C0EF424A9323900129E8C /* ScannerContainerView.swift */,
 				7E4003AF24AD5DC600B709BD /* DrawOverlay.swift */,
 				7E09140825B5EECB0023215F /* PassiveCameraViewContainer.swift */,
 				7E09141625B66ED60023215F /* ActiveARViewContainer.swift */,
+				7E80EDA9277A8A6C008E662F /* CompassView.swift */,
+				7E80EDAB277AB16B008E662F /* ScannerGPSView.swift */,
 			);
 			path = ScannerTab;
 			sourceTree = "<group>";
@@ -823,7 +826,7 @@
 				7E96711826704395002B70B6 /* CSMeshSnapshot.swift in Sources */,
 				7EAAA3DD2770225600B25CFC /* simd+simd.swift in Sources */,
 				7E43C62D256B49AB00170C17 /* Interaction3dSettingsSection.swift in Sources */,
-				7E6C0EF524A9323900129E8C /* ScannerContainerView.swift in Sources */,
+				7E80EDAA277A8A6D008E662F /* CompassView.swift in Sources */,
 				7E9C2CEA24B3FD5700B9FC44 /* SavedScanRow.swift in Sources */,
 				7E9C2CE824B3FD4B00B9FC44 /* SavedScanDetail.swift in Sources */,
 				7E99F95324B1161E0098D44B /* SurveyLine.swift in Sources */,
@@ -833,6 +836,7 @@
 				7E0C5EFB24CE639E001C0D0E /* FileSaveError.swift in Sources */,
 				7E0C5EF624CE580B001C0D0E /* FileOpener.swift in Sources */,
 				7E23DB2A254E457000BABB52 /* ScaleBarModel.swift in Sources */,
+				7E80EDAC277AB16B008E662F /* ScannerGPSView.swift in Sources */,
 				7E6C0EAC24A800C200129E8C /* AppDelegate.swift in Sources */,
 				7EAE9CF32562212D00EA66D0 /* SettingsStore.swift in Sources */,
 				7E3AD7AB2558FFA70068D1E5 /* SnapshotExportModel.swift in Sources */,
