@@ -86,6 +86,8 @@ final class SettingsStore : NSObject, ObservableObject {
 
     let dateFormatter: DateFormatter
 
+    let coordinateFormatter: MeasurementFormatter
+
     private func setValue<ValT:Equatable>(
         _ key: SettingsKey,
         from oldValue: ValT,
@@ -112,7 +114,7 @@ final class SettingsStore : NSObject, ObservableObject {
         /// register default values for our defaults
         def.register(defaults: getSettingsDefaultDictionary())
 
-        (self.formatter, self.measureFormatter, self.dateFormatter) =
+        (self.formatter, self.measureFormatter, self.coordinateFormatter, self.dateFormatter) =
             Self.setupFormatters()
 
         super.init()
@@ -147,6 +149,17 @@ final class SettingsStore : NSObject, ObservableObject {
             key in
             def.removeObserver(self, forKeyPath: key.rawValue)
         }
+    }
+
+    func formatCoordinate(_ degree: Double) -> String {
+        coordinateFormatter.string(from: Measurement(
+            value: degree,
+            unit: UnitAngle.degrees
+        ))
+    }
+
+    func formatLength(_ length: Double) -> String {
+        measureFormatter.string(from: UnitsLength.fromMetric(length))
     }
 
     /**
@@ -223,7 +236,7 @@ final class SettingsStore : NSObject, ObservableObject {
     }
 
     private static func setupFormatters()
-        -> (NumberFormatter, MeasurementFormatter, DateFormatter)
+        -> (NumberFormatter, MeasurementFormatter, MeasurementFormatter, DateFormatter)
     {
         let locale = NSLocale.current
 
@@ -238,11 +251,20 @@ final class SettingsStore : NSObject, ObservableObject {
         measurementFormatter.numberFormatter = formatter
         measurementFormatter.unitOptions = .providedUnit
 
+        let degreeNumFmt = NumberFormatter()
+        degreeNumFmt.locale = locale
+        degreeNumFmt.minimumFractionDigits = 6
+        degreeNumFmt.maximumFractionDigits = 6
+        let coordinateFormatter = MeasurementFormatter()
+        coordinateFormatter.locale = locale
+        coordinateFormatter.numberFormatter = degreeNumFmt
+        coordinateFormatter.unitStyle = .short
+
         let dateFormatter = DateFormatter()
         dateFormatter.locale = locale
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .long
 
-        return (formatter, measurementFormatter, dateFormatter)
+        return (formatter, measurementFormatter, coordinateFormatter, dateFormatter)
     }
 }

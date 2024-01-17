@@ -28,10 +28,7 @@ struct SavedScanDetailLinks: View {
             NavigationLink(
                 destination: SavedScanDetailAdvanced(
                     model: self.model,
-                    unitLength: settings.UnitsLength,
-                    formatter: settings.formatter,
-                    measureFormatter: settings.measureFormatter,
-                    dateFormatter: settings.dateFormatter
+                    settings: settings
                 )
             ) {
                 HStack {

@@ -29,9 +29,10 @@ struct Interaction3dSettingsSection: View {
             SettingsKey.InteractionMode3d.name,
             selection: $settings.InteractionMode3d
         ) {
-            ForEach(0..<Self.modes.count) {
-                Text(Self.modes[$0].name)
-                    .tag(Self.modes[$0] as SCNInteractionMode?)
+            ForEach(Self.modes, id: \.rawValue) {
+                mode in
+                Text(mode.name)
+                    .tag(mode as SCNInteractionMode?)
             }
         }
     }

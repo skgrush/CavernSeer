@@ -46,25 +46,17 @@ struct ScannerGPSView: View {
         var settings: SettingsStore
 
         @State
-        var degreeFormatter = MeasurementFormatter()
-        @State
         var shortLengthFormatter = MeasurementFormatter()
 
         var body: some View {
             VStack {
-                Text("\(formatDegree(location.coordinate.latitude))N")
-                Text("\(formatDegree(location.coordinate.longitude))E")
+                Text("\(settings.formatCoordinate(location.coordinate.longitude))E")
+                Text("\(settings.formatCoordinate(location.coordinate.latitude))N")
                 Text("±\(formatMeters(location.horizontalAccuracy))")
             }
             .onAppear { setupFormatters() }
         }
 
-        private func formatDegree(_ degree: Double) -> String {
-            self.degreeFormatter.string(from: Measurement(
-                value: degree,
-                unit: UnitAngle.degrees
-            ))
-        }
         private func formatMeters(_ meters: Double) -> String {
             self.shortLengthFormatter.string(
                 from: settings.UnitsLength.fromMetric(meters)
@@ -73,17 +65,8 @@ struct ScannerGPSView: View {
 
         private func setupFormatters() {
             let locale = settings.formatter.locale
-            let degreeNumFmt = NumberFormatter()
-            degreeNumFmt.locale = locale
-            degreeNumFmt.minimumFractionDigits = 6
-            degreeNumFmt.maximumFractionDigits = 6
-
-            self.degreeFormatter.locale = locale
-            self.degreeFormatter.numberFormatter = degreeNumFmt
-            self.degreeFormatter.unitStyle = .short
-
             let ftNumFmt = NumberFormatter()
-            ftNumFmt.locale = settings.formatter.locale
+            ftNumFmt.locale = locale
             ftNumFmt.minimumFractionDigits = 1
             ftNumFmt.maximumFractionDigits = 1
 

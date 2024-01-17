@@ -31,14 +31,12 @@ struct CompassView: View {
     var body: some View {
         VStack {
             if heading.headingIsAvailable == true {
-//                Text("\(Self.degreeFormatter.string(for: heading.degrees)!)ºN")
-//                + Text("m").font(.system(size: 8)).baselineOffset(0)
-                Text("\(degreeFormatter.string(from: Measurement(value: heading.degrees, unit: UnitAngle.degrees)))N")
+                Text("\(formatDegree(heading.degrees))N")
                 + Text("m").font(.system(size: 8)).baselineOffset(0)
 
-//                Text("\(Self.degreeFormatter.string(from: NSNumber(value: heading.trueDegrees))!)ºN")
-
                 Text("±\(degreeFormatter.string(from: Measurement(value: heading.accuracy, unit: UnitAngle.degrees)))")
+            } else {
+                Text("???")
             }
         }
             .onAppear {
@@ -46,6 +44,13 @@ struct CompassView: View {
                 setupDegreeFormatter()
             }
             .onDisappear { heading.didDisappear() }
+    }
+
+    private func formatDegree(_ degree: Double) -> String {
+        degreeFormatter.string(from: Measurement(
+            value: degree,
+            unit: UnitAngle.degrees
+        ))
     }
 
     private func setupDegreeFormatter() {
@@ -80,7 +85,7 @@ struct CompassView: View {
         }
 
         deinit {
-            self.locationManager.delegate = nil
+    
         }
 
         func didAppear() {
@@ -115,7 +120,7 @@ struct CompassView: View {
             _ manager: CLLocationManager,
             didUpdateHeading newHeading: CLHeading
         ) {
-            if self.degrees < 0 {
+            if newHeading.magneticHeading < 0 {
                 self.headingIsAvailable = false
             }
 

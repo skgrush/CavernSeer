@@ -12,12 +12,7 @@ import ARKit /// ARMeshAnchor
 struct SavedScanDetailAdvanced: View {
     var model: SavedScanModel
 
-    var unitLength: LengthPreference
-
-    var formatter: NumberFormatter
-    var measureFormatter: MeasurementFormatter
-
-    var dateFormatter: DateFormatter
+    var settings: SettingsStore
 
     private var totalVertices: Int {
         model.scan.meshAnchors.map {
@@ -86,7 +81,7 @@ struct SavedScanDetailAdvanced: View {
                         Text(line.endIdentifier.uuidString)
                         Text(model.scan.getDistance(
                             line: line,
-                            lengthPref: unitLength
+                            lengthPref: settings.UnitsLength
                         ))
                     }
                 }
@@ -115,7 +110,7 @@ struct SavedScanDetailAdvanced: View {
         [
             ("id", model.id),
             ("name", model.scan.name),
-            ("date", dateFormatter.string(from: model.scan.timestamp)),
+            ("date", settings.dateFormatter.string(from: model.scan.timestamp)),
             ("file version", String(model.scan.encodingVersion)),
             ("url", model.url.absoluteString),
             ("file size", showMegabytes(amount: model.fileSize)),
@@ -146,14 +141,10 @@ struct SavedScanDetailAdvanced: View {
     }
 
     private func xyzView(_ triple: simd_float3) -> AnyView {
-        let x = self.unitLength.fromMetric(Double(triple.x))
-        let y = self.unitLength.fromMetric(Double(triple.y))
-        let z = self.unitLength.fromMetric(Double(triple.z))
-
         return AnyView(VStack {
-            Text("x: \(self.measureFormatter.string(from: x))")
-            Text("y: \(self.measureFormatter.string(from: y))")
-            Text("z: \(self.measureFormatter.string(from: z))")
+            Text("x: \(self.settings.formatLength(Double(triple.x)))")
+            Text("y: \(self.settings.formatLength(Double(triple.y)))")
+            Text("z: \(self.settings.formatLength(Double(triple.z)))")
         })
     }
 
@@ -166,7 +157,7 @@ struct SavedScanDetailAdvanced: View {
     }
 
     private func format(_ value: Int) -> String {
-        return self.formatter.string(
+        return self.settings.formatter.string(
             from: NSNumber(value: value)
         ) ?? "??"
     }
@@ -198,12 +189,10 @@ struct MeshAnchorDetail: View {
 #if DEBUG
 struct SavedScanDetailAdvanced_Previews: PreviewProvider {
     static var previews: some View {
+        let settings = SettingsStore()
         SavedScanDetailAdvanced(
             model: dummySavedScans[1],
-            unitLength: .MetricMeter,
-            formatter: NumberFormatter(),
-            measureFormatter: MeasurementFormatter(),
-            dateFormatter: DateFormatter()
+            settings: settings
         )
     }
 }
